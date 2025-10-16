@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.43, for Linux (x86_64)
 --
--- Host: localhost    Database: polimark
+-- Host: 127.0.0.1    Database: Polimark
 -- ------------------------------------------------------
 -- Server version	8.0.43-0ubuntu0.24.04.1
 
@@ -100,6 +100,7 @@ CREATE TABLE `Usuario` (
   `mail` varchar(45) DEFAULT NULL,
   `contraseña(hash)` varchar(45) DEFAULT NULL,
   `Rango_idRango` int NOT NULL,
+  `puntos` int DEFAULT NULL,
   PRIMARY KEY (`identificador`,`Rango_idRango`),
   KEY `fk_Usuario_Rango1_idx` (`Rango_idRango`),
   CONSTRAINT `fk_Usuario_Rango1` FOREIGN KEY (`Rango_idRango`) REFERENCES `Rango` (`idRango`)
@@ -116,6 +117,29 @@ LOCK TABLES `Usuario` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `articulo`
+--
+
+DROP TABLE IF EXISTS `articulo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `articulo` (
+  `idarticulo` int NOT NULL,
+  `precio` int DEFAULT NULL,
+  PRIMARY KEY (`idarticulo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `articulo`
+--
+
+LOCK TABLES `articulo` WRITE;
+/*!40000 ALTER TABLE `articulo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `articulo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `butaca`
 --
 
@@ -123,16 +147,13 @@ DROP TABLE IF EXISTS `butaca`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `butaca` (
-  `compra_idcompra` int NOT NULL,
-  `funcion_cartelera_Pelicula_nombre` varchar(45) NOT NULL,
-  `funcion_sala_idsala` int NOT NULL,
-  `ubicacion` varchar(45) DEFAULT NULL,
-  `desmanda` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`compra_idcompra`,`funcion_cartelera_Pelicula_nombre`,`funcion_sala_idsala`),
-  KEY `fk_compra_has_funcion_funcion1_idx` (`funcion_cartelera_Pelicula_nombre`,`funcion_sala_idsala`),
-  KEY `fk_compra_has_funcion_compra1_idx` (`compra_idcompra`),
-  CONSTRAINT `fk_compra_has_funcion_compra1` FOREIGN KEY (`compra_idcompra`) REFERENCES `compra` (`idcompra`),
-  CONSTRAINT `fk_compra_has_funcion_funcion1` FOREIGN KEY (`funcion_cartelera_Pelicula_nombre`, `funcion_sala_idsala`) REFERENCES `funcion` (`cartelera_Pelicula_nombre`, `sala_idsala`)
+  `idbutaca` int NOT NULL,
+  `columna` int DEFAULT NULL,
+  `fila` varchar(45) DEFAULT NULL,
+  `sala_idsala` int NOT NULL,
+  PRIMARY KEY (`idbutaca`),
+  KEY `fk_butaca_sala_idx` (`sala_idsala`),
+  CONSTRAINT `fk_butaca_sala` FOREIGN KEY (`sala_idsala`) REFERENCES `sala` (`idsala`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -143,34 +164,6 @@ CREATE TABLE `butaca` (
 LOCK TABLES `butaca` WRITE;
 /*!40000 ALTER TABLE `butaca` DISABLE KEYS */;
 /*!40000 ALTER TABLE `butaca` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cartelera`
---
-
-DROP TABLE IF EXISTS `cartelera`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `cartelera` (
-  `Pelicula_nombre` varchar(45) NOT NULL,
-  `Lugar_idLugar` int NOT NULL,
-  `fechaEntradaCartelera` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`Pelicula_nombre`,`Lugar_idLugar`),
-  KEY `fk_Pelicula_has_Lugar_Lugar1_idx` (`Lugar_idLugar`),
-  KEY `fk_Pelicula_has_Lugar_Pelicula1_idx` (`Pelicula_nombre`),
-  CONSTRAINT `fk_Pelicula_has_Lugar_Lugar1` FOREIGN KEY (`Lugar_idLugar`) REFERENCES `Lugar` (`idLugar`),
-  CONSTRAINT `fk_Pelicula_has_Lugar_Pelicula1` FOREIGN KEY (`Pelicula_nombre`) REFERENCES `Pelicula` (`nombre`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cartelera`
---
-
-LOCK TABLES `cartelera` WRITE;
-/*!40000 ALTER TABLE `cartelera` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cartelera` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -203,53 +196,35 @@ LOCK TABLES `compra` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `formatosDisponibles`
+-- Table structure for table `entrada`
 --
 
-DROP TABLE IF EXISTS `formatosDisponibles`;
+DROP TABLE IF EXISTS `entrada`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `formatosDisponibles` (
-  `formatosSala_idformatosSala` int NOT NULL,
-  `Pelicula_nombre` varchar(45) NOT NULL,
-  PRIMARY KEY (`formatosSala_idformatosSala`,`Pelicula_nombre`),
-  KEY `fk_formatosSala_has_Pelicula_Pelicula1_idx` (`Pelicula_nombre`),
-  KEY `fk_formatosSala_has_Pelicula_formatosSala1_idx` (`formatosSala_idformatosSala`),
-  CONSTRAINT `fk_formatosSala_has_Pelicula_formatosSala1` FOREIGN KEY (`formatosSala_idformatosSala`) REFERENCES `formatosSala` (`idformatosSala`),
-  CONSTRAINT `fk_formatosSala_has_Pelicula_Pelicula1` FOREIGN KEY (`Pelicula_nombre`) REFERENCES `Pelicula` (`nombre`)
+CREATE TABLE `entrada` (
+  `compra_idcompra` int NOT NULL,
+  `funcion_idfuncion` int NOT NULL,
+  `butaca_idbutaca` int NOT NULL,
+  `articulo_idarticulo` int NOT NULL,
+  PRIMARY KEY (`articulo_idarticulo`),
+  KEY `fk_entrada_compra1_idx` (`compra_idcompra`),
+  KEY `fk_entrada_funcion1_idx` (`funcion_idfuncion`),
+  KEY `fk_entrada_butaca1_idx` (`butaca_idbutaca`),
+  CONSTRAINT `fk_entrada_articulo1` FOREIGN KEY (`articulo_idarticulo`) REFERENCES `articulo` (`idarticulo`),
+  CONSTRAINT `fk_entrada_butaca1` FOREIGN KEY (`butaca_idbutaca`) REFERENCES `butaca` (`idbutaca`),
+  CONSTRAINT `fk_entrada_compra1` FOREIGN KEY (`compra_idcompra`) REFERENCES `compra` (`idcompra`),
+  CONSTRAINT `fk_entrada_funcion1` FOREIGN KEY (`funcion_idfuncion`) REFERENCES `funcion` (`idfuncion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `formatosDisponibles`
+-- Dumping data for table `entrada`
 --
 
-LOCK TABLES `formatosDisponibles` WRITE;
-/*!40000 ALTER TABLE `formatosDisponibles` DISABLE KEYS */;
-/*!40000 ALTER TABLE `formatosDisponibles` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `formatosSala`
---
-
-DROP TABLE IF EXISTS `formatosSala`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `formatosSala` (
-  `idformatosSala` int NOT NULL,
-  `nombre` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`idformatosSala`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `formatosSala`
---
-
-LOCK TABLES `formatosSala` WRITE;
-/*!40000 ALTER TABLE `formatosSala` DISABLE KEYS */;
-/*!40000 ALTER TABLE `formatosSala` ENABLE KEYS */;
+LOCK TABLES `entrada` WRITE;
+/*!40000 ALTER TABLE `entrada` DISABLE KEYS */;
+/*!40000 ALTER TABLE `entrada` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -260,13 +235,15 @@ DROP TABLE IF EXISTS `funcion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `funcion` (
-  `cartelera_Pelicula_nombre` varchar(45) NOT NULL,
   `sala_idsala` int NOT NULL,
-  `fechaInicioFuncion` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`cartelera_Pelicula_nombre`,`sala_idsala`),
-  KEY `fk_funcion_sala1_idx` (`sala_idsala`),
-  CONSTRAINT `fk_funcion_cartelera1` FOREIGN KEY (`cartelera_Pelicula_nombre`) REFERENCES `cartelera` (`Pelicula_nombre`),
-  CONSTRAINT `fk_funcion_sala1` FOREIGN KEY (`sala_idsala`) REFERENCES `sala` (`idsala`)
+  `Pelicula_nombre` varchar(45) NOT NULL,
+  `horario` datetime DEFAULT NULL,
+  `idfuncion` int NOT NULL,
+  PRIMARY KEY (`idfuncion`),
+  KEY `fk_sala_has_Pelicula_Pelicula1_idx` (`Pelicula_nombre`),
+  KEY `fk_sala_has_Pelicula_sala1_idx` (`sala_idsala`),
+  CONSTRAINT `fk_sala_has_Pelicula_Pelicula1` FOREIGN KEY (`Pelicula_nombre`) REFERENCES `Pelicula` (`nombre`),
+  CONSTRAINT `fk_sala_has_Pelicula_sala1` FOREIGN KEY (`sala_idsala`) REFERENCES `sala` (`idsala`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -304,6 +281,115 @@ LOCK TABLES `metodoPago` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `producto`
+--
+
+DROP TABLE IF EXISTS `producto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `producto` (
+  `nombre` varchar(45) DEFAULT NULL,
+  `descripcion` varchar(45) DEFAULT NULL,
+  `articulo_idarticulo` int NOT NULL,
+  `stock` int DEFAULT NULL,
+  PRIMARY KEY (`articulo_idarticulo`),
+  KEY `fk_producto_articulo1_idx` (`articulo_idarticulo`),
+  CONSTRAINT `fk_producto_articulo1` FOREIGN KEY (`articulo_idarticulo`) REFERENCES `articulo` (`idarticulo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `producto`
+--
+
+LOCK TABLES `producto` WRITE;
+/*!40000 ALTER TABLE `producto` DISABLE KEYS */;
+/*!40000 ALTER TABLE `producto` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `producto_has_compra`
+--
+
+DROP TABLE IF EXISTS `producto_has_compra`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `producto_has_compra` (
+  `compra_idcompra` int NOT NULL,
+  `cantidad` varchar(45) DEFAULT NULL,
+  `producto_articulo_idarticulo` int NOT NULL,
+  PRIMARY KEY (`compra_idcompra`,`producto_articulo_idarticulo`),
+  KEY `fk_producto_has_compra_compra1_idx` (`compra_idcompra`),
+  KEY `fk_producto_has_compra_producto1_idx` (`producto_articulo_idarticulo`),
+  CONSTRAINT `fk_producto_has_compra_compra1` FOREIGN KEY (`compra_idcompra`) REFERENCES `compra` (`idcompra`),
+  CONSTRAINT `fk_producto_has_compra_producto1` FOREIGN KEY (`producto_articulo_idarticulo`) REFERENCES `producto` (`articulo_idarticulo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `producto_has_compra`
+--
+
+LOCK TABLES `producto_has_compra` WRITE;
+/*!40000 ALTER TABLE `producto_has_compra` DISABLE KEYS */;
+/*!40000 ALTER TABLE `producto_has_compra` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `producto_has_promociones`
+--
+
+DROP TABLE IF EXISTS `producto_has_promociones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `producto_has_promociones` (
+  `producto_articulo_idarticulo` int NOT NULL,
+  `promociones_idpromociones` int NOT NULL,
+  PRIMARY KEY (`producto_articulo_idarticulo`,`promociones_idpromociones`),
+  KEY `fk_producto_has_promociones_promociones1_idx` (`promociones_idpromociones`),
+  KEY `fk_producto_has_promociones_producto1_idx` (`producto_articulo_idarticulo`),
+  CONSTRAINT `fk_producto_has_promociones_producto1` FOREIGN KEY (`producto_articulo_idarticulo`) REFERENCES `producto` (`articulo_idarticulo`),
+  CONSTRAINT `fk_producto_has_promociones_promociones1` FOREIGN KEY (`promociones_idpromociones`) REFERENCES `promociones` (`idpromociones`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `producto_has_promociones`
+--
+
+LOCK TABLES `producto_has_promociones` WRITE;
+/*!40000 ALTER TABLE `producto_has_promociones` DISABLE KEYS */;
+/*!40000 ALTER TABLE `producto_has_promociones` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `promociones`
+--
+
+DROP TABLE IF EXISTS `promociones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `promociones` (
+  `idpromociones` int NOT NULL,
+  `tipo` varchar(45) DEFAULT NULL,
+  `caracteristicas` varchar(45) DEFAULT NULL,
+  `Rango_idRango` int NOT NULL,
+  PRIMARY KEY (`idpromociones`),
+  KEY `fk_promociones_Rango1_idx` (`Rango_idRango`),
+  CONSTRAINT `fk_promociones_Rango1` FOREIGN KEY (`Rango_idRango`) REFERENCES `Rango` (`idRango`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `promociones`
+--
+
+LOCK TABLES `promociones` WRITE;
+/*!40000 ALTER TABLE `promociones` DISABLE KEYS */;
+/*!40000 ALTER TABLE `promociones` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `sala`
 --
 
@@ -314,11 +400,9 @@ CREATE TABLE `sala` (
   `idsala` int NOT NULL,
   `capacidad` varchar(45) DEFAULT NULL,
   `Lugar_idLugar` int NOT NULL,
-  `formatosSala_idformatosSala` int NOT NULL,
+  `tipo` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idsala`,`Lugar_idLugar`),
   KEY `fk_sala_Lugar_idx` (`Lugar_idLugar`),
-  KEY `fk_sala_formatosSala1_idx` (`formatosSala_idformatosSala`),
-  CONSTRAINT `fk_sala_formatosSala1` FOREIGN KEY (`formatosSala_idformatosSala`) REFERENCES `formatosSala` (`idformatosSala`),
   CONSTRAINT `fk_sala_Lugar` FOREIGN KEY (`Lugar_idLugar`) REFERENCES `Lugar` (`idLugar`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -341,4 +425,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-13 12:14:24
+-- Dump completed on 2025-10-16 11:57:12
