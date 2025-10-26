@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/funciones")
+@RequestMapping("/api/compra")
 @CrossOrigin(origins = "*")
 public class CompraController {
 
