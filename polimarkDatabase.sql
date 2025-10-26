@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.43, for Linux (x86_64)
+  -- MySQL dump 10.13  Distrib 8.0.43, for Linux (x86_64)
 --
 -- Host: 127.0.0.1    Database: Polimark
 -- ------------------------------------------------------
@@ -175,7 +175,7 @@ DROP TABLE IF EXISTS `compra`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `compra` (
   `idcompra` int NOT NULL,
-  `Estado` varchar(45) DEFAULT NULL,
+  `pagado` tinyint DEFAULT NULL,
   `metodoPago_idmetodoPago` int NOT NULL,
   `Usuario_identificador` int NOT NULL,
   PRIMARY KEY (`idcompra`),
