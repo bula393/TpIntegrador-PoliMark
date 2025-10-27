@@ -1,7 +1,7 @@
-package com.polimark.polimark.dto;
+package com.polimark.Polimark.dto;
 
-import com.polimark.polimark.model.Butaca;
-import com.polimark.polimark.model.EstadoOcupacion;
+import com.polimark.Polimark.modelo.Butaca;
+import com.polimark.Polimark.modelo.EstadoOcupacion;
 
 public class ButacaEstado {
 

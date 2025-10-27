@@ -1,5 +1,4 @@
-package com.polimark.polimark.modelo;
-package com.web.cine.model;
+package com.polimark.Polimark.modelo;
 
 import jakarta.persistence.*;
 import java.util.List;

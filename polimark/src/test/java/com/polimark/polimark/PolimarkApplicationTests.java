@@ -1,4 +1,4 @@
-package com.polimark.polimark;
+package com.polimark.Polimark;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

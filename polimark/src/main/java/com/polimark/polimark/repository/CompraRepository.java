@@ -1,7 +1,11 @@
-package com.polimark.polimark.repository;
+package com.polimark.Polimark.repository;
 
-public class CompraRepository extends JpaRepository<Compra, Integer> {
+import com.polimark.Polimark.modelo.*;
 
-    
+import java.util.List;
+
+public interface CompraRepository extends JpaRepository<Compra, Integer> {
+
+
 
 }

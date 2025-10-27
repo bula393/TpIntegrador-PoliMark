@@ -1,5 +1,11 @@
-package com.polimark.polimark.repository;
+package com.polimark.Polimark.repository;
 
-public class ButacaRepository extends JpaRepository<Butaca, Integer> {
+import com.polimark.Polimark.modelo.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+
+public interface ButacaRepository extends JpaRepository<Butaca, Integer> {
     List<Butaca> findBySala(Sala sala);
 }

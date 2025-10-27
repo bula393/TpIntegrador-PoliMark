@@ -1,18 +1,16 @@
-package com.polimark.polimark.service;
+package com.polimark.Polimark.service;
 
-import com.polimark.polimark.model.*;
-import com.polimark.polimark.repository.*;
+import com.polimark.Polimark.modelo.*;
+import com.polimark.Polimark.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
-public class ButacaService {
-
+public class EntradaService {
     private final ButacaRepository butacaRepository;
     private final EntradaRepository entradaRepository;
-    
+
 
     public ButacaService(ButacaRepository butacaRepository,
                          EntradaRepository entradaRepository,
@@ -24,17 +22,13 @@ public class ButacaService {
 
     public void reservarAsiento(Compra compra,Funcion funcion,Butaca butaca) {
 
-            boolean ocupada = entradaRepository.existsByFuncionAndButaca(funcion, butaca);
-            if(ocupada){
-                throw new AsientoOcupadoExeption();
-            }
-            Entrada entradaNueva = new Entrada(compra,funcion,butaca)
-            entradaRepository.save(entradaNueva);
-        
+        boolean ocupada = entradaRepository.existsByFuncionAndButaca(funcion, butaca);
+        if(ocupada){
+            throw new AsientoOcupadoExeption();
+        }
+        Entrada entradaNueva = new Entrada(compra,funcion,butaca);
+        entradaRepository.save(entradaNueva);
 
-        return mapa;
     }
 
-    
 }
-

@@ -1,7 +1,7 @@
-package com.polimark.polimark.controler;
+package com.polimark.Polimark.controler;
 
-import com.web.cineapp.model.ButacaEstado;
-import com.web.cineapp.service.ButacaService;
+import com.polimark.Polimark.dto.ButacaEstado;
+import com.polimark.Polimark.service.ButacaService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

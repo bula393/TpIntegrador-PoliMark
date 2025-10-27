@@ -1,7 +1,7 @@
-package com.polimark.polimark.controler;
+package com.polimark.Polimark.controler;
 
-import com.polimark.polimark.modelo.Funcion;
-import com.polimark.polimark.service.FuncionService;
+import com.polimark.Polimark.modelo.Funcion;
+import com.polimark.Polimark.service.FuncionService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 

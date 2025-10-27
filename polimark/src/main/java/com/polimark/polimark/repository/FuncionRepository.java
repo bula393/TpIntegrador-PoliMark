@@ -1,12 +1,13 @@
-package com.polimark.polimark.repository;
+package com.polimark.Polimark.repository;
 
-import com.web.cine.model.Funcion;
+import com.polimark.Polimark.modelo.Funcion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+
 
 public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
 
