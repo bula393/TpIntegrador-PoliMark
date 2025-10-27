@@ -7,8 +7,4 @@ import java.util.List;
 
 public interface CompraRepository extends JpaRepository<Compra, Integer> {
 
-
-    void save(Compra nuevaCompra);
-
-    Compra findById(int idMetodoPago);
 }

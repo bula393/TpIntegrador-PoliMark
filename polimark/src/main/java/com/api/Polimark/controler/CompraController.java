@@ -21,11 +21,12 @@ public class CompraController {
     }
 
     @PostMapping
-    public ResponseEntity<?> reserva(@RequestParam(required = true) List<Butaca> butacas,
+    public ResponseEntity<Compra> reserva(@RequestParam(required = true) List<Butaca> butacas,
                                      @RequestParam(required = true) int idUsuario,
-                                     @RequestParam(required = true) int idFuncion) {
+                                     @RequestParam(required = true) int idFuncion,
+                                    @RequestParam(required = true) List<Articulo> articulos) {
         try {
-            return ResponseEntity.ok(compraService.reservarCompra(idFuncion,idUsuario,butacas));
+            return ResponseEntity.ok(compraService.reservarCompra(idFuncion,idUsuario,articulos,butacas));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

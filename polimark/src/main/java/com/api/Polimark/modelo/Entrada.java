@@ -38,6 +38,13 @@ public class Entrada {
         this.butaca = butaca;
     }
 
+    public static int getPrecioBasa() {
+        return precioBasa;
+    }
+
+    public static void setPrecioBasa(int precioBasa) {
+        Entrada.precioBasa = precioBasa;
+    }
 
     // ✅ Getters y Setters
     public int getIdArticulo() { return idArticulo; }
