@@ -2,6 +2,7 @@ package com.api.Polimark.dto;
 
 import com.api.Polimark.modelo.Butaca;
 import com.api.Polimark.modelo.EstadoOcupacion;
+import com.api.Polimark.modelo.Funcion;
 
 public class ButacaEstado {
 
@@ -13,7 +14,7 @@ public class ButacaEstado {
     public ButacaEstado() {}
 
     // Constructor completo
-    public ButacaEstado(EstadoOcupacion estadoOcupacion, Butaca butaca, int idFuncion) {
+    public ButacaEstado(EstadoOcupacion estadoOcupacion, int idButaca, Funcion funcion) {
         this.estadoOcupacion = estadoOcupacion;
         this.butaca = butaca;
         this.idFuncion = idFuncion;

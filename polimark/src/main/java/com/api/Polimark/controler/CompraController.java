@@ -3,6 +3,7 @@ package com.api.Polimark.controler;
 import com.api.Polimark.modelo.*;
 import com.api.Polimark.service.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -19,12 +20,16 @@ public class CompraController {
         this.compraService = compraService;
     }
 
-    @GetMapping("/reservar")
-    public void reserva(
-            @RequestParam(required = true) List<Butaca> butacas,
-            @RequestParam(required = true) int idUsuario,
-            @RequestParam(required = true) int idFuncion
-    ) {
-        compraService.reservarCompra(idFuncion,idUsuario,butacas);
+    @PostMapping
+    public ResponseEntity<?> reserva(@RequestParam(required = true) List<Butaca> butacas,
+                                     @RequestParam(required = true) int idUsuario,
+                                     @RequestParam(required = true) int idFuncion) {
+        try {
+            return ResponseEntity.ok(compraService.reservarCompra(idFuncion,idUsuario,butacas));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
+
+
 }

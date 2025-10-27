@@ -14,11 +14,10 @@ public class EntradaService {
 
 
     public ButacaService(ButacaRepository butacaRepository,
-                         EntradaRepository entradaRepository,
-                         FuncionRepository funcionRepository) {
+                         EntradaRepository entradaRepository
+    ) {
         this.butacaRepository = butacaRepository;
         this.entradaRepository = entradaRepository;
-        this.funcionRepository = funcionRepository;
     }
 
     public void reservarAsiento(Compra compra,Funcion funcion,Butaca butaca) {

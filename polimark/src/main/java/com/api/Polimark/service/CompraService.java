@@ -14,23 +14,21 @@ public class CompraService {
     private final MetodoPagoRepository metodoPagoRepository;
     private final CompraRepository compraRepository;
 
-    public CompraService(FuncionRepository funcionRepository,UsuarioRepository usuarioRepository
-    MetodoPagoRepository metodoPagoRepository,CompraRepository compraRepository)
+    public CompraService(EntradaService entradaService, FuncionRepository funcionRepository, UsuarioRepository usuarioRepository,
+                         MetodoPagoRepository metodoPagoRepository, CompraRepository compraRepository)
         {
+            this.entradaService = entradaService;
             this.funcionRepository = funcionRepository;
             this.usuarioRepository = usuarioRepository;
             this.metodoPagoRepository = metodoPagoRepository;
             this.compraRepository = compraRepository;
         }
     public void reservarCompra(int idFuncion, int identificadorUsuario, List<Butaca> butacas) {
-        Funcion funcion = funcionRepository.findById(funcionId)
+        Funcion funcion = funcionRepository.findById(idFuncion)
                 .orElseThrow(() -> new RuntimeException("Función no encontrada"));
 
         Usuario usuario = usuarioRepository.findById(identificadorUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        MetodoPago metodoPago = metodoPagoRepository.findById(idmetodoPago)
-        .orElseThrow(() -> new RuntimeException("Metodo de Pago no encontrada"));
 
 
         if(butacas.size() > 6){
@@ -45,14 +43,9 @@ public class CompraService {
         }
     }
 
-    public void pagarCompra() {
-        Funcion funcion = funcionRepository.findById(funcionId)
-                .orElseThrow(() -> new RuntimeException("Función no encontrada"));
-
-        Usuario usuario = usuarioRepository.findById(identificadorUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        MetodoPago metodoPago = metodoPagoRepository.findById(idmetodoPago)
+    public void pagarCompra(int idCompra,int idMetodoPago) {
+        Compra compra = compraRepository.findById(idMetodoPago);
+        MetodoPago metodoPago = metodoPagoRepository.findById(idMetodoPago)
         .orElseThrow(() -> new RuntimeException("Metodo de Pago no encontrada"));
 
 
