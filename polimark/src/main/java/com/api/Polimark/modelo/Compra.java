@@ -14,6 +14,9 @@ public class Compra {
     @Column(name = "pagado")
     private Boolean pagado;
 
+    @Column(name = "monto")
+    private int montopagado;
+
     // Relación con MetodoPago
     @ManyToOne
     @JoinColumn(name = "metodoPago_idmetodoPago", referencedColumnName = "idmetodoPago")

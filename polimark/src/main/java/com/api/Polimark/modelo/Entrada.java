@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 @Entity
 public class Entrada {
 
+    static int precioBasa = 13200;
+
     @Id
     @Column(name = "articulo_idarticulo")
     private int idArticulo;
@@ -35,6 +37,7 @@ public class Entrada {
         this.funcion = funcion;
         this.butaca = butaca;
     }
+
 
     // ✅ Getters y Setters
     public int getIdArticulo() { return idArticulo; }

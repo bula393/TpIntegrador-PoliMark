@@ -13,20 +13,20 @@ public class EntradaService {
     private final EntradaRepository entradaRepository;
 
 
-    public ButacaService(ButacaRepository butacaRepository,
+    public EntradaService(ButacaRepository butacaRepository,
                          EntradaRepository entradaRepository
     ) {
         this.butacaRepository = butacaRepository;
         this.entradaRepository = entradaRepository;
     }
 
-    public void reservarAsiento(Compra compra,Funcion funcion,Butaca butaca) {
+    public void reservarAsiento(Compra compra,Articulo articulo,Funcion funcion,Butaca butaca) {
 
         boolean ocupada = entradaRepository.existsByFuncionAndButaca(funcion, butaca);
         if(ocupada){
             throw new AsientoOcupadoExeption();
         }
-        Entrada entradaNueva = new Entrada(compra,funcion,butaca);
+        Entrada entradaNueva = new Entrada(articulo.getIdArticulo(),articulo,compra,funcion,butaca);
         entradaRepository.save(entradaNueva);
 
     }
