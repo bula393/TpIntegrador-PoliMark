@@ -24,5 +24,28 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
             @Param("sucursalNombre") String sucursalNombre,
             @Param("peliculaNombre") String peliculaNombre
     );
+
+    @Query("""
+        SELECT 
+            NEW com.api.Polimark.dto.RangoHorario(
+                FUNCTION('TIME', CONCAT(LPAD(FUNCTION('HOUR', f.horario), 2, '0'), ':00:00')),
+                FUNCTION('TIME', CONCAT(LPAD(FUNCTION('HOUR', f.horario), 2, '0'), ':59:59'))
+            ),
+            AVG(CAST((
+                SELECT COUNT(e) 
+                FROM Entrada e 
+                WHERE e.funcion.idfuncion = f.idfuncion
+            ) as DOUBLE) / CAST(f.sala.capacidad as DOUBLE)) * 100
+        FROM Funcion f
+        WHERE DATE(f.horario) BETWEEN :desde AND :hasta
+        AND (:nombreEstablecimiento IS NULL OR f.sala.lugar.nombre = :nombreEstablecimiento)
+        GROUP BY FUNCTION('HOUR', f.horario)
+        ORDER BY FUNCTION('HOUR', f.horario)
+    """)
+    List<Object[]> findOcupacionPorRangoHorario(
+            @Param("desde") LocalDate desde,
+            @Param("hasta") LocalDate hasta,
+            @Param("nombreEstablecimiento") String nombreEstablecimiento
+    );
 }
 
