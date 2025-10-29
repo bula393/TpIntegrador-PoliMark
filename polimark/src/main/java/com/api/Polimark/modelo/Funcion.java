@@ -9,7 +9,7 @@ public class Funcion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idfuncion")
+    @Column(name = "idFuncion")
     private Integer idfuncion;
 
     @Column(name = "horario")
@@ -17,12 +17,12 @@ public class Funcion {
 
     // Relación con Sala
     @ManyToOne
-    @JoinColumn(name = "sala_idsala", referencedColumnName = "idsala")
+    @JoinColumn(name = "salaIdSala", referencedColumnName = "idSala")
     private Sala sala;
 
     // Relación con Pelicula
     @ManyToOne
-    @JoinColumn(name = "Pelicula_nombre", referencedColumnName = "nombre")
+    @JoinColumn(name = "peliculaNombre", referencedColumnName = "nombre")
     private Pelicula pelicula;
 
     public Funcion() {}

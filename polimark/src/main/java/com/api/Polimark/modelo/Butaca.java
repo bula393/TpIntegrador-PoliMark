@@ -3,17 +3,20 @@ package com.api.Polimark.modelo;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "butaca")
 public class Butaca {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idButaca")
     private int idbutaca;
-
+    @Column(name = "columna")
     private Integer columna;
+    @Column(name = "fila")
     private String fila;
 
     @ManyToOne
-    @JoinColumn(name = "sala_idsala")
+    @JoinColumn(name = "salaIdSala")
     private Sala sala;
 
     // ✅ Constructores

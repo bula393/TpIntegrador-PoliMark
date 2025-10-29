@@ -3,7 +3,7 @@ package com.api.Polimark.modelo;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Usuario")
+@Table(name = "usuario")
 public class Usuario {
 
     @Id
@@ -20,7 +20,7 @@ public class Usuario {
     @Column(name = "mail")
     private String mail;
 
-    @Column(name = "`contraseña(hash)`") // El nombre tiene paréntesis, así que va entre backticks
+    @Column(name = "contrasenaHash") // El nombre tiene paréntesis, así que va entre backticks
     private String contrasenaHash;
 
     @Column(name = "puntos")
@@ -28,7 +28,7 @@ public class Usuario {
 
     // Relación con Rango
     @ManyToOne
-    @JoinColumn(name = "Rango_idRango", referencedColumnName = "idRango")
+    @JoinColumn(name = "rangoIdRango", referencedColumnName = "idRango")
     private Rango rango;
 
     // Constructores

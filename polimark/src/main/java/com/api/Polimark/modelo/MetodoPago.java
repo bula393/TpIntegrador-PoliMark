@@ -8,13 +8,13 @@ public class MetodoPago {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idmetodoPago")
+    @Column(name = "idMetodoPago")
     private int idmetodoPago;
 
     @Column(name = "nombre")
     private String nombre;
 
-    @Column(name = "`descuento(%)`") // Se usan backticks porque el nombre contiene caracteres especiales
+    @Column(name = "descuentoPorcentaje") // Se usan backticks porque el nombre contiene caracteres especiales
     private Integer descuento;
 
     // Constructor vacío

@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 public class Sala {
 
     @EmbeddedId
+    @Column(name = "idSala")
     private SalaId id;
 
     @Column(name = "capacidad")
@@ -17,7 +18,7 @@ public class Sala {
 
     @MapsId("lugarIdLugar") // referencia la parte de la clave compuesta
     @ManyToOne
-    @JoinColumn(name = "Lugar_idLugar", referencedColumnName = "idLugar")
+    @JoinColumn(name = "lugarIdLugar", referencedColumnName = "idLugar")
     private Lugar lugar;
 
     public Sala() {}

@@ -8,23 +8,23 @@ public class Entrada {
     static int precioBasa = 13200;
 
     @Id
-    @Column(name = "articulo_idarticulo")
+    @Column(name = "articuloIdArticulo")
     private int idArticulo;
 
     @OneToOne
-    @JoinColumn(name = "articulo_idarticulo", referencedColumnName = "idarticulo", insertable = false, updatable = false)
+    @JoinColumn(name = "articuloIdArticulo", referencedColumnName = "idArticulo", insertable = false, updatable = false)
     private Articulo articulo;
 
     @ManyToOne
-    @JoinColumn(name = "compra_idcompra")
+    @JoinColumn(name = "compraIdCompra")
     private Compra compra;
 
     @ManyToOne
-    @JoinColumn(name = "funcion_idfuncion")
+    @JoinColumn(name = "funcionIdFuncion")
     private Funcion funcion;
 
     @ManyToOne
-    @JoinColumn(name = "butaca_idbutaca")
+    @JoinColumn(name = "butacaIdButaca")
     private Butaca butaca;
 
     // ✅ Constructores

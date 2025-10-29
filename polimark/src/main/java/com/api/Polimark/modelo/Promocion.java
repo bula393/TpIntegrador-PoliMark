@@ -11,7 +11,7 @@ public class Promocion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idpromociones")
+    @Column(name = "idPromociones")
     private Integer idPromocion;
 
     @Enumerated(EnumType.STRING)
@@ -22,7 +22,7 @@ public class Promocion {
     private String caracteristicas;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Rango_idRango", nullable = false)
+    @JoinColumn(name = "rangoIdRango", nullable = false)
     private Rango rango;
 
     // Constructores

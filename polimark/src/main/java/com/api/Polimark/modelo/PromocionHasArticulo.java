@@ -13,12 +13,12 @@ public class PromocionHasArticulo implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("idPromocion")
-    @JoinColumn(name = "promociones_idpromociones")
+    @JoinColumn(name = "promocionesIdPromociones")
     private Promocion promocion;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("idArticulo")
-    @JoinColumn(name = "articulo_idarticulo")
+    @JoinColumn(name = "articuloIdArticulo")
     private Articulo articulo;
 
     // Constructores

@@ -8,7 +8,7 @@ public class Compra {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idcompra")
+    @Column(name = "idCompra")
     private int idcompra;
 
     @Column(name = "pagado")
@@ -19,12 +19,12 @@ public class Compra {
 
     // Relación con MetodoPago
     @ManyToOne
-    @JoinColumn(name = "metodoPago_idmetodoPago", referencedColumnName = "idmetodoPago")
+    @JoinColumn(name = "metodoPagoIdMetodoPago", referencedColumnName = "idMetodoPago")
     private MetodoPago metodoPago;
 
     // Relación con Usuario
     @ManyToOne
-    @JoinColumn(name = "Usuario_identificador", referencedColumnName = "identificador")
+    @JoinColumn(name = "usuarioIdentificador", referencedColumnName = "identificador")
     private Usuario usuario;
 
     // Constructores

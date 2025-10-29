@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "Pelicula")
+@Table(name = "pelicula")
 public class Pelicula {
 
     @Id
@@ -15,7 +15,7 @@ public class Pelicula {
     private String productor;
 
     // El nombre del campo tiene paréntesis en SQL, así que lo renombramos en el modelo
-    @Column(name = "duracion(min)")
+    @Column(name = "duracionMin")
     private Integer duracionMin;
 
     public Pelicula() {}
