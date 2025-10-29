@@ -339,28 +339,19 @@ UNLOCK TABLES;
 -- Table structure for table `producto_has_promociones`
 --
 
+-- Primero eliminar la tabla existente
 DROP TABLE IF EXISTS `producto_has_promociones`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `producto_has_promociones` (
-  `producto_articulo_idarticulo` int NOT NULL,
+
+-- Crear la nueva tabla con el nombre actualizado
+CREATE TABLE `articuloHasPromocion` (
+  `articulo_idarticulo` int NOT NULL,
   `promociones_idpromociones` int NOT NULL,
-  PRIMARY KEY (`producto_articulo_idarticulo`,`promociones_idpromociones`),
-  KEY `fk_producto_has_promociones_promociones1_idx` (`promociones_idpromociones`),
-  KEY `fk_producto_has_promociones_producto1_idx` (`producto_articulo_idarticulo`),
-  CONSTRAINT `fk_producto_has_promociones_producto1` FOREIGN KEY (`producto_articulo_idarticulo`) REFERENCES `producto` (`articulo_idarticulo`),
-  CONSTRAINT `fk_producto_has_promociones_promociones1` FOREIGN KEY (`promociones_idpromociones`) REFERENCES `promociones` (`idpromociones`)
+  PRIMARY KEY (`articulo_idarticulo`,`promociones_idpromociones`),
+  KEY `fk_articuloHasPromocion_promociones1_idx` (`promociones_idpromociones`),
+  KEY `fk_articuloHasPromocion_articulo1_idx` (`articulo_idarticulo`),
+  CONSTRAINT `fk_articuloHasPromocion_articulo1` FOREIGN KEY (`articulo_idarticulo`) REFERENCES `articulo` (`idarticulo`),
+  CONSTRAINT `fk_articuloHasPromocion_promociones1` FOREIGN KEY (`promociones_idpromociones`) REFERENCES `promociones` (`idpromociones`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `producto_has_promociones`
---
-
-LOCK TABLES `producto_has_promociones` WRITE;
-/*!40000 ALTER TABLE `producto_has_promociones` DISABLE KEYS */;
-/*!40000 ALTER TABLE `producto_has_promociones` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `promociones`
@@ -416,6 +407,22 @@ LOCK TABLES `sala` WRITE;
 /*!40000 ALTER TABLE `sala` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+-- Crear tabla de notificaciones
+CREATE TABLE `notificaciones` (
+  `idnotificacion` int NOT NULL AUTO_INCREMENT,
+  `Usuario_identificador` int NOT NULL,
+  `funcion_idfuncion` int NOT NULL,
+  `mensaje` varchar(255) NOT NULL,
+  `fecha_creacion` datetime DEFAULT CURRENT_TIMESTAMP,
+  `leida` tinyint DEFAULT '0',
+  `fecha_envio` date NOT NULL,
+  PRIMARY KEY (`idnotificacion`),
+  KEY `fk_notificaciones_Usuario1_idx` (`Usuario_identificador`),
+  KEY `fk_notificaciones_funcion1_idx` (`funcion_idfuncion`),
+  CONSTRAINT `fk_notificaciones_Usuario1` FOREIGN KEY (`Usuario_identificador`) REFERENCES `Usuario` (`identificador`),
+  CONSTRAINT `fk_notificaciones_funcion1` FOREIGN KEY (`funcion_idfuncion`) REFERENCES `funcion` (`idfuncion`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

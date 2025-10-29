@@ -20,8 +20,7 @@ public class UsuarioService {
     public Perfil obtenerPerfil(int idcliente) {
         Usuario usuario = userRepository.findById(idcliente)
                 .orElseThrow(() -> new RuntimeException("cliente no existente"));
-        List<Entrada> historialEntradas = userRepository.findHistorialById(idcliente)
-                .orElseThrow(() -> new RuntimeException("historial no encontrado"));
+        List<Entrada> historialEntradas = userRepository.findHistorialById(idcliente);
         Perfil perfil = new Perfil(usuario,historialEntradas);
         return perfil;
     }

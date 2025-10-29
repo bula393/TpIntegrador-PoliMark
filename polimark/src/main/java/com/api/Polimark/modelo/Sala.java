@@ -13,7 +13,7 @@ public class Sala {
     private String capacidad;
 
     @Column(name = "tipo")
-    private String tipo;
+    private TipoSala tipo;
 
     @MapsId("lugarIdLugar") // referencia la parte de la clave compuesta
     @ManyToOne
@@ -29,8 +29,8 @@ public class Sala {
     public String getCapacidad() { return capacidad; }
     public void setCapacidad(String capacidad) { this.capacidad = capacidad; }
 
-    public String getTipo() { return tipo; }
-    public void setTipo(String tipo) { this.tipo = tipo; }
+    public TipoSala getTipo() { return tipo; }
+    public void setTipo(TipoSala tipo) { this.tipo = tipo; }
 
     public Lugar getLugar() { return lugar; }
     public void setLugar(Lugar lugar) { this.lugar = lugar; }
