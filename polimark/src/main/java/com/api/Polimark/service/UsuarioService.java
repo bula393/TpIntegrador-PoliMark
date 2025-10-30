@@ -26,9 +26,24 @@ public class UsuarioService {
         this.entradaRepository = entradaRepository;
     }
 
-    public void crearUsuario(int identificador,String nombre, String apellido, String contrasenia,String mail){
-        Usuario usuario = new Usuario(identificador,nombre, apellido, generarHash(contrasenia),mail);
-        usuarioRepository.save(usuario);
+    public Usuario crearUsuario(Usuario usuario){
+        return usuarioRepository.save(usuario);
+    }
+
+    public Usuario darRangoCliente(int idCliente,Rango rango){
+        Usuario usuario = usuarioRepository.findById(idCliente)
+                .orElseThrow(() -> new RuntimeException("Cliente no existente"));
+        usuario.setRango(rango);
+        return usuarioRepository.save(usuario);
+    }
+
+    public Usuario usuarioLogueado(int idCliente,String contrasenia){
+        Usuario usuario = usuarioRepository.findById(idCliente)
+                .orElseThrow(() -> new RuntimeException("Cliente no existente"));
+        if (usuario.getContrasenaHash().equals(generarHash(contrasenia))){
+            return usuario;
+        }
+        throw new ContraseniaIncorrectaExeptiom();
     }
 
     private byte[] generarHash(String contrasenia){

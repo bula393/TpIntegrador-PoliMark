@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,15 @@ public class PeliculaService {
         }
 
         return (new PeliculaHorario(peliculaMasTaquillera.orElse(null), rangoHorarioMasVista));
+    }
+
+    public List<Pelicula> peliculasConFuncionesProximamente() {
+        LocalDateTime ahora = LocalDateTime.now();
+
+        return funcionRepository.findDistinctByFechaHoraAfter(ahora).stream()
+                .map(Funcion::getPelicula)
+                .distinct()
+                .toList();
     }
 
     private Optional<Pelicula> findPeliculaMasTaquilleraEntre(LocalDate desde, LocalDate hasta) {
@@ -116,4 +126,20 @@ public class PeliculaService {
         return entradaRepository.countByFuncionIdfuncion(funcion.getIdfuncion());
     }
 
+    public List<LocalTime> findHorariosDisponible(Long idPelicula, LocalDate fecha) {
+        LocalDateTime inicio = fecha.atStartOfDay();
+        LocalDateTime fin = fecha.plusDays(1).atStartOfDay();
+
+        return (List<LocalTime>) funcionRepository.findByPelicula_IdAndFechaHoraBetween(idPelicula, inicio, fin).stream()
+                .map(funcion -> funcion.getHorario().toLocalTime());
+    }
+
+    public List<LocalDate> findFechaDisponibleById(Long idPelicula) {
+        return funcionRepository.findByPelicula_Id(idPelicula).stream()
+                .map(funcion -> funcion.getHorario().toLocalDate())
+                .filter(fecha -> !fecha.isBefore(LocalDate.now()))
+                .distinct()
+                .sorted()
+                .toList();
+    }
 }

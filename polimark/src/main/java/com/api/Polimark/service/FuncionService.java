@@ -59,6 +59,7 @@ public class FuncionService {
         // Traer todas las funciones
         List<Funcion> todasLasFunciones = funcionRepository.findAllByOrderByHorario();
 
+
         // Filtrar por rango de fechas y establecimiento
         List<Funcion> funcionesFiltradas = todasLasFunciones.stream()
                 .filter(funcion -> estaEnRangoFechas(funcion, desde, hasta))
