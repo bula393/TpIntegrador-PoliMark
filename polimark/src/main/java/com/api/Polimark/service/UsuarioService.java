@@ -5,6 +5,8 @@ import com.api.Polimark.modelo.*;
 import com.api.Polimark.repository.*;
 import org.springframework.stereotype.Service;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +26,25 @@ public class UsuarioService {
         this.entradaRepository = entradaRepository;
     }
 
+    public void crearUsuario(int identificador,String nombre, String apellido, String contrasenia,String mail){
+        Usuario usuario = new Usuario(identificador,nombre, apellido, generarHash(contrasenia),mail);
+        usuarioRepository.save(usuario);
+    }
+
+    private byte[] generarHash(String contrasenia){
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        return md.digest(contrasenia.getBytes());
+    }
+
     public Perfil obtenerPerfil(int idCliente) {
-        // Obtener el usuario
         Usuario usuario = usuarioRepository.findById(idCliente)
                 .orElseThrow(() -> new RuntimeException("Cliente no existente"));
 
-        // Obtener el historial de entradas usando la lógica en el servicio
         List<Entrada> historialEntradas = obtenerHistorialEntradas(idCliente);
 
         return new Perfil(usuario, historialEntradas);
@@ -38,10 +53,8 @@ public class UsuarioService {
     private List<Entrada> obtenerHistorialEntradas(Integer idCliente) {
         List<Entrada> historialEntradas = new ArrayList<>();
 
-        // 1. Obtener todas las compras del usuario
         List<Compra> compras = compraRepository.findByUsuarioId(idCliente);
 
-        // 2. Para cada compra, obtener sus entradas
         for (Compra compra : compras) {
             List<Entrada> entradasDeCompra = entradaRepository.findByCompraId(compra.getIdcompra());
             historialEntradas.addAll(entradasDeCompra);

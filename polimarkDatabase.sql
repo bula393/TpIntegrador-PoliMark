@@ -98,7 +98,7 @@ CREATE TABLE `usuario` (
   `nombre` varchar(45) DEFAULT NULL,
   `apellido` varchar(45) DEFAULT NULL,
   `mail` varchar(45) DEFAULT NULL,
-  `contrasenaHash` varchar(45) DEFAULT NULL,
+  `contrasenaHash` binary(60) DEFAULT NULL,
   `rangoIdRango` int NOT NULL,
   `puntos` int DEFAULT NULL,
   PRIMARY KEY (`identificador`,`rangoIdRango`),

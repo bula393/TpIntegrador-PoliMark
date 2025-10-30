@@ -21,7 +21,7 @@ public class Usuario {
     private String mail;
 
     @Column(name = "contrasenaHash") // El nombre tiene paréntesis, así que va entre backticks
-    private String contrasenaHash;
+    private byte[] contrasenaHash;
 
     @Column(name = "puntos")
     private Integer puntos;
@@ -32,15 +32,18 @@ public class Usuario {
     private Rango rango;
 
     // Constructores
-    public Usuario() {}
+    public Usuario(int identificador, String nombre, String apellido, byte[] bytes, String mail) {}
 
-    public Usuario(String nombre, String apellido, String mail, String contrasenaHash, Rango rango, Integer puntos) {
+    public Usuario(int identificador,String nombre, String apellido, String mail, byte[] contrasenaHash) {
+        this.identificador = identificador;
         this.nombre = nombre;
         this.apellido = apellido;
         this.mail = mail;
         this.contrasenaHash = contrasenaHash;
-        this.rango = rango;
-        this.puntos = puntos;
+    }
+
+    public Usuario() {
+
     }
 
     // Getters y Setters
@@ -76,11 +79,11 @@ public class Usuario {
         this.mail = mail;
     }
 
-    public String getContrasenaHash() {
+    public byte[] getContrasenaHash() {
         return contrasenaHash;
     }
 
-    public void setContrasenaHash(String contrasenaHash) {
+    public void setContrasenaHash(byte[] contrasenaHash) {
         this.contrasenaHash = contrasenaHash;
     }
 

@@ -8,7 +8,7 @@ import java.util.List;
 public interface EntradaRepository extends JpaRepository<Entrada, Integer> {
     boolean existsByFuncionAndButaca(Funcion funcion, Butaca butaca);
 
-    // Método para contar entradas vendidas por función
+
     long countByFuncionIdfuncion(Integer funcionId);
 
     List<Entrada> findByCompraId(Integer compraId);

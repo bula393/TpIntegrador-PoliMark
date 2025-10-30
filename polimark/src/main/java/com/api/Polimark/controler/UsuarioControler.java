@@ -23,5 +23,10 @@ public class UsuarioControler {
     public Perfil perfil(@PathVariable int idCliente) {
         return usuarioService.obtenerPerfil(idCliente);
     }
+
+    @PostMapping("crearUsuario")
+    public void perfil(@Body int idCliente) {
+        return usuarioService.obtenerPerfil(idCliente);
+    }
 }
 
