@@ -50,6 +50,8 @@ CREATE TABLE `pelicula` (
   `nombre` varchar(45) NOT NULL,
   `productor` varchar(45) DEFAULT NULL,
   `duracionMin` int DEFAULT NULL,
+  `fotoCartelera` varchar(100) DEFAULT NULL,
+  `linkTrailer` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`nombre`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -72,6 +74,7 @@ DROP TABLE IF EXISTS `rango`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `rango` (
   `idRango` int NOT NULL,
+  `precio` int ,
   `nombre` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idRango`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
