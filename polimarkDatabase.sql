@@ -438,6 +438,18 @@ CREATE TABLE `notificaciones` (
   CONSTRAINT `fk_notificaciones_funcion1` FOREIGN KEY (`funcionIdFuncion`) REFERENCES `funcion` (`idFuncion`),
   CONSTRAINT `fk_notificaciones_usuario1` FOREIGN KEY (`usuarioIdentificador`) REFERENCES `usuario` (`identificador`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `entradaAuto`;
+
+CREATE TABLE `entradaAuto` (
+  `entradaArticuloIdArticulo` INT NOT NULL,
+  `patente` VARCHAR(7) NOT NULL,
+  `cantidadAuto` INT DEFAULT NULL,
+  PRIMARY KEY (`entradaArticuloIdArticulo`),
+  CONSTRAINT `fkEntradaAutoEntrada` FOREIGN KEY (`entradaArticuloIdArticulo`) REFERENCES `entrada` (`articuloIdArticulo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
