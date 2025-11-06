@@ -29,12 +29,12 @@ public class PeliculaControler {
     }
 
     @GetMapping("/{id}/fechas")
-    public List<LocalDate> fechasDisponibles(@PathVariable long idPelicula
+    public List<LocalDate> fechasDisponibles(@PathVariable String idPelicula
     ) {
         return peliculaService.findFechaDisponibleById(idPelicula);
     }
     @GetMapping("/{id}/horarios")
-    public List<LocalTime> fechasDisponibles(@PathVariable long idPelicula,@RequestBody LocalDate fecha) {
-        return peliculaService.findHorariosDisponible(idPelicula,fecha);
+    public List<LocalTime> fechasDisponibles(@PathVariable String nombrePelicula,@RequestBody LocalDate fecha) {
+        return peliculaService.findHorariosDisponible(nombrePelicula,fecha);
     }
 }

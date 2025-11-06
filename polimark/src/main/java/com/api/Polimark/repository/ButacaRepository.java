@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ButacaRepository extends JpaRepository<Butaca, Integer> {
     List<Butaca> findBySala(Sala sala);
+
+    List<Butaca> findBySalaIdSala(Integer idSala);
 }

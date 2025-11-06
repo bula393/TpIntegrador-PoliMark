@@ -9,7 +9,7 @@ public class Butaca {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idButaca")
-    private int idbutaca;
+    private int idButaca;
     @Column(name = "columna")
     private Integer columna;
     @Column(name = "fila")
@@ -29,12 +29,12 @@ public class Butaca {
     }
 
     // ✅ Getters y Setters
-    public int getIdbutaca() {
-        return idbutaca;
+    public int getIdButaca() {
+        return idButaca;
     }
 
-    public void setIdbutaca(int idbutaca) {
-        this.idbutaca = idbutaca;
+    public void setIdButaca(int idbutaca) {
+        this.idButaca = idButaca;
     }
 
     public Integer getColumna() {

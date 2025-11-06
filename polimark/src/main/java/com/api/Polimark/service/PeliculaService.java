@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,108 +35,106 @@ public class PeliculaService {
         this.compraRepository = compraRepository;
     }
 
-    public PeliculaHorario peliculaMasTaquillera(LocalDate desde, LocalDate hasta) {
-        Optional<Pelicula> peliculaMasTaquillera;
-        RangoHorario rangoHorarioMasVista;
-        try {
-            peliculaMasTaquillera = findPeliculaMasTaquilleraEntre(desde, hasta);
-        }
-        catch (Exception e) {
-            throw  new ResponseStatusException(HttpStatus.NOT_FOUND, "Pelicula no encontrada");
-        }
-        try {
-            rangoHorarioMasVista = findRangoHorarioMasVistaEntre(
-                    desde, hasta, peliculaMasTaquillera.get().getNombre());
-        }
-        catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "rango pelicula no encontrada");
-        }
 
-        return (new PeliculaHorario(peliculaMasTaquillera.orElse(null), rangoHorarioMasVista));
-    }
 
     public List<Pelicula> peliculasConFuncionesProximamente() {
         LocalDateTime ahora = LocalDateTime.now();
 
-        return funcionRepository.findDistinctByFechaHoraAfter(ahora).stream()
+        return funcionRepository.findDistinctByHorarioAfter(ahora).stream()
                 .map(Funcion::getPelicula)
                 .distinct()
                 .toList();
     }
 
-    private Optional<Pelicula> findPeliculaMasTaquilleraEntre(LocalDate desde, LocalDate hasta) {
-        // Obtener todas las funciones en el rango de fechas
-        List<Funcion> funciones = funcionRepository.findAll().stream()
-                .filter(funcion -> {
-                    LocalDate fechaFuncion = funcion.getHorario().toLocalDate();
-                    return !fechaFuncion.isBefore(desde) && !fechaFuncion.isAfter(hasta);
-                })
-                .collect(Collectors.toList());
 
-        // Contar entradas vendidas por película
-        Map<Pelicula, Long> entradasPorPelicula = funciones.stream()
-                .collect(Collectors.groupingBy(
-                        Funcion::getPelicula,
-                        Collectors.summingLong(funcion -> entradaRepository.countByFuncionIdfuncion(funcion.getIdfuncion()))
-                ));
 
-        // Encontrar la película con más entradas vendidas
-        return entradasPorPelicula.entrySet().stream()
+    public PeliculaHorario peliculaMasTaquillera(LocalDate desde, LocalDate hasta) {
+        // 1. Obtener todas las películas
+        List<Pelicula> todasLasPeliculas = peliculaRepository.findAll();
+
+        // 2. Convertir fechas a LocalDateTime
+        LocalDateTime inicio = desde.atStartOfDay();
+        LocalDateTime fin = hasta.atTime(23, 59, 59);
+
+        // 3. Encontrar la película más taquillera
+        Pelicula peliculaMasTaquillera = null;
+        long maxEntradas = 0;
+
+        for (Pelicula pelicula : todasLasPeliculas) {
+            // Obtener funciones de esta película en el rango
+            List<Funcion> funciones = funcionRepository.findByPeliculaNombreAndHorarioBetween(
+                    pelicula.getNombre(), inicio, fin);
+
+            // Contar entradas vendidas
+            long totalEntradas = contarEntradasVendidas(funciones);
+
+            // Verificar si es la más taquillera
+            if (totalEntradas > maxEntradas) {
+                maxEntradas = totalEntradas;
+                peliculaMasTaquillera = pelicula;
+            }
+        }
+
+        if (peliculaMasTaquillera == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontraron películas taquilleras");
+        }
+
+        // 4. Encontrar el rango horario más visto para esta película
+        RangoHorario rangoHorarioMasVista = encontrarRangoHorarioMasVista(
+                peliculaMasTaquillera.getNombre(), desde, hasta);
+
+        return new PeliculaHorario(peliculaMasTaquillera, rangoHorarioMasVista);
+    }
+
+    private long contarEntradasVendidas(List<Funcion> funciones) {
+        long totalEntradas = 0;
+        for (Funcion funcion : funciones) {
+            totalEntradas += entradaRepository.countByFuncionAndCompraPagadoTrue(funcion);
+        }
+        return totalEntradas;
+    }
+
+    private RangoHorario encontrarRangoHorarioMasVista(String nombrePelicula, LocalDate desde, LocalDate hasta) {
+        LocalDateTime inicio = desde.atStartOfDay();
+        LocalDateTime fin = hasta.atTime(23, 59, 59);
+
+        // Obtener funciones de la película
+        List<Funcion> funciones = funcionRepository.findByPeliculaNombreAndHorarioBetween(
+                nombrePelicula, inicio, fin);
+
+        // Contar entradas por hora del día
+        Map<Integer, Long> entradasPorHora = new HashMap<>();
+
+        for (Funcion funcion : funciones) {
+            int hora = funcion.getHorario().getHour();
+            long entradas = entradaRepository.countByFuncionAndCompraPagadoTrue(funcion);
+
+            entradasPorHora.put(hora, entradasPorHora.getOrDefault(hora, 0L) + entradas);
+        }
+
+        // Encontrar la hora con más entradas
+        int horaMasVista = entradasPorHora.entrySet().stream()
                 .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey);
+                .map(Map.Entry::getKey)
+                .orElse(14); // Hora por defecto (2 PM) si no hay datos
+
+        // Crear rango horario con LocalTime
+        LocalTime horaInicio = LocalTime.of(horaMasVista, 0);
+        LocalTime horaFin = LocalTime.of((horaMasVista + 1) % 24, 0);
+
+        return new RangoHorario(horaInicio, horaFin);
     }
 
-    private RangoHorario findRangoHorarioMasVistaEntre(LocalDate desde, LocalDate hasta, String nombrePelicula) {
-        // Obtener todas las funciones de la película en el rango de fechas
-        List<Funcion> funcionesPelicula = funcionRepository.findAll().stream()
-                .filter(funcion -> funcion.getPelicula().getNombre().equals(nombrePelicula))
-                .filter(funcion -> {
-                    LocalDate fechaFuncion = funcion.getHorario().toLocalDate();
-                    return !fechaFuncion.isBefore(desde) && !fechaFuncion.isAfter(hasta);
-                })
-                .collect(Collectors.toList());
-
-        // Agrupar por hora y contar entradas vendidas usando el repository
-        Map<Integer, Long> entradasPorHora = funcionesPelicula.stream()
-                .collect(Collectors.groupingBy(
-                        funcion -> funcion.getHorario().getHour(),
-                        Collectors.summingLong(funcion -> contarEntradasVendidasPorFuncion(funcion))
-                ));
-
-        // Encontrar la hora con más entradas vendidas
-        Optional<Map.Entry<Integer, Long>> horaMasVendida = entradasPorHora.entrySet().stream()
-                .max(Map.Entry.comparingByValue());
-
-
-        int hora = horaMasVendida.get().getKey();
-
-        // Crear el rango horario
-        LocalTime horaInicio = LocalTime.of(hora, 0, 0);
-        LocalTime horaFin = horaInicio.plusHours(1);
-
-        RangoHorario rangoHorario = new RangoHorario(
-                horaInicio,
-                horaFin
-        );
-
-        return rangoHorario;
-    }
-
-    private long contarEntradasVendidasPorFuncion(Funcion funcion) {
-        // Contar entradas vendidas para una función específica usando el repository
-        return entradaRepository.countByFuncionIdfuncion(funcion.getIdfuncion());
-    }
-
-    public List<LocalTime> findHorariosDisponible(Long idPelicula, LocalDate fecha) {
+    public List<LocalTime> findHorariosDisponible(String nombrePelicula, LocalDate fecha) {
         LocalDateTime inicio = fecha.atStartOfDay();
         LocalDateTime fin = fecha.plusDays(1).atStartOfDay();
 
-        return (List<LocalTime>) funcionRepository.findByPelicula_IdAndFechaHoraBetween(idPelicula, inicio, fin).stream()
+        return (List<LocalTime>) funcionRepository.findByPeliculaNombreAndHorarioBetween(nombrePelicula, inicio, fin).stream()
                 .map(funcion -> funcion.getHorario().toLocalTime());
     }
 
-    public List<LocalDate> findFechaDisponibleById(Long idPelicula) {
-        return funcionRepository.findByPelicula_Id(idPelicula).stream()
+    public List<LocalDate> findFechaDisponibleById(String idPelicula) {
+        return funcionRepository.findByPeliculaNombre(idPelicula).stream()
                 .map(funcion -> funcion.getHorario().toLocalDate())
                 .filter(fecha -> !fecha.isBefore(LocalDate.now()))
                 .distinct()

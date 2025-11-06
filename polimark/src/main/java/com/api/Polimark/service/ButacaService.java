@@ -27,15 +27,16 @@ public class ButacaService {
         Funcion funcion = funcionRepository.findById(funcionId)
                 .orElseThrow(() -> new RuntimeException("Función no encontrada"));
 
-        // Traer todas las butacas de la sala de la función
-        List<Butaca> butacas = butacaRepository.findBySala(funcion.getSala());
+        // Usar el ID de la sala en lugar de la entidad completa
+        List<Butaca> butacas = butacaRepository.findBySalaIdSala(funcion.getSala().getIdSala());
 
         List<ButacaEstado> mapa = new ArrayList<>();
 
-        for (Butaca b : butacas) {
-            boolean ocupada = entradaRepository.existsByFuncionAndButaca(funcion, b);
+        for (Butaca butaca : butacas) {
+            // Usar IDs para la consulta (más eficiente)
+            boolean ocupada = entradaRepository.existsByFuncionIdFuncionAndButacaIdButaca(funcionId, butaca.getIdButaca());
             EstadoOcupacion estado = ocupada ? EstadoOcupacion.OCUPADO : EstadoOcupacion.LIBRE;
-            mapa.add(new ButacaEstado(estado, b.getIdbutaca(), funcion));
+            mapa.add(new ButacaEstado(estado, butaca.getIdButaca(), funcion));
         }
 
         return mapa;

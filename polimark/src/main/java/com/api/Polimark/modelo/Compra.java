@@ -9,7 +9,7 @@ public class Compra {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idCompra")
-    private int idcompra;
+    private int idCompra;
 
     @Column(name = "pagado")
     private Boolean pagado;
@@ -37,12 +37,12 @@ public class Compra {
     }
 
     // Getters y setters
-    public int getIdcompra() {
-        return idcompra;
+    public int getIdCompra() {
+        return idCompra;
     }
 
     public void setIdcompra(int idcompra) {
-        this.idcompra = idcompra;
+        this.idCompra = idcompra;
     }
 
     public Boolean getPagado() {
@@ -72,7 +72,7 @@ public class Compra {
     @Override
     public String toString() {
         return "Compra{" +
-                "idcompra=" + idcompra +
+                "idcompra=" + idCompra +
                 ", pagado=" + pagado +
                 ", metodoPago=" + (metodoPago != null ? metodoPago.getIdmetodoPago() : null) +
                 ", usuario=" + (usuario != null ? usuario.getIdentificador() : null) +

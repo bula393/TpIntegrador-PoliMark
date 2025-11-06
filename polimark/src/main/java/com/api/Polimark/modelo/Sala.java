@@ -6,33 +6,53 @@ import jakarta.persistence.*;
 @Table(name = "sala")
 public class Sala {
 
-    @EmbeddedId
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idSala")
-    private SalaId id;
+    private int idSala;
 
     @Column(name = "capacidad")
     private String capacidad;
 
     @Column(name = "tipo")
-    private TipoSala tipo;
+    private String tipo;
 
-    @MapsId("lugarIdLugar") // referencia la parte de la clave compuesta
     @ManyToOne
-    @JoinColumn(name = "lugarIdLugar", referencedColumnName = "idLugar")
+    @JoinColumn(name = "lugarIdLugar")
     private Lugar lugar;
 
     public Sala() {}
 
     // Getters y setters
-    public SalaId getId() { return id; }
-    public void setId(SalaId id) { this.id = id; }
+    public int getIdSala() {
+        return idSala;
+    }
 
-    public String getCapacidad() { return capacidad; }
-    public void setCapacidad(String capacidad) { this.capacidad = capacidad; }
+    public void setIdSala(int idSala) {
+        this.idSala = idSala;
+    }
 
-    public TipoSala getTipo() { return tipo; }
-    public void setTipo(TipoSala tipo) { this.tipo = tipo; }
+    public String getCapacidad() {
+        return capacidad;
+    }
 
-    public Lugar getLugar() { return lugar; }
-    public void setLugar(Lugar lugar) { this.lugar = lugar; }
+    public void setCapacidad(String capacidad) {
+        this.capacidad = capacidad;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public Lugar getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(Lugar lugar) {
+        this.lugar = lugar;
+    }
 }

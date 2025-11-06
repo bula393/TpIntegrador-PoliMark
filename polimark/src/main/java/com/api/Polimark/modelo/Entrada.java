@@ -3,6 +3,7 @@ package com.api.Polimark.modelo;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "entrada")
 public class Entrada {
 
     static int precioBasa = 13200;

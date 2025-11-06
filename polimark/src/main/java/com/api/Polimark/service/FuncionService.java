@@ -117,7 +117,7 @@ public class FuncionService {
 
         for (Funcion funcion : funciones) {
             try {
-                int entradasVendidas = (int) entradaRepository.countByFuncionIdfuncion(funcion.getIdfuncion());
+                int entradasVendidas = (int) entradaRepository.countByFuncionIdFuncion(funcion.getIdFuncion());
                 int capacidad = Integer.parseInt(funcion.getSala().getCapacidad());
 
                 if (capacidad > 0) {
@@ -127,7 +127,7 @@ public class FuncionService {
                 }
             } catch (NumberFormatException e) {
                 // Si la capacidad no es un número válido, saltar esta función
-                System.err.println("Capacidad inválida para función ID: " + funcion.getIdfuncion());
+                System.err.println("Capacidad inválida para función ID: " + funcion.getIdFuncion());
             }
         }
 

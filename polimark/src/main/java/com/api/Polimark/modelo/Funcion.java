@@ -9,20 +9,20 @@ public class Funcion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idFuncion")
-    private Integer idfuncion;
+    @Column(name = "idFuncion") // This matches your DB
+    private Integer idFuncion;
 
-    @Column(name = "horario")
+    @Column(name = "horario") // This matches your DB
     private LocalDateTime horario;
 
-    // Relación con Sala
+    // Relación con Sala - FIXED to match DB column name
     @ManyToOne
-    @JoinColumn(name = "salaIdSala", referencedColumnName = "idSala")
+    @JoinColumn(name = "salaIdSala") // Changed from "salaIdSala" to match exact DB column name
     private Sala sala;
 
-    // Relación con Pelicula
+    // Relación con Pelicula - FIXED to match DB column name
     @ManyToOne
-    @JoinColumn(name = "peliculaNombre", referencedColumnName = "nombre")
+    @JoinColumn(name = "peliculaNombre") // This matches your DB
     private Pelicula pelicula;
 
     public Funcion() {}
@@ -34,12 +34,12 @@ public class Funcion {
     }
 
     // Getters y Setters
-    public Integer getIdfuncion() {
-        return idfuncion;
+    public Integer getIdFuncion() {
+        return idFuncion;
     }
 
-    public void setIdfuncion(Integer idfuncion) {
-        this.idfuncion = idfuncion;
+    public void setIdFuncion(Integer idFuncion) {
+        this.idFuncion = idFuncion;
     }
 
     public LocalDateTime getHorario() {

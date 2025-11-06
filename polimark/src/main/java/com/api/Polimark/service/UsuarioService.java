@@ -68,10 +68,10 @@ public class UsuarioService {
     private List<Entrada> obtenerHistorialEntradas(Integer idCliente) {
         List<Entrada> historialEntradas = new ArrayList<>();
 
-        List<Compra> compras = compraRepository.findByUsuarioId(idCliente);
+        List<Compra> compras = compraRepository.findByUsuarioIdentificador(idCliente);
 
         for (Compra compra : compras) {
-            List<Entrada> entradasDeCompra = entradaRepository.findByCompraId(compra.getIdcompra());
+            List<Entrada> entradasDeCompra = entradaRepository.findByCompraIdCompra(compra.getIdCompra());
             historialEntradas.addAll(entradasDeCompra);
         }
         return historialEntradas;

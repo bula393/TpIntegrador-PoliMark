@@ -400,11 +400,11 @@ DROP TABLE IF EXISTS `sala`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sala` (
-  `idSala` int NOT NULL,
+  `idSala` int NOT NULL ,
   `capacidad` varchar(45) DEFAULT NULL,
   `lugarIdLugar` int NOT NULL,
   `tipo` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`idSala`,`lugarIdLugar`),
+  PRIMARY KEY (`idSala`),
   KEY `fk_sala_lugar_idx` (`lugarIdLugar`),
   CONSTRAINT `fk_sala_lugar` FOREIGN KEY (`lugarIdLugar`) REFERENCES `lugar` (`idLugar`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

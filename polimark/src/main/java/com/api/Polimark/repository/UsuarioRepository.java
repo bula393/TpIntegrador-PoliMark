@@ -9,9 +9,14 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
-    @Query("SELECT e FROM Usuario u " +
-            "JOIN u.compras c " +
-            "JOIN c.entradas e " +
-            "WHERE u.identificador = :idCliente")
-    List<Entrada> findHistorialById(@Param("idCliente") Integer idCliente);
+    Usuario findByIdentificador(int identificador);
+
+    // Encuentra usuario por email
+    Usuario findByMail(String mail);
+
+    // Encuentra usuarios por nombre
+    List<Usuario> findByNombre(String nombre);
+
+    // Encuentra usuarios por rango
+    List<Usuario> findByRangoIdRango(int rangoId);
 }
