@@ -25,31 +25,31 @@ public class CompraService {
             this.compraRepository = compraRepository;
             this.articuloRepository = articuloRepository;
         }
-//    public Compra reservarCompra(int idFuncion, int identificadorUsuario,List<Articulo> articulos, List<Butaca> butacas) {
-//        Funcion funcion = funcionRepository.findById(idFuncion)
-//                .orElseThrow(() -> new RuntimeException("Función no encontrada"));
-//
-//        Usuario usuario = usuarioRepository.findById(identificadorUsuario)
-//                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-//
-//
-//
-//        if (butacas.size() == articulos.size()) {}
-//            if(butacas.size() > 6){
-//                int contador = 0;
-//                Compra nuevaCompra = new Compra(false, null, usuario);
-//                for(Butaca butaca : butacas){
-//                        entradaService.reservarAsiento(nuevaCompra,articulos.get(contador),funcion,butaca);
-//                        contador++;
-//                    }
-//                compraRepository.save(nuevaCompra);
-//                return nuevaCompra;
-//            }
-//            else{
-//                throw new excedeLimiteExeption();
-//            }
-//
-//    }
+    public Compra reservarCompra(int idFuncion, int identificadorUsuario,List<Articulo> articulos, List<Butaca> butacas) {
+        Funcion funcion = funcionRepository.findById(idFuncion)
+                .orElseThrow(() -> new RuntimeException("Función no encontrada"));
+
+        Usuario usuario = usuarioRepository.findById(identificadorUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+
+
+        if (butacas.size() == articulos.size()) {}
+            if(butacas.size() > 6){
+                int contador = 0;
+                Compra nuevaCompra = new Compra(false, null, usuario);
+                for(Butaca butaca : butacas){
+                        entradaService.reservarAsiento(nuevaCompra,articulos.get(contador),funcion,butaca);
+                        contador++;
+                    }
+                compraRepository.save(nuevaCompra);
+                return nuevaCompra;
+            }
+            else{
+                throw new excedeLimiteExeption();
+            }
+
+    }
 
 //    public void pagarCompra(int idCompra,int idMetodoPago) {
 //        Compra compra = compraRepository.findById(idCompra);
