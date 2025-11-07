@@ -1,5 +1,6 @@
 package com.api.Polimark.controler;
 
+import com.api.Polimark.dto.FuncionVisible;
 import com.api.Polimark.modelo.Funcion;
 import com.api.Polimark.service.FuncionService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,7 +21,7 @@ public class FuncionController {
     }
 
     @GetMapping("/buscar")
-    public List<Funcion> buscarFunciones(
+    public List<FuncionVisible> buscarFunciones(
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
 

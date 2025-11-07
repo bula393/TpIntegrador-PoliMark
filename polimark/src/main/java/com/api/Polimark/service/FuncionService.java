@@ -1,6 +1,8 @@
 package com.api.Polimark.service;
 
+import com.api.Polimark.dto.FuncionVisible;
 import com.api.Polimark.dto.RangoHorario;
+import com.api.Polimark.dto.SalaVisible;
 import com.api.Polimark.modelo.Funcion;
 import com.api.Polimark.repository.FuncionRepository;
 import com.api.Polimark.repository.EntradaRepository;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,34 +28,57 @@ public class FuncionService {
         this.entradaRepository = entradaRepository;
     }
 
-    public List<Funcion> buscarFunciones(LocalDate fecha, String sucursalNombre, String peliculaNombre) {
+    public List<FuncionVisible> buscarFunciones(LocalDate fecha, String sucursalNombre, String peliculaNombre) {
         // Traer todas las funciones ordenadas por horario
         List<Funcion> todasLasFunciones = funcionRepository.findAllByOrderByHorario();
+        List <Funcion> funcinesFiltradas = filtrarPorFecha(filtrarPorSucursal(filtrarPorPelicula(todasLasFunciones,peliculaNombre),sucursalNombre), fecha);
 
-        // Filtrar en memoria
-        return todasLasFunciones.stream()
-                .filter(funcion -> filtrarPorFecha(funcion, fecha))
-                .filter(funcion -> filtrarPorSucursal(funcion, sucursalNombre))
-                .filter(funcion -> filtrarPorPelicula(funcion, peliculaNombre))
-                .collect(Collectors.toList());
+
+
+        return generarListaFuncionesVisibles(funcinesFiltradas);
     }
 
-    private boolean filtrarPorFecha(Funcion funcion, LocalDate fecha) {
-        if (fecha == null) return true;
-        return funcion.getHorario().toLocalDate().equals(fecha);
+    private static List<FuncionVisible> generarListaFuncionesVisibles(List<Funcion> funciones) {
+        List<FuncionVisible> funcionVisibles = new ArrayList<>();
+        for (Funcion funcion : funciones){
+            funcionVisibles.add(new FuncionVisible(funcion.getHorario(),new SalaVisible(funcion.getSala().getIdSala(),funcion.getSala().getCapacidad(),funcion.getSala().getTipo(),funcion.getSala().getLugar().getNombre()),funcion.getPelicula()));
+        }
+        return funcionVisibles;
+
     }
 
-    private boolean filtrarPorSucursal(Funcion funcion, String sucursalNombre) {
-        if (sucursalNombre == null || sucursalNombre.trim().isEmpty()) return true;
-        return funcion.getSala() != null &&
-                funcion.getSala().getLugar() != null &&
-                sucursalNombre.equalsIgnoreCase(funcion.getSala().getLugar().getNombre());
+    private static List<Funcion> filtrarPorFecha(List<Funcion> funciones, LocalDate fecha) {
+        if (fecha == null){ return  funciones;  }
+        List<Funcion> nuevaListaFiltro = new ArrayList<>();
+        for (Funcion funcion : funciones){
+            if (funcion.getHorario().toLocalDate().equals(fecha)){
+                nuevaListaFiltro.add(funcion);
+            }
+        }
+        return nuevaListaFiltro;
+
     }
 
-    private boolean filtrarPorPelicula(Funcion funcion, String peliculaNombre) {
-        if (peliculaNombre == null || peliculaNombre.trim().isEmpty()) return true;
-        return funcion.getPelicula() != null &&
-                peliculaNombre.equalsIgnoreCase(funcion.getPelicula().getNombre());
+    private static List<Funcion> filtrarPorSucursal(List<Funcion> funciones, String sucursalNombre) {
+        if (sucursalNombre == null){ return  funciones;  }
+        List<Funcion> nuevaListaFiltro = new ArrayList<>();
+        for (Funcion funcion : funciones){
+            if (funcion.getSala().getLugar().getNombre().equals(sucursalNombre)){
+                nuevaListaFiltro.add(funcion);
+            }
+        }
+        return nuevaListaFiltro;
+    }
+
+    private static List<Funcion> filtrarPorPelicula(List<Funcion> funciones, String peliculaNombre) {
+        if (peliculaNombre == null){ return  funciones;  }
+        List<Funcion> nuevaListaFiltro = new ArrayList<>();
+        for (Funcion funcion : funciones){
+            if (funcion.getPelicula().getNombre().equals(peliculaNombre)){
+                nuevaListaFiltro.add(funcion);
+            }
+        }
+        return nuevaListaFiltro;
     }
 
     public List<Map<RangoHorario, Double>> ocupacionPorRangoEnLugar(LocalDate desde, LocalDate hasta, String nombreEstablecimiento) {
