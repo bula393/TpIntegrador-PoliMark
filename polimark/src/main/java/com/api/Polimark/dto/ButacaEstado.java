@@ -7,17 +7,17 @@ import com.api.Polimark.modelo.Funcion;
 public class ButacaEstado {
 
     private EstadoOcupacion estadoOcupacion;
-    private int idButaca;
-    private Funcion funcion;
+    private ButacaVisible butaca;
+    private int idFuncion;
 
     // Constructor vacío
     public ButacaEstado() {}
 
     // Constructor completo
-    public ButacaEstado(EstadoOcupacion estadoOcupacion, int idButaca, Funcion funcion) {
+    public ButacaEstado(EstadoOcupacion estadoOcupacion, int idFuncion, ButacaVisible butaca) {
         this.estadoOcupacion = estadoOcupacion;
-        this.funcion = funcion;
-        this.idButaca = idButaca;
+        this.idFuncion = idFuncion;
+        this.butaca = butaca;
     }
 
     // Constructor solo con estado y butaca
@@ -33,19 +33,19 @@ public class ButacaEstado {
         this.estadoOcupacion = estadoOcupacion;
     }
 
-    public int getIdButaca() {
-        return idButaca;
+    public ButacaVisible getButaca() {
+        return butaca;
     }
 
-    public void setIdButaca(int idButaca) {
-        this.idButaca = idButaca;
+    public void setButaca(ButacaVisible butaca) {
+        this.butaca = butaca;
     }
 
-    public Funcion getFuncion() {
-        return funcion;
+    public int getIdFuncion() {
+        return idFuncion;
     }
 
-    public void setFuncion(Funcion funcion) {
-        this.funcion = funcion;
+    public void setIdFuncion(int idFuncion) {
+        this.idFuncion = idFuncion;
     }
 }

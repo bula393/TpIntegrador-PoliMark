@@ -13,7 +13,8 @@ public class FuncionVisible {
         private SalaVisible sala;
         private Pelicula pelicula;
 
-        public FuncionVisible(LocalDateTime horario, SalaVisible sala, Pelicula pelicula) {
+        public FuncionVisible(Integer idFuncion,LocalDateTime horario, SalaVisible sala, Pelicula pelicula) {
+            this.idFuncion = idFuncion;
             this.horario = horario;
             this.sala = sala;
             this.pelicula = pelicula;

@@ -41,7 +41,7 @@ public class FuncionService {
     private static List<FuncionVisible> generarListaFuncionesVisibles(List<Funcion> funciones) {
         List<FuncionVisible> funcionVisibles = new ArrayList<>();
         for (Funcion funcion : funciones){
-            funcionVisibles.add(new FuncionVisible(funcion.getHorario(),new SalaVisible(funcion.getSala().getIdSala(),funcion.getSala().getCapacidad(),funcion.getSala().getTipo(),funcion.getSala().getLugar().getNombre()),funcion.getPelicula()));
+            funcionVisibles.add(new FuncionVisible(funcion.getIdFuncion(),funcion.getHorario(),new SalaVisible(funcion.getSala().getIdSala(),funcion.getSala().getCapacidad(),funcion.getSala().getTipo(),funcion.getSala().getLugar().getNombre()),funcion.getPelicula()));
         }
         return funcionVisibles;
 

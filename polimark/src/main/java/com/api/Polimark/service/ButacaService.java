@@ -1,6 +1,9 @@
 package com.api.Polimark.service;
 
 import com.api.Polimark.dto.ButacaEstado;
+import com.api.Polimark.dto.ButacaVisible;
+import com.api.Polimark.dto.FuncionVisible;
+import com.api.Polimark.dto.SalaVisible;
 import com.api.Polimark.modelo.*;
 import com.api.Polimark.repository.*;
 import org.springframework.stereotype.Service;
@@ -36,7 +39,8 @@ public class ButacaService {
             // Usar IDs para la consulta (más eficiente)
             boolean ocupada = entradaRepository.existsByFuncionIdFuncionAndButacaIdButaca(funcionId, butaca.getIdButaca());
             EstadoOcupacion estado = ocupada ? EstadoOcupacion.OCUPADO : EstadoOcupacion.LIBRE;
-            mapa.add(new ButacaEstado(estado, butaca.getIdButaca(), funcion));
+            ButacaVisible butacaVisible = new ButacaVisible(butaca.getIdButaca(),butaca.getColumna(),butaca.getFila(),new SalaVisible(funcion.getSala().getIdSala(),funcion.getSala().getCapacidad(),funcion.getSala().getTipo(),funcion.getSala().getLugar().getNombre()));
+            mapa.add(new ButacaEstado(estado, funcion.getIdFuncion(), butacaVisible));
         }
 
         return mapa;
