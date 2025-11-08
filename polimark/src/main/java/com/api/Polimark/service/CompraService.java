@@ -1,5 +1,9 @@
 package com.api.Polimark.service;
 
+import com.api.Polimark.dto.ArticuloVisible;
+import com.api.Polimark.dto.ButacaVisible;
+import com.api.Polimark.dto.FuncionVisible;
+import com.api.Polimark.dto.ResumenCompra;
 import com.api.Polimark.modelo.*;
 import com.api.Polimark.repository.*;
 import org.springframework.stereotype.Service;
@@ -14,9 +18,10 @@ public class CompraService {
     private final MetodoPagoRepository metodoPagoRepository;
     private final CompraRepository compraRepository;
     private final ArticuloRepository articuloRepository;
+    private final ButacaRepository butacaRepository;
 
     public CompraService(EntradaService entradaService, FuncionRepository funcionRepository, UsuarioRepository usuarioRepository,
-                         MetodoPagoRepository metodoPagoRepository, CompraRepository compraRepository, ArticuloRepository articuloRepository)
+                         MetodoPagoRepository metodoPagoRepository, CompraRepository compraRepository, ArticuloRepository articuloRepository, ButacaRepository butacaRepository)
         {
             this.entradaService = entradaService;
             this.funcionRepository = funcionRepository;
@@ -24,8 +29,9 @@ public class CompraService {
             this.metodoPagoRepository = metodoPagoRepository;
             this.compraRepository = compraRepository;
             this.articuloRepository = articuloRepository;
+            this.butacaRepository = butacaRepository;
         }
-    public Compra reservarCompra(int idFuncion, int identificadorUsuario,List<Articulo> articulos, List<Butaca> butacas) {
+    public Compra reservarCompra(int idFuncion, int identificadorUsuario,List<Integer> articulosId, List<Integer> butacasid) {
         Funcion funcion = funcionRepository.findById(idFuncion)
                 .orElseThrow(() -> new RuntimeException("Función no encontrada"));
 
@@ -34,12 +40,17 @@ public class CompraService {
 
 
 
-        if (butacas.size() == articulos.size()) {}
-            if(butacas.size() > 6){
+        if (butacasid.size() == articulosId.size()) {}
+            if(butacasid.size() > 6){
                 int contador = 0;
                 Compra nuevaCompra = new Compra(false, null, usuario);
-                for(Butaca butaca : butacas){
-                        entradaService.reservarAsiento(nuevaCompra,articulos.get(contador),funcion,butaca);
+                for(Integer butacaId : butacasid){
+                        Articulo articulo = articuloRepository.findById(articulosId.get(contador))
+                                .orElseThrow(() -> new RuntimeException("articulo no encontrado"));
+
+                        Butaca butaca = butacaRepository.findById(butacaId)
+                                .orElseThrow(() -> new RuntimeException("butaca no encontrado"));
+                        entradaService.reservarAsiento(nuevaCompra,articulo,funcion,butaca);
                         contador++;
                     }
                 compraRepository.save(nuevaCompra);
@@ -49,6 +60,23 @@ public class CompraService {
                 throw new excedeLimiteExeption();
             }
 
+    }
+
+    public ResumenCompra generarResumenCompra(int idCompra){
+        Compra compra = compraRepository.findById(idCompra)
+                .orElseThrow(() -> new RuntimeException("compra no encontrada"));
+
+        List<ButacaVisible> butacas = List.of();
+        List<ArticuloVisible> articulos = List.of();
+        FuncionVisible funcionVisible = null;
+        ResumenCompra resumenCompra = new ResumenCompra(butacas,calcularTotal(compra),articulos,funcionVisible);
+
+        return resumenCompra;
+    }
+
+    public static int calcularTotal(Compra compra){
+        int total = 0;
+        return total;
     }
 
 //    public void pagarCompra(int idCompra,int idMetodoPago) {

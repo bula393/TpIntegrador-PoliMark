@@ -1,5 +1,6 @@
 package com.api.Polimark.controler;
 
+import com.api.Polimark.dto.ResumenCompra;
 import com.api.Polimark.modelo.*;
 import com.api.Polimark.service.*;
 import org.springframework.http.ResponseEntity;
@@ -18,16 +19,21 @@ public class CompraController {
         this.compraService = compraService;
     }
 
-    @PostMapping
-    public ResponseEntity<String> reserva(@RequestParam(required = true) List<int> butacasid,
+    @PostMapping("/reservar")
+    public ResponseEntity<String> reserva(@RequestParam(required = true) List<Integer> butacasid,
                                           @RequestParam(required = true) int idUsuario,
                                           @RequestParam(required = true) int idFuncion,
-                                          @RequestParam(required = true) List<Articulo> articulosId) {
+                                          @RequestParam(required = true) List<Integer> articulosId) {
         try {
-            return ResponseEntity.ok(compraService.reservarCompra(idFuncion,idUsuario,articulos,butacas));
+            return ResponseEntity.ok(compraService.reservarCompra(idFuncion,idUsuario,articulosId,butacasid));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/resumenCompra/{id}")
+    public ResumenCompra getResumenCompra(@PathVariable Integer idCompra) {
+        return compraService.generarResumenCompra(idCompra);
     }
 
 
