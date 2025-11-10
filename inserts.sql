@@ -93,43 +93,28 @@ INSERT INTO `articulo` (`idArticulo`, `precio`) VALUES
 (10, 35);
 
 -- Insert para tabla producto
-INSERT INTO `producto` (`nombre`, `descripcion`, `articuloIdArticulo`, `stock`) VALUES
-('Coca Cola 500ml', 'Gaseosa Coca Cola 500ml', 1, 100),
-('Pochoclos Grande', 'Pochoclos tamaño grande', 2, 50),
-('Combo Familiar', '2 Coca + 1 Pochoclos Grande', 3, 30),
-('Agua Mineral', 'Agua sin gas 500ml', 4, 80),
-('Sandwich Jamón y Queso', 'Sandwich fresco', 5, 25),
-('Gomitas', 'Gomitas surtidas 100gr', 6, 60),
-('Chocolate', 'Tableta de chocolate', 7, 45),
-('Combo Pareja', '2 Coca + 2 Pochoclos Mediano', 8, 20),
-('Nachos con Queso', 'Nachos con salsa de queso', 9, 35),
-('Helado', 'Helado en pote 250ml', 10, 40);
+INSERT INTO `producto` (`nombre`, `descripcion`, `articuloIdArticulo`,`categoria`, `stock`) VALUES
+('Coca Cola 500ml', 'Gaseosa Coca Cola 500ml', 1, 'Bebida', 100),
+('Pochoclos Grande', 'Pochoclos tamaño grande', 2, 'Snack', 50),
+('Agua Mineral', 'Agua sin gas 500ml', 4, 'Bebida', 80),
+('Sandwich Jamón y Queso', 'Sandwich fresco', 5, 'Comida', 25),
+('Gomitas', 'Gomitas surtidas 100gr', 6, 'Snack', 60),
+('Chocolate', 'Tableta de chocolate', 7, 'Snack', 45),
+('Nachos con Queso', 'Nachos con salsa de queso', 9, 'Snack', 35),
+('Helado', 'Helado en pote 250ml', 10, 'Snack', 40);
 
 -- Insert para tabla promociones
 INSERT INTO `promociones` (`idPromociones`, `tipo`, `caracteristicas`, `rangoIdRango`) VALUES
-(1, 'DESCUENTO', '20% off en combos los martes', 1),
-(2, 'COMBO', 'Entrada + Pochoclos + Bebida', 2),
-(3, 'DOSXUNO', '2x1 en entradas los miércoles', 3),
-(4, 'DESCUENTO', '15% off en productos', 2),
-(5, 'COMBO', 'Combo Familiar 4 personas', 3),
-(6, 'DOSXUNO', '2x1 en bebidas', 1),
-(7, 'DESCUENTO', '10% off en merchandising', 2),
-(8, 'COMBO', 'Entrada + Bebida a precio especial', 3),
-(9, 'DOSXUNO', '2x1 en pochoclos jueves', 1),
-(10, 'DESCUENTO', '25% off primera compra online', 3);
-
--- Insert para tabla articuloHasPromocion
-INSERT INTO `articuloHasPromocion` (`articuloIdArticulo`, `promocionesIdPromociones`) VALUES
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(5, 5),
-(6, 6),
-(7, 7),
-(8, 8),
-(9, 9),
-(10, 10);
+(1, 'DESCUENTO', '20-combos-martes', 1),
+(2, 'COMBO', 'Pochoclos+Bebida-3000', 2),
+(3, 'DOSXUNO', '2x1-entrada-miércoles', 3),
+(4, 'DESCUENTO', '15-producto', 2),
+(5, 'COMBO', 'Nachos+Nachos+Bebida+Bebida+Helado-12000', 3),
+(6, 'DOSXUNO', '3x2-Bebida', 1),
+(7, 'DESCUENTO', '10-Snack', 2),
+(8, 'COMBO', 'Nachos+Nachos+Bebida-7000', 3),
+(9, 'DOSXUNO', '2x1-pochoclos-jueves', 1),
+(10, 'DESCUENTO', '5-entrada-viernes', 2);
 
 -- Insert para tabla funcion
 INSERT INTO `funcion` (`salaIdSala`, `peliculaNombre`, `horario`, `idFuncion`) VALUES

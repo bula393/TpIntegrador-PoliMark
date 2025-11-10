@@ -294,6 +294,7 @@ CREATE TABLE `producto` (
   `nombre` varchar(45) DEFAULT NULL,
   `descripcion` varchar(45) DEFAULT NULL,
   `articuloIdArticulo` int NOT NULL,
+  `categoria` varchar(45) DEFAULT NULL,
   `stock` int DEFAULT NULL,
   PRIMARY KEY (`articuloIdArticulo`),
   KEY `fk_producto_articulo1_idx` (`articuloIdArticulo`),
@@ -341,8 +342,8 @@ UNLOCK TABLES;
 --
 -- Table structure for table `articuloHasPromocion`
 --
-
-DROP TABLE IF EXISTS `articuloHasPromocion`;
+/*
+DROP TABLE IF EXISTS `compraHasPromocion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `articuloHasPromocion` (
@@ -355,10 +356,29 @@ CREATE TABLE `articuloHasPromocion` (
   CONSTRAINT `fk_articuloHasPromocion_promociones1` FOREIGN KEY (`promocionesIdPromociones`) REFERENCES `promociones` (`idPromociones`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
+*/
 --
 -- Dumping data for table `articuloHasPromocion`
 --
+
+DROP TABLE IF EXISTS `compraHasPromocion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+
+CREATE TABLE `articuloHasPromocion` (
+  `promocionesIdPromociones` int NOT NULL,
+  `articuloIdArticulo` int NOT NULL,
+  PRIMARY KEY (`promocionesIdPromociones`,`articuloIdArticulo`),
+  KEY `fk_articuloHasPromocion_articulo1_idx` (`articuloIdArticulo`),
+  KEY `fk_articuloHasPromocion_promociones1_idx` (`promocionesIdPromociones`),
+  CONSTRAINT `fk_articuloHasPromocion_articulo1` FOREIGN KEY (`articuloIdArticulo`) REFERENCES `articulo` (`idArticulo`),
+  CONSTRAINT `fk_articuloHasPromocion_promociones1` FOREIGN KEY (`promocionesIdPromociones`) REFERENCES `promociones` (`idPromociones`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+--
+-- Dumping data for table `articuloHasPromocion`
+--
+
 
 LOCK TABLES `articuloHasPromocion` WRITE;
 /*!40000 ALTER TABLE `articuloHasPromocion` DISABLE KEYS */;
