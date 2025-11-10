@@ -13,25 +13,31 @@ import java.util.Map;
 @Service
 public class ArticuloService {
     private final ArticuloRepository articuloRepository;
+    private final CompraRepository compraRepository;
     private final PromocionRepository promocionRepository;
-    private final PromocionHasArticuloRepository promocionHasArticuloRepository;
+    private final CompraHasPromocionRepository compraHasPromocionRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public ArticuloService(ArticuloRepository articuloRepository,
+    public ArticuloService(ArticuloRepository articuloRepository, CompraRepository compraRepository,
                            PromocionRepository promocionRepository,
-                           PromocionHasArticuloRepository promocionHasArticuloRepository) {
+                           CompraHasPromocionRepository compraHasPromocionRepository, UsuarioRepository usuarioRepository) {
         this.articuloRepository = articuloRepository;
+        this.compraRepository = compraRepository;
         this.promocionRepository = promocionRepository;
-        this.promocionHasArticuloRepository = promocionHasArticuloRepository;
+        this.compraHasPromocionRepository = compraHasPromocionRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Transactional
-    public List<Articulo> crearArticulosConPromociones(List<Map<Integer, Integer>> articulosPromociones) {
+    public List<Articulo> crearArticulosConPromociones(List<Map<Integer, Integer>> articulosPromociones, int idUsuario) {
         List<Articulo> articulosCreados = new ArrayList<>();
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Compra compraGuardada = compraRepository.save(new Compra(false, null, usuario)); // CAPTURAR LA COMPRA GUARDADA
 
         for (Map<Integer, Integer> articuloPromo : articulosPromociones) {
-            // Crear nuevo artículo (ID autoincremental)
             Articulo nuevoArticulo = new Articulo();
-            nuevoArticulo.setPrecio(Entrada.getPrecioBasa()); // Ejemplo
+            nuevoArticulo.setPrecio(Entrada.getPrecioBasa());
 
             Articulo articuloGuardado = articuloRepository.save(nuevoArticulo);
             articulosCreados.add(articuloGuardado);
@@ -45,26 +51,16 @@ public class ArticuloService {
                 if (idPromocion != null) {
                     // Verificar si la promoción existe
                     Promocion promocion = promocionRepository.findById(idPromocion)
-                            .orElseThrow(() -> new RuntimeException("Promoción no encontrada con ID: " + idPromocion));
+                            .orElseThrow(() -> new RuntimeException("Promoción no encontrada"));
 
-                    // Crear la relación PromocionHasArticulo
-                    PromocionHasArticulo promocionHasArticulo = new PromocionHasArticulo();
-                    promocionHasArticulo.setPromocion(promocion);
-                    promocionHasArticulo.setArticulo(articuloGuardado);
-                    // Si tienes campo para cantidad en la tabla de unión, setearlo aquí
-                    // promocionHasArticulo.setCantidad(cantidad);
-
-                    promocionHasArticuloRepository.save(promocionHasArticulo);
+                    // Usar compraGuardada en lugar de nuevaCompra
+                    CompraHasPromocion compraHasPromocion = new CompraHasPromocion(compraGuardada, promocion, cantidad);
+                    compraHasPromocionRepository.save(compraHasPromocion); // esta línea ya debería funcionar
                 }
             }
         }
-
         return articulosCreados;
     }
 
-    // Método alternativo que recibe el DTO
-    @Transactional
-    public List<Articulo> crearArticulosConPromociones(ArticuloPromocionRequest request) {
-        return crearArticulosConPromociones(request.getArticulosPromociones());
-    }
+
 }

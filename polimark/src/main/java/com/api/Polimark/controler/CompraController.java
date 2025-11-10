@@ -19,13 +19,14 @@ public class CompraController {
         this.compraService = compraService;
     }
 
+
     @PostMapping("/reservar")
-    public ResponseEntity<String> reserva(@RequestParam(required = true) List<Integer> butacasid,
-                                          @RequestParam(required = true) int idUsuario,
+    public ResponseEntity<?> reserva(@RequestParam(required = true) List<Integer> butacasid,
+                                          @RequestParam(required = true) int idCompra,
                                           @RequestParam(required = true) int idFuncion,
                                           @RequestParam(required = true) List<Integer> articulosId) {
         try {
-            return ResponseEntity.ok(compraService.reservarCompra(idFuncion,idUsuario,articulosId,butacasid));
+            return ResponseEntity.ok(compraService.reservarCompra(idFuncion,idCompra,articulosId,butacasid));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

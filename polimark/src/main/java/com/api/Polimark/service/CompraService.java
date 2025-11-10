@@ -14,36 +14,31 @@ import java.util.List;
 public class CompraService {
     private final EntradaService entradaService;
     private final FuncionRepository funcionRepository;
-    private final UsuarioRepository usuarioRepository;
     private final MetodoPagoRepository metodoPagoRepository;
     private final CompraRepository compraRepository;
     private final ArticuloRepository articuloRepository;
     private final ButacaRepository butacaRepository;
+    private final CompraHasPromocionRepository compraHasPromocionRepository;
 
-    public CompraService(EntradaService entradaService, FuncionRepository funcionRepository, UsuarioRepository usuarioRepository,
-                         MetodoPagoRepository metodoPagoRepository, CompraRepository compraRepository, ArticuloRepository articuloRepository, ButacaRepository butacaRepository)
+    public CompraService(EntradaService entradaService, FuncionRepository funcionRepository,
+                         MetodoPagoRepository metodoPagoRepository, CompraRepository compraRepository, ArticuloRepository articuloRepository, ButacaRepository butacaRepository, CompraHasPromocionRepository compraHasPromocionRepository)
         {
             this.entradaService = entradaService;
             this.funcionRepository = funcionRepository;
-            this.usuarioRepository = usuarioRepository;
             this.metodoPagoRepository = metodoPagoRepository;
             this.compraRepository = compraRepository;
             this.articuloRepository = articuloRepository;
             this.butacaRepository = butacaRepository;
+            this.compraHasPromocionRepository = compraHasPromocionRepository;
         }
-    public Compra reservarCompra(int idFuncion, int identificadorUsuario,List<Integer> articulosId, List<Integer> butacasid) {
+    public Compra reservarCompra(int idFuncion, int idCompra,List<Integer> articulosId, List<Integer> butacasid) {
         Funcion funcion = funcionRepository.findById(idFuncion)
                 .orElseThrow(() -> new RuntimeException("Función no encontrada"));
-
-        Usuario usuario = usuarioRepository.findById(identificadorUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-
-
         if (butacasid.size() == articulosId.size()) {}
             if(butacasid.size() > 6){
                 int contador = 0;
-                Compra nuevaCompra = new Compra(false, null, usuario);
+                Compra nuevaCompra = compraRepository.findById(idCompra)
+                        .orElseThrow(() -> new RuntimeException("compra no encontrada"));;
                 for(Integer butacaId : butacasid){
                         Articulo articulo = articuloRepository.findById(articulosId.get(contador))
                                 .orElseThrow(() -> new RuntimeException("articulo no encontrado"));
@@ -53,7 +48,6 @@ public class CompraService {
                         entradaService.reservarAsiento(nuevaCompra,articulo,funcion,butaca);
                         contador++;
                     }
-                compraRepository.save(nuevaCompra);
                 return nuevaCompra;
             }
             else{
@@ -66,9 +60,12 @@ public class CompraService {
         Compra compra = compraRepository.findById(idCompra)
                 .orElseThrow(() -> new RuntimeException("compra no encontrada"));
 
+
+
         List<ButacaVisible> butacas = List.of();
         List<ArticuloVisible> articulos = List.of();
-        FuncionVisible funcionVisible = null;
+        List<CompraHasPromocion> compraHasPromocions = compraHasPromocionRepository.findByCompra_Idcompra(idCompra);
+        FuncionVisible  funcionVisible =;
         ResumenCompra resumenCompra = new ResumenCompra(butacas,calcularTotal(compra),articulos,funcionVisible);
 
         return resumenCompra;
