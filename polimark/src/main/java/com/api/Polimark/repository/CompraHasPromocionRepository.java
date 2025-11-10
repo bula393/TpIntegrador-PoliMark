@@ -9,5 +9,5 @@ import java.util.List;
 
 
 public interface CompraHasPromocionRepository extends JpaRepository<CompraHasPromocion, Integer> {
-    List<CompraHasPromocion> findByCompra_Idcompra(Integer idcompra);
+    List<CompraHasPromocion> findByCompra_idCompra(Integer idcompra);
 }

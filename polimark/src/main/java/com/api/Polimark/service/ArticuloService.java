@@ -36,17 +36,19 @@ public class ArticuloService {
         Compra compraGuardada = compraRepository.save(new Compra(false, null, usuario)); // CAPTURAR LA COMPRA GUARDADA
 
         for (Map<Integer, Integer> articuloPromo : articulosPromociones) {
-            Articulo nuevoArticulo = new Articulo();
-            nuevoArticulo.setPrecio(Entrada.getPrecioBasa());
 
-            Articulo articuloGuardado = articuloRepository.save(nuevoArticulo);
-            articulosCreados.add(articuloGuardado);
 
             // Procesar las promociones asociadas
             for (Map.Entry<Integer, Integer> entry : articuloPromo.entrySet()) {
                 Integer idPromocion = entry.getKey();
                 Integer cantidad = entry.getValue();
+                for (int i = 0; i < cantidad; i++) {
+                    Articulo nuevoArticulo = new Articulo();
+                    nuevoArticulo.setPrecio(Entrada.getPrecioBasa());
 
+                    Articulo articuloGuardado = articuloRepository.save(nuevoArticulo);
+                    articulosCreados.add(articuloGuardado);
+                }
                 // Si el idPromocion no es null, crear la relación
                 if (idPromocion != null) {
                     // Verificar si la promoción existe

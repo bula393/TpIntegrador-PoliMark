@@ -1,9 +1,6 @@
 package com.api.Polimark.service;
 
-import com.api.Polimark.dto.ArticuloVisible;
-import com.api.Polimark.dto.ButacaVisible;
-import com.api.Polimark.dto.FuncionVisible;
-import com.api.Polimark.dto.ResumenCompra;
+import com.api.Polimark.dto.*;
 import com.api.Polimark.modelo.*;
 import com.api.Polimark.repository.*;
 import org.springframework.stereotype.Service;
@@ -13,6 +10,7 @@ import java.util.List;
 @Service
 public class CompraService {
     private final EntradaService entradaService;
+    private final EntradaRepository entradaRepository;
     private final FuncionRepository funcionRepository;
     private final MetodoPagoRepository metodoPagoRepository;
     private final CompraRepository compraRepository;
@@ -20,10 +18,11 @@ public class CompraService {
     private final ButacaRepository butacaRepository;
     private final CompraHasPromocionRepository compraHasPromocionRepository;
 
-    public CompraService(EntradaService entradaService, FuncionRepository funcionRepository,
+    public CompraService(EntradaService entradaService, EntradaRepository entradaRepository, FuncionRepository funcionRepository,
                          MetodoPagoRepository metodoPagoRepository, CompraRepository compraRepository, ArticuloRepository articuloRepository, ButacaRepository butacaRepository, CompraHasPromocionRepository compraHasPromocionRepository)
         {
             this.entradaService = entradaService;
+            this.entradaRepository = entradaRepository;
             this.funcionRepository = funcionRepository;
             this.metodoPagoRepository = metodoPagoRepository;
             this.compraRepository = compraRepository;
@@ -56,20 +55,21 @@ public class CompraService {
 
     }
 
-    public ResumenCompra generarResumenCompra(int idCompra){
-        Compra compra = compraRepository.findById(idCompra)
-                .orElseThrow(() -> new RuntimeException("compra no encontrada"));
-
-
-
-        List<ButacaVisible> butacas = List.of();
-        List<ArticuloVisible> articulos = List.of();
-        List<CompraHasPromocion> compraHasPromocions = compraHasPromocionRepository.findByCompra_Idcompra(idCompra);
-        FuncionVisible  funcionVisible =;
-        ResumenCompra resumenCompra = new ResumenCompra(butacas,calcularTotal(compra),articulos,funcionVisible);
-
-        return resumenCompra;
-    }
+//    public ResumenCompra generarResumenCompra(int idCompra){
+//        Compra compra = compraRepository.findById(idCompra)
+//                .orElseThrow(() -> new RuntimeException("compra no encontrada"));
+//
+//
+//
+//        List<ButacaVisible> butacas = List.of();
+//        List<Entrada> entradas = entradaRepository.findByCompra_Idcompra(idCompra);
+//        Funcion funcionCompra = entradas.get(0).getFuncion();
+//        List<CompraHasPromocion> compraHasPromocions = compraHasPromocionRepository.findByCompra_Idcompra(idCompra);
+//        FuncionVisible  funcionVisible = new FuncionVisible(funcionCompra.getIdFuncion(),funcionCompra.getHorario(),new SalaVisible(funcionCompra.getSala().getIdSala(),funcionCompra.getSala().getCapacidad(),funcionCompra.getSala().getTipo(),funcionCompra.getSala().getLugar().getNombre()),funcionCompra.getPelicula());
+//        ResumenCompra resumenCompra = new ResumenCompra(butacas,calcularTotal(compra),entradas,,funcionVisible);
+//
+//        return resumenCompra;
+//    }
 
     public static int calcularTotal(Compra compra){
         int total = 0;

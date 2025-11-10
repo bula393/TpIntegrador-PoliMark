@@ -32,10 +32,10 @@ public class CompraController {
         }
     }
 
-    @GetMapping("/resumenCompra/{id}")
-    public ResumenCompra getResumenCompra(@PathVariable Integer idCompra) {
-        return compraService.generarResumenCompra(idCompra);
-    }
+//    @GetMapping("/resumenCompra/{id}")
+//    public ResumenCompra getResumenCompra(@PathVariable Integer idCompra) {
+//        return compraService.generarResumenCompra(idCompra);
+//    }
 
 
 }
