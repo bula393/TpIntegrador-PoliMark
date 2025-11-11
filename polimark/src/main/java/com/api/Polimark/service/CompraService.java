@@ -6,6 +6,7 @@ import com.api.Polimark.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CompraService {
@@ -55,32 +56,35 @@ public class CompraService {
 
     }
 
-//    public ResumenCompra generarResumenCompra(int idCompra){
-//        Compra compra = compraRepository.findById(idCompra)
-//                .orElseThrow(() -> new RuntimeException("compra no encontrada"));
-//
-//
-//
-//        List<ButacaVisible> butacas = List.of();
-//        List<Entrada> entradas = entradaRepository.findByCompra_Idcompra(idCompra);
-//        Funcion funcionCompra = entradas.get(0).getFuncion();
-//        List<CompraHasPromocion> compraHasPromocions = compraHasPromocionRepository.findByCompra_Idcompra(idCompra);
-//        FuncionVisible  funcionVisible = new FuncionVisible(funcionCompra.getIdFuncion(),funcionCompra.getHorario(),new SalaVisible(funcionCompra.getSala().getIdSala(),funcionCompra.getSala().getCapacidad(),funcionCompra.getSala().getTipo(),funcionCompra.getSala().getLugar().getNombre()),funcionCompra.getPelicula());
-//        ResumenCompra resumenCompra = new ResumenCompra(butacas,calcularTotal(compra),entradas,,funcionVisible);
-//
-//        return resumenCompra;
-//    }
+    public ResumenCompra generarResumenCompra(int idCompra){
+        Compra compra = compraRepository.findById(idCompra)
+                .orElseThrow(() -> new RuntimeException("compra no encontrada"));
+
+
+
+        List<ButacaVisible> butacas = List.of();
+        List<Entrada> entradas = entradaRepository.findByCompra_idCompra(idCompra);
+        Funcion funcionCompra = entradas.get(0).getFuncion();
+        List<CompraHasPromocion> compraHasPromocions = compraHasPromocionRepository.findByCompra_idCompra(idCompra);
+        FuncionVisible  funcionVisible = new FuncionVisible(funcionCompra.getIdFuncion(),funcionCompra.getHorario(),new SalaVisible(funcionCompra.getSala().getIdSala(),funcionCompra.getSala().getCapacidad(),funcionCompra.getSala().getTipo(),funcionCompra.getSala().getLugar().getNombre()),funcionCompra.getPelicula());
+        ResumenCompra resumenCompra = new ResumenCompra(butacas,calcularTotal(compra),entradas,,funcionVisible);
+
+        return resumenCompra;
+    }
 
     public static int calcularTotal(Compra compra){
         int total = 0;
         return total;
     }
 
-//    public void pagarCompra(int idCompra,int idMetodoPago) {
-//        Compra compra = compraRepository.findById(idCompra);
-//        MetodoPago metodoPago = metodoPagoRepository.findById(idMetodoPago)
-//        .orElseThrow(() -> new RuntimeException("Metodo de Pago no encontrada"));
-//
-//
-//    }
+    public ResumenCompra pagarCompra(int idCompra,int idMetodoPago) {
+        Optional<Compra> compraOptional = compraRepository.findById(idCompra);
+        Compra compra = compraOptional.get();
+        MetodoPago metodoPago = metodoPagoRepository.findById(idMetodoPago)
+        .orElseThrow(() -> new RuntimeException("Metodo de Pago no encontrada"));
+        compra.setMetodoPago(metodoPago);
+        compra.setPagado(true);
+        compraRepository.save(compra);
+        return generarResumenCompra(idCompra);
+    }
 }

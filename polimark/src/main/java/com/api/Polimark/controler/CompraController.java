@@ -32,6 +32,16 @@ public class CompraController {
         }
     }
 
+    @PostMapping("/reservar")
+    public ResponseEntity<?> reserva(@RequestParam(required = true) int idMetodoPago,
+                                     @RequestParam(required = true) int idCompra) {
+        try {
+            return ResponseEntity.ok(compraService.pagarCompra(idCompra,idMetodoPago));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 //    @GetMapping("/resumenCompra/{id}")
 //    public ResumenCompra getResumenCompra(@PathVariable Integer idCompra) {
 //        return compraService.generarResumenCompra(idCompra);
