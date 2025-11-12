@@ -1,6 +1,7 @@
 package com.api.Polimark.controler;
 
 import com.api.Polimark.dto.Perfil;
+import com.api.Polimark.dto.UsuarioRequest;
 import com.api.Polimark.modelo.Rango;
 import com.api.Polimark.modelo.Usuario;
 import com.api.Polimark.service.UsuarioService;
@@ -19,13 +20,13 @@ public class UsuarioControler {
         this.usuarioService = usuarioService;
     }
 
-    @GetMapping("/{id}/perfil")
+    @GetMapping("{id}/perfil")
     public Perfil perfil(@PathVariable int idCliente) {
         return usuarioService.obtenerPerfil(idCliente);
     }
 
     @PostMapping("crearUsuario")
-    public ResponseEntity<?> crearUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<?> crearUsuario(@RequestBody UsuarioRequest usuario) {
         try {
             return ResponseEntity.ok(usuarioService.crearUsuario(usuario));
         }
@@ -33,8 +34,23 @@ public class UsuarioControler {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @GetMapping("/{id}/logIn")
-    public ResponseEntity<?> usuario(@PathVariable int idCliente, @RequestBody String contrasenia) {
+
+    // Json para crear usuario
+//    {
+//        "identificador": 0,
+//            "nombre": "María",
+//            "apellido": "González",
+//            "mail": "maria.gonzalez@ejemplo.com",
+//            "contrasena": "miPassword123",
+//            "puntos": 0,
+//            "rangoId": 1
+//    }
+
+
+
+
+    @GetMapping("/{idCliente}/logIn")
+    public ResponseEntity<?> logIn(@PathVariable int idCliente, @RequestBody String contrasenia) {
         try {
             return ResponseEntity.ok(usuarioService.usuarioLogueado(idCliente,contrasenia));
         }
@@ -44,6 +60,10 @@ public class UsuarioControler {
                     .body("Error inesperado: " + e.getMessage());
         }
     }
+// json para loguearse
+//    {
+//            "contrasena": "miPassword123",
+//    }
 
     @PutMapping("/{id}/adquirirRango")
     public ResponseEntity<?> adquirirRango(@PathVariable int idCliente, @RequestBody Rango rango) {

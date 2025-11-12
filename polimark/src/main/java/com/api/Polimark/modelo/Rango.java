@@ -2,7 +2,7 @@ package com.api.Polimark.modelo;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Rango")
+@Table(name = "rango")
 public class Rango {
 
     @Id

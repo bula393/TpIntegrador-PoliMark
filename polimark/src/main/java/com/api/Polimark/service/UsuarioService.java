@@ -1,6 +1,7 @@
 package com.api.Polimark.service;
 
 import com.api.Polimark.dto.Perfil;
+import com.api.Polimark.dto.UsuarioRequest;
 import com.api.Polimark.modelo.*;
 import com.api.Polimark.repository.*;
 import org.springframework.stereotype.Service;
@@ -26,22 +27,19 @@ public class UsuarioService {
         this.entradaRepository = entradaRepository;
     }
 
-    public Usuario crearUsuario(Usuario usuario){
+    public Usuario crearUsuario(UsuarioRequest usuarioRequest){
+        Usuario usuario = new Usuario(usuarioRequest.getIdentificador(),usuarioRequest.getNombre(),usuarioRequest.getApellido(),usuarioRequest.getMail(),generarHash(usuarioRequest.getContrasena()));
         return usuarioRepository.save(usuario);
     }
 
-    public Usuario darRangoCliente(int idCliente,Rango rango){
-        Usuario usuario = usuarioRepository.findById(idCliente)
-                .orElseThrow(() -> new RuntimeException("Cliente no existente"));
-        usuario.setRango(rango);
-        return usuarioRepository.save(usuario);
-    }
 
-    public Usuario usuarioLogueado(int idCliente,String contrasenia){
+
+    public UsuarioRequest usuarioLogueado(int idCliente,String contrasenia){
         Usuario usuario = usuarioRepository.findById(idCliente)
                 .orElseThrow(() -> new RuntimeException("Cliente no existente"));
-        if (usuario.getContrasenaHash().equals(generarHash(contrasenia))){
-            return usuario;
+        byte[] contraseniaByte = generarHash(contrasenia);
+        if (usuario.getContrasenaHash().equals(contraseniaByte)){
+            return new UsuarioRequest(usuario);
         }
         throw new ContraseniaIncorrectaExeptiom();
     }
@@ -55,7 +53,12 @@ public class UsuarioService {
         }
         return md.digest(contrasenia.getBytes());
     }
-
+    public Usuario darRangoCliente(int idCliente,Rango rango){
+        Usuario usuario = usuarioRepository.findById(idCliente)
+                .orElseThrow(() -> new RuntimeException("Cliente no existente"));
+        usuario.setRango(rango);
+        return usuarioRepository.save(usuario);
+    }
     public Perfil obtenerPerfil(int idCliente) {
         Usuario usuario = usuarioRepository.findById(idCliente)
                 .orElseThrow(() -> new RuntimeException("Cliente no existente"));

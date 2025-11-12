@@ -1,4 +1,3 @@
-
 -- MySQL dump 10.13  Distrib 8.0.43, for Linux (x86_64)
 --
 -- Host: 127.0.0.1    Database: Polimark
@@ -59,9 +58,9 @@ CREATE TABLE `usuario` (
   `apellido` varchar(45) DEFAULT NULL,
   `mail` varchar(45) DEFAULT NULL,
   `contrasenaHash` binary(60) DEFAULT NULL,
-  `rangoIdRango` int NOT NULL,
+  `rangoIdRango` int NULL,
   `puntos` int DEFAULT NULL,
-  PRIMARY KEY (`identificador`,`rangoIdRango`),
+  PRIMARY KEY (`identificador`),
   KEY `fk_usuario_rango1_idx` (`rangoIdRango`),
   CONSTRAINT `fk_usuario_rango1` FOREIGN KEY (`rangoIdRango`) REFERENCES `rango` (`idRango`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -278,7 +277,7 @@ DROP TABLE IF EXISTS `compraHasPromocion`;
 CREATE TABLE `compraHasPromocion` (
   `compraIdCompra` int NOT NULL,
   `promocionesIdPromociones` int NOT NULL,
-  'cantidadAplicada' int DEFAULT NULL,
+  `cantidadAplicada` int DEFAULT NULL,
   PRIMARY KEY (`compraIdCompra`,`promocionesIdPromociones`),
   KEY `fk_compra_has_promociones_compra1_idx` (`compraIdCompra`),
   KEY `fk_compra_has_promociones_promociones1_idx` (`promocionesIdPromociones`),
