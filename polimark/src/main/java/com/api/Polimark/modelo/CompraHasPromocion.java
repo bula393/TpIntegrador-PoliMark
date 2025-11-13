@@ -58,4 +58,12 @@ public class CompraHasPromocion implements Serializable {
     public void setPromociones(Promocion promociones) {
         this.promociones = promociones;
     }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
 }

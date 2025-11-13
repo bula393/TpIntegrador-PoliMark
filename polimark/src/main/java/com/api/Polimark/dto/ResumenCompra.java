@@ -1,52 +1,36 @@
 package com.api.Polimark.dto;
 
-import com.api.Polimark.modelo.Articulo;
-import com.api.Polimark.modelo.Butaca;
-
 import java.util.List;
 
 public class ResumenCompra {
     private List<ButacaVisible> butacasVisibles;
-    private List<ArticuloVisible> articuloVisibles;
-    private FuncionVisible funcionVisibles;
+    private List<EntradaVisible> entradasVisibles;
+    private List<ProductoVisible> productosVisibles;
+    private FuncionVisible funcionVisible;
     private Integer total;
 
-    public ResumenCompra(List<ButacaVisible> butacasVisibles,Integer total, List<ArticuloVisible> articuloVisibles, FuncionVisible funcionVisibles) {
+    public ResumenCompra(List<ButacaVisible> butacasVisibles, List<EntradaVisible> entradasVisibles,
+                         List<ProductoVisible> productosVisibles, FuncionVisible funcionVisible, Integer total) {
         this.butacasVisibles = butacasVisibles;
-        this.articuloVisibles = articuloVisibles;
-        this.funcionVisibles = funcionVisibles;
+        this.entradasVisibles = entradasVisibles;
+        this.productosVisibles = productosVisibles;
+        this.funcionVisible = funcionVisible;
         this.total = total;
     }
 
-    public Integer getTotal() {
-        return total;
-    }
+    // Getters y Setters
+    public List<ButacaVisible> getButacasVisibles() { return butacasVisibles; }
+    public void setButacasVisibles(List<ButacaVisible> butacasVisibles) { this.butacasVisibles = butacasVisibles; }
 
-    public void setTotal(Integer total) {
-        this.total = total;
-    }
+    public List<EntradaVisible> getEntradasVisibles() { return entradasVisibles; }
+    public void setEntradasVisibles(List<EntradaVisible> entradasVisibles) { this.entradasVisibles = entradasVisibles; }
 
-    public List<ButacaVisible> getButacasVisibles() {
-        return butacasVisibles;
-    }
+    public List<ProductoVisible> getProductosVisibles() { return productosVisibles; }
+    public void setProductosVisibles(List<ProductoVisible> productosVisibles) { this.productosVisibles = productosVisibles; }
 
-    public void setButacasVisibles(List<ButacaVisible> butacasVisibles) {
-        this.butacasVisibles = butacasVisibles;
-    }
+    public FuncionVisible getFuncionVisible() { return funcionVisible; }
+    public void setFuncionVisible(FuncionVisible funcionVisible) { this.funcionVisible = funcionVisible; }
 
-    public List<ArticuloVisible> getArticuloVisibles() {
-        return articuloVisibles;
-    }
-
-    public void setArticuloVisibles(List<ArticuloVisible> articuloVisibles) {
-        this.articuloVisibles = articuloVisibles;
-    }
-
-    public FuncionVisible getFuncionVisibles() {
-        return funcionVisibles;
-    }
-
-    public void setFuncionVisibles(FuncionVisible funcionVisibles) {
-        this.funcionVisibles = funcionVisibles;
-    }
+    public Integer getTotal() { return total; }
+    public void setTotal(Integer total) { this.total = total; }
 }
