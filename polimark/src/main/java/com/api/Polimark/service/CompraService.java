@@ -152,9 +152,9 @@ public class CompraService {
         Integer totalConPromociones = aplicarPromociones(totalBase, promocionesAplicadas, entradas, productos);
 
         // Aplicar descuento del método de pago
-     //   Integer totalFinal = aplicarDescuentoMetodoPago(totalConPromociones, compra.getMetodoPago());
+        Integer totalFinal = aplicarDescuentoMetodoPago(totalConPromociones, compra.getMetodoPago());
 
-        return totalConPromociones;
+        return totalFinal;
     }
 
     private Integer aplicarPromociones(Integer totalBase, List<CompraHasPromocion> promociones,
@@ -263,12 +263,12 @@ public class CompraService {
         return total;
     }
 
-//    private Integer aplicarDescuentoMetodoPago(Integer total, MetodoPago metodoPago) {
-//        if (metodoPago != null && metodoPago.getDescuentoPorcentaje() != null) {
-//            return total * (100 - metodoPago.getDescuentoPorcentaje()) / 100;
-//        }
-//        return total;
-//    }
+    private Integer aplicarDescuentoMetodoPago(Integer total, MetodoPago metodoPago) {
+        if (metodoPago != null && metodoPago.getDescuento() != null) {
+            return total * (100 - metodoPago.getDescuento()) / 100;
+        }
+        return total;
+    }
     public ResumenCompra pagarCompra(int idCompra,int idMetodoPago) {
         Optional<Compra> compraOptional = compraRepository.findById(idCompra);
         Compra compra = compraOptional.get();
