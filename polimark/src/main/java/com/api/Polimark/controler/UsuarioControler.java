@@ -61,9 +61,7 @@ public class UsuarioControler {
         }
     }
 // json para loguearse
-//    {
-//            "contrasena": "miPassword123",
-//    }
+//   hal.jpg
 
     @PutMapping("/{id}/adquirirRango")
     public ResponseEntity<?> adquirirRango(@PathVariable int idCliente, @RequestBody Rango rango) {

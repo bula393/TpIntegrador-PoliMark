@@ -10,6 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -38,7 +39,8 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(idCliente)
                 .orElseThrow(() -> new RuntimeException("Cliente no existente"));
         byte[] contraseniaByte = generarHash(contrasenia);
-        if (usuario.getContrasenaHash().equals(contraseniaByte)){
+        byte[] contraseniaBytes = Arrays.copyOf(usuario.getContrasenaHash(), contraseniaByte.length);
+        if (Arrays.equals(contraseniaBytes,contraseniaByte)){
             return new UsuarioRequest(usuario);
         }
         throw new ContraseniaIncorrectaExeptiom();

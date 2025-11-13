@@ -17,7 +17,12 @@ public class UsuarioRequest {
         apellido = usuario.getApellido();
         mail = usuario.getMail();
         puntos = usuario.getPuntos();
-        rangoId = usuario.getRango().getIdRango();
+        try {
+            rangoId = usuario.getRango().getIdRango();
+        } catch (NullPointerException e) {
+            rangoId = null;
+        }
+
     }
 
     public UsuarioRequest() {
