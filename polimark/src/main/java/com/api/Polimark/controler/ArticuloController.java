@@ -21,18 +21,5 @@ public class ArticuloController {
         this.articuloService = articuloService;
     }
 
-    // Endpoint alternativo que recibe directamente la lista
-    @PostMapping("/adquirirEntradas")
-    public ResponseEntity<List<Articulo>> crearEntradasConPromocionesList(
-            @RequestBody SolicitudEntradas solicitudEntradas) {
-        try {
-            List<Articulo> articulosCreados = articuloService.crearArticulosConPromociones(
-                    solicitudEntradas.getArticulosPromociones(),
-                    solicitudEntradas.getIdUsuario()
-            );
-            return ResponseEntity.ok(articulosCreados);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
+
 }
