@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,39 +48,6 @@ public class CompraService {
         this.articuloService = articuloService;
     }
 
-    public Compra reservarCompra(int idFuncion, int idCompra, List<Integer> articulosId, List<Integer> butacasid)  {
-        Funcion funcion = funcionRepository.findById(idFuncion)
-                .orElseThrow(() -> new RuntimeException("Función no encontrada"));
-
-        // Validar que las listas tengan el mismo tamaño
-        if (butacasid.size() != articulosId.size()) {
-            throw new RuntimeException("La cantidad de butacas (" + butacasid.size() +
-                    ") no coincide con la cantidad de artículos (" + articulosId.size() + ")");
-        }
-
-        // Validar que no exceda el límite de 6 butacas
-        if (butacasid.size() > 6) {
-            throw new RuntimeException("jaj");
-        }
-
-        // Si pasa todas las validaciones, procesar la reserva
-        int contador = 0;
-        Compra nuevaCompra = compraRepository.findById(idCompra)
-                .orElseThrow(() -> new RuntimeException("Compra no encontrada"));
-
-        for (Integer butacaId : butacasid) {
-            Articulo articulo = articuloRepository.findById(articulosId.get(contador))
-                    .orElseThrow(() -> new RuntimeException("Artículo no encontrado"));
-
-            Butaca butaca = butacaRepository.findById(butacaId)
-                    .orElseThrow(() -> new RuntimeException("Butaca no encontrada"));
-
-            entradaService.reservarAsiento(nuevaCompra, articulo, funcion, butaca);
-            contador++;
-        }
-
-        return nuevaCompra;
-    }
 
     public ResumenCompra generarResumenCompra(int idCompra) {
         Compra compra = compraRepository.findById(idCompra)
@@ -207,10 +177,10 @@ public class CompraService {
         int contador = 0;
         for (Integer butacaId : butacasid) {
             Articulo articulo = articuloRepository.findById(articulosId.get(contador))
-                    .orElseThrow(() -> new RuntimeException("Artículo no encontrado con ID: " + articulosId.get(contador)));
+                    .orElseThrow(() -> new RuntimeException("Artículo no encontrado con ID"));
 
             Butaca butaca = butacaRepository.findById(butacaId)
-                    .orElseThrow(() -> new RuntimeException("Butaca no encontrada con ID: " + butacaId));
+                    .orElseThrow(() -> new RuntimeException("Butaca no encontrada con ID" ));
 
             // Reservar asiento
             entradaService.reservarAsiento(compra, articulo, funcion, butaca);
@@ -222,30 +192,50 @@ public class CompraService {
 
 
     private void validarSolicitud(SolicitudEntradas solicitudEntradas) {
-        if (solicitudEntradas.getIdUsuario() == null) {
-            throw new RuntimeException("ID de usuario es requerido");
-        }
-
         if (solicitudEntradas.getArticulosPromociones() == null ||
                 solicitudEntradas.getArticulosPromociones().isEmpty()) {
             throw new RuntimeException("La lista de artículos no puede estar vacía");
         }
 
-        // Validar que la cantidad de butacas no exceda la cantidad de entradas
-        int cantidadButacas = solicitudEntradas.getArticulosPromociones().stream()
-                .filter(ap -> ap.getButacasIds() != null)
-                .mapToInt(ap -> ap.getButacasIds().size())
-                .sum();
-
-        int cantidadEntradas = solicitudEntradas.getArticulosPromociones().stream()
-                .filter(ap -> "ENTRADA".equals(ap.getTipo()) || "ENTRADA_AUTO".equals(ap.getTipo()))
-                .mapToInt(ArticuloPromocionRequest::getCantidad)
-                .sum();
+        int cantidadButacas = calcularCantidadButacas(solicitudEntradas);
+        int cantidadEntradas = calcularCantidadEntradas(solicitudEntradas);
 
         if (cantidadButacas > cantidadEntradas) {
             throw new RuntimeException("La cantidad de butacas (" + cantidadButacas +
                     ") excede la cantidad de entradas (" + cantidadEntradas + ")");
         }
+    }
+
+    private int calcularCantidadButacas(SolicitudEntradas solicitudEntradas) {
+        int totalButacas = 0;
+
+        for (Map<Integer, Integer> articulo : solicitudEntradas.getArticulosPromociones()) {
+            Object butacasObj = articulo.get("butacasIds");
+            if (butacasObj instanceof List) {
+                totalButacas += ((List<?>) butacasObj).size();
+            }
+        }
+
+        return totalButacas;
+    }
+
+    private int calcularCantidadEntradas(SolicitudEntradas solicitudEntradas) {
+        int totalEntradas = 0;
+
+        for (Map<Integer, Integer> articulo : solicitudEntradas.getArticulosPromociones()) {
+            Object tipoObj = articulo.get("tipo");
+            if (tipoObj != null) {
+                String tipo = tipoObj.toString();
+                if ("ENTRADA".equals(tipo) || "ENTRADA_AUTO".equals(tipo)) {
+                    Object cantidadObj = articulo.get("cantidad");
+                    if (cantidadObj instanceof Integer) {
+                        totalEntradas += (Integer) cantidadObj;
+                    }
+                }
+            }
+        }
+
+        return totalEntradas;
     }
 
     private Compra crearCompraInicial(Integer idUsuario) {
@@ -261,17 +251,46 @@ public class CompraService {
 
     private Integer obtenerFuncionId(SolicitudEntradas solicitudEntradas) {
         return solicitudEntradas.getArticulosPromociones().stream()
-                .filter(ap -> ap.getFuncionId() != null)
+                .filter(ap -> ap.get("funcionId") != null)
                 .findFirst()
-                .map(ap -> ap.getFuncionId())
+                .map(ap -> (Integer) ap.get("funcionId"))
                 .orElseThrow(() -> new RuntimeException("No se encontró función ID en la solicitud"));
     }
 
     private List<Integer> obtenerButacasIds(SolicitudEntradas solicitudEntradas) {
-        return solicitudEntradas.getArticulosPromociones().stream()
-                .filter(ap -> ap.getButacasIds() != null)
-                .flatMap(ap -> ap.getButacasIds().stream())
-                .collect(Collectors.toList());
+        List<Integer> todasLasButacas = new ArrayList<>();
+
+        if (solicitudEntradas.getArticulosPromociones() != null) {
+            for (Map<Integer, Integer> articulo : solicitudEntradas.getArticulosPromociones()) {
+                List<Integer> butacasDeEsteArticulo = obtenerButacasDeArticulo(articulo);
+                if (butacasDeEsteArticulo != null) {
+                    todasLasButacas.addAll(butacasDeEsteArticulo);
+                }
+            }
+        }
+
+        return todasLasButacas;
+    }
+
+    private List<Integer> obtenerButacasDeArticulo(Map<Integer, Integer> articulo) {
+        Object butacasObj = articulo.get("butacasIds");
+        if (butacasObj instanceof List) {
+            List<?> listaButacas = (List<?>) butacasObj;
+            return convertirListaAEnteros(listaButacas);
+        }
+        return null;
+    }
+
+    private List<Integer> convertirListaAEnteros(List<?> lista) {
+        List<Integer> resultado = new ArrayList<>();
+        if (lista != null) {
+            for (Object item : lista) {
+                if (item instanceof Integer) {
+                    resultado.add((Integer) item);
+                }
+            }
+        }
+        return resultado;
     }
 
     private void validarDisponibilidadButacas(List<Integer> butacasIds, Funcion funcion) {
@@ -280,7 +299,7 @@ public class CompraService {
                     .orElseThrow(() -> new RuntimeException("Butaca no encontrada: " + butacaId));
 
             // Verificar que la butaca pertenece a una sala de la función
-            if (!butaca.getSala().getIdSala().equals(funcion.getSala().getIdSala())) {
+            if (!(butaca.getSala().getIdSala() == funcion.getSala().getIdSala())) {
                 throw new RuntimeException("La butaca " + butacaId + " no pertenece a la sala de la función");
             }
         }

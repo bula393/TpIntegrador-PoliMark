@@ -30,4 +30,6 @@ public class SolicitudEntradas {
     public void setIdUsuario(int idUsuario) {
         this.idUsuario = idUsuario;
     }
+
+
 }
