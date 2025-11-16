@@ -1,6 +1,5 @@
 package com.api.Polimark.service;
 
-import com.api.Polimark.dto.ArticuloPromocionRequest;
 import com.api.Polimark.modelo.*;
 import com.api.Polimark.repository.*;
 import org.springframework.stereotype.Service;

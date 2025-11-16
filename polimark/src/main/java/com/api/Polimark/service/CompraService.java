@@ -2,10 +2,8 @@ package com.api.Polimark.service;
 
 import com.api.Polimark.dto.*;
 import com.api.Polimark.dto.SolicitudEntradas;
-import com.api.Polimark.dto.ArticuloPromocionRequest;
 import com.api.Polimark.modelo.*;
 import com.api.Polimark.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +24,10 @@ public class CompraService {
     private final ProductoRepository productoRepository;
     private final UsuarioRepository usuarioRepository;
     private final ArticuloService articuloService;
-
+    private final EntradaAutoRepository entradaAutoRepository;
 
     public CompraService(EntradaService entradaService, EntradaRepository entradaRepository, FuncionRepository funcionRepository,
-                         MetodoPagoRepository metodoPagoRepository, CompraRepository compraRepository, ArticuloRepository articuloRepository, ButacaRepository butacaRepository, CompraHasPromocionRepository compraHasPromocionRepository, ProductoHasCompraRepository productoHasCompraRepository, ProductoRepository productoRepository, UsuarioRepository usuarioRepository, ArticuloService articuloService)
+                         MetodoPagoRepository metodoPagoRepository, CompraRepository compraRepository, ArticuloRepository articuloRepository, ButacaRepository butacaRepository, CompraHasPromocionRepository compraHasPromocionRepository, ProductoHasCompraRepository productoHasCompraRepository, ProductoRepository productoRepository, UsuarioRepository usuarioRepository, ArticuloService articuloService, EntradaAutoRepository entradaAutoRepository)
     {
         this.entradaService = entradaService;
         this.entradaRepository = entradaRepository;
@@ -43,6 +41,7 @@ public class CompraService {
         this.productoRepository = productoRepository;
         this.usuarioRepository = usuarioRepository;
         this.articuloService = articuloService;
+        this.entradaAutoRepository = entradaAutoRepository;
     }
 
 
@@ -131,17 +130,33 @@ public class CompraService {
 
         // 4. Extraer información para la reserva
         Integer funcionId = obtenerFuncionId(solicitudEntradas);
-        List<Integer> articulosIds = articulosCreados.stream()
-                .map(Articulo::getIdArticulo)
-                .collect(Collectors.toList());
+        List<Integer> articulosIds = new ArrayList<>();
+        List<Integer> butacasIds = new ArrayList<>();
 
-        List<Integer> butacasIds = obtenerButacasIds(solicitudEntradas);
+        // 5. Procesar tanto ENTRADA como ENTRADA_AUTO
+        int articuloIndex = 0;
+        for (Map<Integer, Integer> articuloRequest : solicitudEntradas.getArticulosPromociones()) {
+            Object tipoObj = articuloRequest.get("tipo");
+            if (tipoObj != null && ("ENTRADA".equals(tipoObj.toString()) || "ENTRADA_AUTO".equals(tipoObj.toString()))) {
+                // Agregar artículo
+                articulosIds.add(articulosCreados.get(articuloIndex).getIdArticulo());
 
-        // 5. Llamar al método original de reservarCompra con toda la lógica de negocio
+                // Agregar butacas (tanto para entrada normal como auto)
+                Object butacasObj = articuloRequest.get("butacasIds");
+                if (butacasObj instanceof List) {
+                    butacasIds.addAll(convertirListaAEnteros((List<?>) butacasObj));
+                }
+
+                // Si es ENTRADA_AUTO, crear también el registro en EntradaAuto
+                if ("ENTRADA_AUTO".equals(tipoObj.toString())) {
+                    crearRegistroEntradaAuto(articuloRequest, articulosCreados.get(articuloIndex));
+                }
+            }
+            articuloIndex++;
+        }
+
+        // 6. Llamar al método original de reservarCompra
         Compra compraReservada = reservarCompra(funcionId, compra.getIdCompra(), articulosIds, butacasIds);
-
-        // 6. Calcular y actualizar el total usando el método existente
-        Integer total = calcularTotal(compraReservada);
 
         return compraRepository.save(compraReservada);
     }
@@ -185,6 +200,27 @@ public class CompraService {
         }
 
         return compra;
+    }
+
+    private void crearRegistroEntradaAuto(Map<Integer, Integer> articuloRequest, Articulo articulo) {
+        try {
+            Object patenteObj = articuloRequest.get("patente");
+            Object cantidadAutoObj = articuloRequest.get("cantidadAuto");
+
+            if (patenteObj instanceof String && cantidadAutoObj instanceof Integer) {
+                String patente = (String) patenteObj;
+                Integer cantidadAuto = (Integer) cantidadAutoObj;
+
+                EntradaAuto entradaAuto = new EntradaAuto();
+                entradaAuto.setEntradaArticuloIdArticulo(articulo.getIdArticulo());
+                entradaAuto.setPatente(patente);
+                entradaAuto.setCantidadAuto(cantidadAuto);
+
+                entradaAutoRepository.save(entradaAuto);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error creando registro de entrada auto: " + e.getMessage());
+        }
     }
 
 
