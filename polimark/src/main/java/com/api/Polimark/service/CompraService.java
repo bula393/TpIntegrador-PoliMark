@@ -323,12 +323,17 @@ public class CompraService {
         Producto producto = productoRepository.findById(articuloRequest.getProductoId())
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + articuloRequest.getProductoId()));
 
+        if (articuloRequest.getCantidad() > producto.getStock()) {
+            throw new  RuntimeException("stock insuficiente");
+        }
+        producto.setStock(producto.getStock() - articuloRequest.getCantidad());
         ProductoHasCompra productoHasCompra = new ProductoHasCompra();
         productoHasCompra.setCompra(compra);
         productoHasCompra.setProducto(producto);
         productoHasCompra.setCantidad(articuloRequest.getCantidad());
 
         productoHasCompraRepository.save(productoHasCompra);
+        productoRepository.save(producto);
     }
 
 
