@@ -2,8 +2,10 @@ package com.api.Polimark.service;
 
 import com.api.Polimark.dto.*;
 import com.api.Polimark.dto.SolicitudEntradas;
+import com.api.Polimark.dto.ArticuloPromocionRequest;
 import com.api.Polimark.modelo.*;
 import com.api.Polimark.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,11 +25,11 @@ public class CompraService {
     private final ProductoHasCompraRepository productoHasCompraRepository;
     private final ProductoRepository productoRepository;
     private final UsuarioRepository usuarioRepository;
-    private final ArticuloService articuloService;
+    private final PromocionRepository promocionRepository;
     private final EntradaAutoRepository entradaAutoRepository;
 
     public CompraService(EntradaService entradaService, EntradaRepository entradaRepository, FuncionRepository funcionRepository,
-                         MetodoPagoRepository metodoPagoRepository, CompraRepository compraRepository, ArticuloRepository articuloRepository, ButacaRepository butacaRepository, CompraHasPromocionRepository compraHasPromocionRepository, ProductoHasCompraRepository productoHasCompraRepository, ProductoRepository productoRepository, UsuarioRepository usuarioRepository, ArticuloService articuloService, EntradaAutoRepository entradaAutoRepository)
+                         MetodoPagoRepository metodoPagoRepository, CompraRepository compraRepository, ArticuloRepository articuloRepository, ButacaRepository butacaRepository, CompraHasPromocionRepository compraHasPromocionRepository, ProductoHasCompraRepository productoHasCompraRepository, ProductoRepository productoRepository, UsuarioRepository usuarioRepository, PromocionRepository promocionRepository, EntradaAutoRepository entradaAutoRepository)
     {
         this.entradaService = entradaService;
         this.entradaRepository = entradaRepository;
@@ -40,7 +42,7 @@ public class CompraService {
         this.productoHasCompraRepository = productoHasCompraRepository;
         this.productoRepository = productoRepository;
         this.usuarioRepository = usuarioRepository;
-        this.articuloService = articuloService;
+        this.promocionRepository = promocionRepository;
         this.entradaAutoRepository = entradaAutoRepository;
     }
 
@@ -114,52 +116,6 @@ public class CompraService {
         return new ResumenCompra(butacasVisibles, entradasVisibles, productosVisibles, funcionVisible, total);
     }
 
-    @Transactional
-    public Compra reservarCompraConArticulos(SolicitudEntradas solicitudEntradas) {
-        // 1. Validar datos básicos
-        validarSolicitud(solicitudEntradas);
-
-        // 2. Crear compra temporal
-        Compra compra = crearCompraInicial(solicitudEntradas.getIdUsuario());
-
-        // 3. Crear artículos con promociones
-        List<Articulo> articulosCreados = articuloService.crearArticulosConPromociones(
-                solicitudEntradas.getArticulosPromociones(),
-                solicitudEntradas.getIdUsuario()
-        );
-
-        // 4. Extraer información para la reserva
-        Integer funcionId = obtenerFuncionId(solicitudEntradas);
-        List<Integer> articulosIds = new ArrayList<>();
-        List<Integer> butacasIds = new ArrayList<>();
-
-        // 5. Procesar tanto ENTRADA como ENTRADA_AUTO
-        int articuloIndex = 0;
-        for (Map<Integer, Integer> articuloRequest : solicitudEntradas.getArticulosPromociones()) {
-            Object tipoObj = articuloRequest.get("tipo");
-            if (tipoObj != null && ("ENTRADA".equals(tipoObj.toString()) || "ENTRADA_AUTO".equals(tipoObj.toString()))) {
-                // Agregar artículo
-                articulosIds.add(articulosCreados.get(articuloIndex).getIdArticulo());
-
-                // Agregar butacas (tanto para entrada normal como auto)
-                Object butacasObj = articuloRequest.get("butacasIds");
-                if (butacasObj instanceof List) {
-                    butacasIds.addAll(convertirListaAEnteros((List<?>) butacasObj));
-                }
-
-                // Si es ENTRADA_AUTO, crear también el registro en EntradaAuto
-                if ("ENTRADA_AUTO".equals(tipoObj.toString())) {
-                    crearRegistroEntradaAuto(articuloRequest, articulosCreados.get(articuloIndex));
-                }
-            }
-            articuloIndex++;
-        }
-
-        // 6. Llamar al método original de reservarCompra
-        Compra compraReservada = reservarCompra(funcionId, compra.getIdCompra(), articulosIds, butacasIds);
-
-        return compraRepository.save(compraReservada);
-    }
 
     @Transactional
     public Compra reservarCompra(int idFuncion, int idCompra, List<Integer> articulosId, List<Integer> butacasid) {
@@ -202,27 +158,19 @@ public class CompraService {
         return compra;
     }
 
-    private void crearRegistroEntradaAuto(Map<Integer, Integer> articuloRequest, Articulo articulo) {
-        try {
-            Object patenteObj = articuloRequest.get("patente");
-            Object cantidadAutoObj = articuloRequest.get("cantidadAuto");
+    private List<Integer> obtenerButacasIds(SolicitudEntradas solicitudEntradas) {
+        List<Integer> todasLasButacas = new ArrayList<>();
 
-            if (patenteObj instanceof String && cantidadAutoObj instanceof Integer) {
-                String patente = (String) patenteObj;
-                Integer cantidadAuto = (Integer) cantidadAutoObj;
-
-                EntradaAuto entradaAuto = new EntradaAuto();
-                entradaAuto.setEntradaArticuloIdArticulo(articulo.getIdArticulo());
-                entradaAuto.setPatente(patente);
-                entradaAuto.setCantidadAuto(cantidadAuto);
-
-                entradaAutoRepository.save(entradaAuto);
+        if (solicitudEntradas.getArticulosPromociones() != null) {
+            for (ArticuloPromocionRequest articulo : solicitudEntradas.getArticulosPromociones()) {
+                if (articulo.getButacasIds() != null && !articulo.getButacasIds().isEmpty()) {
+                    todasLasButacas.addAll(articulo.getButacasIds());
+                }
             }
-        } catch (Exception e) {
-            throw new RuntimeException("Error creando registro de entrada auto: " + e.getMessage());
         }
-    }
 
+        return todasLasButacas;
+    }
 
     private void validarSolicitud(SolicitudEntradas solicitudEntradas) {
         if (solicitudEntradas.getArticulosPromociones() == null ||
@@ -242,10 +190,9 @@ public class CompraService {
     private int calcularCantidadButacas(SolicitudEntradas solicitudEntradas) {
         int totalButacas = 0;
 
-        for (Map<Integer, Integer> articulo : solicitudEntradas.getArticulosPromociones()) {
-            Object butacasObj = articulo.get("butacasIds");
-            if (butacasObj instanceof List) {
-                totalButacas += ((List<?>) butacasObj).size();
+        for (ArticuloPromocionRequest articulo : solicitudEntradas.getArticulosPromociones()) {
+            if (articulo.getButacasIds() != null) {
+                totalButacas += articulo.getButacasIds().size();
             }
         }
 
@@ -255,21 +202,135 @@ public class CompraService {
     private int calcularCantidadEntradas(SolicitudEntradas solicitudEntradas) {
         int totalEntradas = 0;
 
-        for (Map<Integer, Integer> articulo : solicitudEntradas.getArticulosPromociones()) {
-            Object tipoObj = articulo.get("tipo");
-            if (tipoObj != null) {
-                String tipo = tipoObj.toString();
-                if ("ENTRADA".equals(tipo) || "ENTRADA_AUTO".equals(tipo)) {
-                    Object cantidadObj = articulo.get("cantidad");
-                    if (cantidadObj instanceof Integer) {
-                        totalEntradas += (Integer) cantidadObj;
-                    }
-                }
+        for (ArticuloPromocionRequest articulo : solicitudEntradas.getArticulosPromociones()) {
+            if ("ENTRADA".equals(articulo.getTipo()) || "ENTRADA_AUTO".equals(articulo.getTipo())) {
+                totalEntradas += articulo.getCantidad();
             }
         }
 
         return totalEntradas;
     }
+
+    private Integer obtenerFuncionId(SolicitudEntradas solicitudEntradas) {
+        for (ArticuloPromocionRequest articulo : solicitudEntradas.getArticulosPromociones()) {
+            if (articulo.getFuncionId() != null) {
+                return articulo.getFuncionId();
+            }
+        }
+        throw new RuntimeException("No se encontró función ID en la solicitud");
+    }
+
+    @Transactional
+    public Compra reservarCompraConArticulos(SolicitudEntradas solicitudEntradas) {
+        // 1. Validar datos básicos
+        validarSolicitud(solicitudEntradas);
+
+        // 2. Crear compra temporal
+        Compra compra = crearCompraInicial(solicitudEntradas.getIdUsuario());
+
+        // 3. Crear artículos con promociones (integrado aquí)
+        List<Articulo> articulosCreados = crearArticulosYPromociones(solicitudEntradas.getArticulosPromociones(), compra);
+
+        // 4. Extraer información para la reserva
+        Integer funcionId = obtenerFuncionId(solicitudEntradas);
+        List<Integer> articulosIds = new ArrayList<>();
+        List<Integer> butacasIds = new ArrayList<>();
+
+        // 5. Procesar tanto ENTRADA como ENTRADA_AUTO
+        int articuloIndex = 0;
+        for (ArticuloPromocionRequest articuloRequest : solicitudEntradas.getArticulosPromociones()) {
+            if ("ENTRADA".equals(articuloRequest.getTipo()) || "ENTRADA_AUTO".equals(articuloRequest.getTipo())) {
+                // Agregar artículo
+                articulosIds.add(articulosCreados.get(articuloIndex).getIdArticulo());
+
+                // Agregar butacas (tanto para entrada normal como auto)
+                if (articuloRequest.getButacasIds() != null) {
+                    butacasIds.addAll(articuloRequest.getButacasIds());
+                }
+            }
+            articuloIndex++;
+        }
+
+        // 6. Llamar al método original de reservarCompra
+        Compra compraReservada = reservarCompra(funcionId, compra.getIdCompra(), articulosIds, butacasIds);
+
+        return compraRepository.save(compraReservada);
+    }
+
+    private List<Articulo> crearArticulosYPromociones(List<ArticuloPromocionRequest> articulosPromociones, Compra compra) {
+        List<Articulo> articulosCreados = new ArrayList<>();
+
+        for (ArticuloPromocionRequest articuloRequest : articulosPromociones) {
+            // Crear artículos según la cantidad solicitada
+            for (int i = 0; i < articuloRequest.getCantidad(); i++) {
+                Articulo nuevoArticulo = new Articulo();
+
+                // Usar el precio del request o el precio base si no está definido
+                if (articuloRequest.getPrecio() != null) {
+                    nuevoArticulo.setPrecio(articuloRequest.getPrecio());
+                } else {
+                    nuevoArticulo.setPrecio(Entrada.getPrecioBasa());
+                }
+
+                Articulo articuloGuardado = articuloRepository.save(nuevoArticulo);
+                articulosCreados.add(articuloGuardado);
+
+                // Crear relaciones adicionales según el tipo
+                if ("ENTRADA_AUTO".equals(articuloRequest.getTipo())) {
+                    crearEntradaAuto(articuloRequest, articuloGuardado, compra);
+                } else if ("PRODUCTO".equals(articuloRequest.getTipo())) {
+                    crearProductoCompra(articuloRequest, articuloGuardado, compra);
+                }
+            }
+
+            // Procesar promociones aplicadas
+            if (articuloRequest.getPromocionesAplicadas() != null) {
+                for (Integer idPromocion : articuloRequest.getPromocionesAplicadas()) {
+                    Promocion promocion = promocionRepository.findById(idPromocion)
+                            .orElseThrow(() -> new RuntimeException("Promoción no encontrada con ID: " + idPromocion));
+
+                    CompraHasPromocion compraHasPromocion = new CompraHasPromocion(
+                            compra,
+                            promocion,
+                            articuloRequest.getCantidad()
+                    );
+                    compraHasPromocionRepository.save(compraHasPromocion);
+                }
+            }
+        }
+
+        return articulosCreados;
+    }
+
+    private void crearEntradaAuto(ArticuloPromocionRequest articuloRequest, Articulo articulo, Compra compra) {
+        if (articuloRequest.getPatente() == null || articuloRequest.getCantidadAuto() == null) {
+            throw new RuntimeException("Patente y cantidadAuto son requeridos para ENTRADA_AUTO");
+        }
+
+        EntradaAuto entradaAuto = new EntradaAuto();
+        entradaAuto.setEntradaArticuloIdArticulo(articulo.getIdArticulo());
+        entradaAuto.setPatente(articuloRequest.getPatente());
+        entradaAuto.setCantidadAuto(articuloRequest.getCantidadAuto());
+
+        entradaAutoRepository.save(entradaAuto);
+    }
+
+    private void crearProductoCompra(ArticuloPromocionRequest articuloRequest, Articulo articulo, Compra compra) {
+        if (articuloRequest.getProductoId() == null) {
+            throw new RuntimeException("productoId es requerido para PRODUCTO");
+        }
+
+        Producto producto = productoRepository.findById(articuloRequest.getProductoId())
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + articuloRequest.getProductoId()));
+
+        ProductoHasCompra productoHasCompra = new ProductoHasCompra();
+        productoHasCompra.setCompra(compra);
+        productoHasCompra.setProducto(producto);
+        productoHasCompra.setCantidad(articuloRequest.getCantidad());
+
+        productoHasCompraRepository.save(productoHasCompra);
+    }
+
 
     private Compra crearCompraInicial(Integer idUsuario) {
         Usuario usuario = usuarioRepository.findById(idUsuario)
@@ -280,50 +341,6 @@ public class CompraService {
         compra.setUsuario(usuario);
 
         return compraRepository.save(compra);
-    }
-
-    private Integer obtenerFuncionId(SolicitudEntradas solicitudEntradas) {
-        return solicitudEntradas.getArticulosPromociones().stream()
-                .filter(ap -> ap.get("funcionId") != null)
-                .findFirst()
-                .map(ap -> (Integer) ap.get("funcionId"))
-                .orElseThrow(() -> new RuntimeException("No se encontró función ID en la solicitud"));
-    }
-
-    private List<Integer> obtenerButacasIds(SolicitudEntradas solicitudEntradas) {
-        List<Integer> todasLasButacas = new ArrayList<>();
-
-        if (solicitudEntradas.getArticulosPromociones() != null) {
-            for (Map<Integer, Integer> articulo : solicitudEntradas.getArticulosPromociones()) {
-                List<Integer> butacasDeEsteArticulo = obtenerButacasDeArticulo(articulo);
-                if (butacasDeEsteArticulo != null) {
-                    todasLasButacas.addAll(butacasDeEsteArticulo);
-                }
-            }
-        }
-
-        return todasLasButacas;
-    }
-
-    private List<Integer> obtenerButacasDeArticulo(Map<Integer, Integer> articulo) {
-        Object butacasObj = articulo.get("butacasIds");
-        if (butacasObj instanceof List) {
-            List<?> listaButacas = (List<?>) butacasObj;
-            return convertirListaAEnteros(listaButacas);
-        }
-        return null;
-    }
-
-    private List<Integer> convertirListaAEnteros(List<?> lista) {
-        List<Integer> resultado = new ArrayList<>();
-        if (lista != null) {
-            for (Object item : lista) {
-                if (item instanceof Integer) {
-                    resultado.add((Integer) item);
-                }
-            }
-        }
-        return resultado;
     }
 
     private void validarDisponibilidadButacas(List<Integer> butacasIds, Funcion funcion) {

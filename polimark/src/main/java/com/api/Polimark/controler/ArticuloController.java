@@ -1,6 +1,5 @@
 package com.api.Polimark.controler;
 
-import com.api.Polimark.service.ArticuloService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

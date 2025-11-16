@@ -3,23 +3,23 @@ import java.util.List;
 import java.util.Map;
 
 public class SolicitudEntradas {
-    private List<Map<Integer, Integer>> articulosPromociones;
+    private List<ArticuloPromocionRequest> articulosPromociones;
     private int idUsuario;
 
     // Constructores
     public SolicitudEntradas() {}
 
-    public SolicitudEntradas(List<Map<Integer, Integer>> articulosPromociones, int idUsuario) {
+    public SolicitudEntradas(List<ArticuloPromocionRequest> articulosPromociones, int idUsuario) {
         this.articulosPromociones = articulosPromociones;
         this.idUsuario = idUsuario;
     }
 
     // Getters y Setters
-    public List<Map<Integer, Integer>> getArticulosPromociones() {
+    public List<ArticuloPromocionRequest> getArticulosPromociones() {
         return articulosPromociones;
     }
 
-    public void setArticulosPromociones(List<Map<Integer, Integer>> articulosPromociones) {
+    public void setArticulosPromociones(List<ArticuloPromocionRequest> articulosPromociones) {
         this.articulosPromociones = articulosPromociones;
     }
 
