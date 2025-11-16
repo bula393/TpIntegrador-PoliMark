@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -445,14 +442,14 @@ private Integer aplicarDescuentoMetodoPago(Integer total, MetodoPago metodoPago)
     }
     return total;
 }
-//public ResumenCompra pagarCompra(int idCompra,int idMetodoPago) {
-//    Optional<Compra> compraOptional = compraRepository.findById(idCompra);
-//    Compra compra = compraOptional.get();
-//    MetodoPago metodoPago = metodoPagoRepository.findById(idMetodoPago)
-//            .orElseThrow(() -> new RuntimeException("Metodo de Pago no encontrada"));
-//    compra.setMetodoPago(metodoPago);
-//    compra.setPagado(true);
-//    compraRepository.save(compra);
-//    return generarResumenCompra(idCompra);
-//}
+public ResumenCompra pagarCompra(PagoCompra pagoCompra) {
+    Optional<Compra> compraOptional = compraRepository.findById(pagoCompra.getIdCompra());
+    Compra compra = compraOptional.get();
+    MetodoPago metodoPago = metodoPagoRepository.findById(pagoCompra.getIdMetodoPago())
+            .orElseThrow(() -> new RuntimeException("Metodo de Pago no encontrada"));
+    compra.setMetodoPago(metodoPago);
+    compra.setPagado(true);
+    compraRepository.save(compra);
+    return generarResumenCompra(pagoCompra.getIdCompra());
+}
 }
