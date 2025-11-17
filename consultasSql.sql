@@ -203,3 +203,42 @@ END //
 
 DELIMITER ;
 
+DELIMITER //
+
+--f
+	
+CREATE EVENT IF NOT EXISTS usuariosInactivos 
+ON SCHEDULE EVERY 1 MONTH
+STARTS NOW()
+DO
+BEGIN 
+    UPDATE usuario 
+    SET rangoIdRango = 1 
+    WHERE idUsuario NOT IN (
+        SELECT DISTINCT c.idUsuario 
+        FROM compra 
+        WHERE compra.fecha >= DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)DELIMITER //
+
+CREATE EVENT IF NOT EXISTS usuariosInactivos 
+ON SCHEDULE EVERY 1 MONTH
+STARTS NOW()
+DO
+BEGIN 
+    UPDATE usuario 
+    SET rangoIdRango = 1 
+    WHERE idUsuario NOT IN (
+        SELECT DISTINCT c.idUsuario 
+        FROM compra 
+        WHERE compra.fecha >= DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
+        AND compra.fecha < CURRENT_DATE
+    );
+END//
+
+DELIMITER ;
+
+        AND compra.fecha < CURRENT_DATE
+    );
+END//
+
+DELIMITER ;
+
