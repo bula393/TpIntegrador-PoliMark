@@ -24,4 +24,13 @@ end //
 
 -- c
 
+delimiter //
+create procedure actualizarRango(in idCliente int, in puntos int)
+begin
+	if puntos > 500 then 
+		update usuario set rangoIdRango = 2 where identificador = idCliente;
+	end if;
+end//
+delimiter ;
+
 select * from pelicula
