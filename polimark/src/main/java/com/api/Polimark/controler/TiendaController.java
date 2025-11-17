@@ -21,6 +21,10 @@ public class TiendaController {
 
     private ProductoService productoService;
 
+    public TiendaController(ProductoService productoService) {
+        this.productoService = productoService;
+    }
+
     @GetMapping("/categorias")
     public List<CategoriaProducto> categorias() {
         return List.of(CategoriaProducto.values());
