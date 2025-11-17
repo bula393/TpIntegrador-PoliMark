@@ -26,7 +26,7 @@ public class EntradaService {
         if(ocupada){
             throw new AsientoOcupadoExeption();
         }
-        Entrada entradaNueva = new Entrada(articulo.getIdArticulo(),articulo,compra,funcion,butaca);
+        Entrada entradaNueva = new Entrada(articulo,compra,funcion,butaca);
         entradaRepository.save(entradaNueva);
 
     }

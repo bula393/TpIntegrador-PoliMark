@@ -1,30 +1,28 @@
 package com.api.Polimark.modelo;
 
 import jakarta.persistence.*;
-import java.io.Serializable;
-import java.util.Objects;
 
 @Entity
 @Table(name = "producto_has_compra")
-public class ProductoHasCompra implements Serializable {
+public class ProductoHasCompra {
 
     @EmbeddedId
     private ProductoHasCompraId id;
 
+    @Column(name = "cantidad")
+    private Integer cantidad;
+
     @ManyToOne
     @MapsId("compraIdCompra")
-    @JoinColumn(name = "compraIdCompra", referencedColumnName = "idcompra")
+    @JoinColumn(name = "compraIdCompra")
     private Compra compra;
 
     @ManyToOne
     @MapsId("productoArticuloIdArticulo")
-    @JoinColumn(name = "productoArticuloIdArticulo", referencedColumnName = "articuloIdArticulo")
+    @JoinColumn(name = "productoArticuloIdArticulo")
     private Producto producto;
 
-    @Column(name = "cantidad")
-    private Integer cantidad;
-
-    // 🔹 Constructores
+    // Constructores
     public ProductoHasCompra() {}
 
     public ProductoHasCompra(Compra compra, Producto producto, Integer cantidad) {
@@ -34,13 +32,21 @@ public class ProductoHasCompra implements Serializable {
         this.id = new ProductoHasCompraId(compra.getIdCompra(), producto.getArticuloIdArticulo());
     }
 
-    // 🔹 Getters y Setters
+    // Getters y Setters
     public ProductoHasCompraId getId() {
         return id;
     }
 
     public void setId(ProductoHasCompraId id) {
         this.id = id;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
     }
 
     public Compra getCompra() {
@@ -57,22 +63,5 @@ public class ProductoHasCompra implements Serializable {
 
     public void setProducto(Producto producto) {
         this.producto = producto;
-    }
-
-    public Integer getCantidad() {
-        return cantidad;
-    }
-
-    public void setCantidad(Integer cantidad) {
-        this.cantidad = cantidad;
-    }
-
-    @Override
-    public String toString() {
-        return "ProductoHasCompra{" +
-                "compra=" + (compra != null ? compra.getIdCompra() : null) +
-                ", producto=" + (producto != null ? producto.getArticuloIdArticulo() : null) +
-                ", cantidad=" + cantidad +
-                '}';
     }
 }

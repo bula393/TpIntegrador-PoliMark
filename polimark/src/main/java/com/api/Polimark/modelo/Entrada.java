@@ -13,7 +13,8 @@ public class Entrada {
     private int idArticulo;
 
     @OneToOne
-    @JoinColumn(name = "articuloIdArticulo", referencedColumnName = "idArticulo", insertable = false, updatable = false)
+    @MapsId  // ✅ Esto hace que el ID se tome de la relación
+    @JoinColumn(name = "articuloIdArticulo", referencedColumnName = "idArticulo")
     private Articulo articulo;
 
     @ManyToOne
@@ -31,8 +32,7 @@ public class Entrada {
     // ✅ Constructores
     public Entrada() {}
 
-    public Entrada(int idArticulo, Articulo articulo, Compra compra, Funcion funcion, Butaca butaca) {
-        this.idArticulo = idArticulo;
+    public Entrada( Articulo articulo, Compra compra, Funcion funcion, Butaca butaca) {
         this.articulo = articulo;
         this.compra = compra;
         this.funcion = funcion;

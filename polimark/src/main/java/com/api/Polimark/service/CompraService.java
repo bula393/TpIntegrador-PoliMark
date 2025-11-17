@@ -241,19 +241,22 @@ public class CompraService {
         for (ArticuloPromocionRequest articuloRequest : solicitudEntradas.getArticulosPromociones()) {
             if ("ENTRADA".equals(articuloRequest.getTipo()) || "ENTRADA_AUTO".equals(articuloRequest.getTipo())) {
                 // Agregar artículo
-                articulosIds.add(articulosCreados.get(articuloIndex).getIdArticulo());
+                for (int i = 0; i < articuloRequest.getCantidad(); i++) {
+                    articulosIds.add(articulosCreados.get(articuloIndex+i).getIdArticulo());
+                }
+
 
                 // Agregar butacas (tanto para entrada normal como auto)
                 if (articuloRequest.getButacasIds() != null) {
                     butacasIds.addAll(articuloRequest.getButacasIds());
                 }
             }
-            articuloIndex++;
+            articuloIndex += articuloRequest.getCantidad();
         }
 
         // 6. Llamar al método original de reservarCompra
         Compra compraReservada = reservarCompra(funcionId, compra.getIdCompra(), articulosIds, butacasIds);
-
+        compraReservada.setMontopagado(calcularTotal(compraReservada));
         return compraRepository.save(compraReservada);
     }
 
@@ -326,10 +329,7 @@ public class CompraService {
         if (articuloRequest.getCantidad() > producto.getStock()) {
             throw new  RuntimeException("stock insuficiente");
         }
-        ProductoHasCompra productoHasCompra = new ProductoHasCompra();
-        productoHasCompra.setCompra(compra);
-        productoHasCompra.setProducto(producto);
-        productoHasCompra.setCantidad(articuloRequest.getCantidad());
+        ProductoHasCompra productoHasCompra = new ProductoHasCompra(compra,producto,articuloRequest.getCantidad());
 
         productoHasCompraRepository.save(productoHasCompra);
     }

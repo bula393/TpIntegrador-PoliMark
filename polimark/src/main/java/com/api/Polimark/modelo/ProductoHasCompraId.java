@@ -1,51 +1,47 @@
 package com.api.Polimark.modelo;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
 public class ProductoHasCompraId implements Serializable {
 
-    @Column(name = "compraIdCompra")
-    private int compraIdCompra;
+    private Integer compraIdCompra;
+    private Integer productoArticuloIdArticulo;
 
-    @Column(name = "productoArticuloIdArticulo")
-    private int productoArticuloIdArticulo;
-
-    // 🔹 Constructores
+    // Constructores
     public ProductoHasCompraId() {}
 
-    public ProductoHasCompraId(int compraIdCompra, int productoArticuloIdArticulo) {
+    public ProductoHasCompraId(Integer compraIdCompra, Integer productoArticuloIdArticulo) {
         this.compraIdCompra = compraIdCompra;
         this.productoArticuloIdArticulo = productoArticuloIdArticulo;
     }
 
-    // 🔹 Getters y Setters
-    public int getCompraIdCompra() {
+    // Getters y Setters
+    public Integer getCompraIdCompra() {
         return compraIdCompra;
     }
 
-    public void setCompraIdCompra(int compraIdCompra) {
+    public void setCompraIdCompra(Integer compraIdCompra) {
         this.compraIdCompra = compraIdCompra;
     }
 
-    public int getProductoArticuloIdArticulo() {
+    public Integer getProductoArticuloIdArticulo() {
         return productoArticuloIdArticulo;
     }
 
-    public void setProductoArticuloIdArticulo(int productoArticuloIdArticulo) {
+    public void setProductoArticuloIdArticulo(Integer productoArticuloIdArticulo) {
         this.productoArticuloIdArticulo = productoArticuloIdArticulo;
     }
 
-    // 🔹 equals() y hashCode()
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ProductoHasCompraId)) return false;
         ProductoHasCompraId that = (ProductoHasCompraId) o;
-        return compraIdCompra == that.compraIdCompra &&
-                productoArticuloIdArticulo == that.productoArticuloIdArticulo;
+        return Objects.equals(compraIdCompra, that.compraIdCompra) &&
+                Objects.equals(productoArticuloIdArticulo, that.productoArticuloIdArticulo);
     }
 
     @Override

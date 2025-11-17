@@ -164,8 +164,9 @@ DROP TABLE IF EXISTS `compra`;
 CREATE TABLE `compra` (
   `idCompra` int NOT NULL AUTO_INCREMENT,
   `pagado` tinyint DEFAULT NULL,
-  `metodoPagoIdMetodoPago` int NOT NULL,
+  `metodoPagoIdMetodoPago` int,
   `usuarioIdentificador` int NOT NULL,
+  `monto` int NULL,
   PRIMARY KEY (`idCompra`),
   KEY `fk_compra_metodoPago1_idx` (`metodoPagoIdMetodoPago`),
   KEY `fk_compra_usuario1_idx` (`usuarioIdentificador`),
@@ -226,7 +227,7 @@ CREATE TABLE `producto` (
   `stock` int DEFAULT NULL,
   PRIMARY KEY (`articuloIdArticulo`),
   KEY `fk_producto_articulo1_idx` (`articuloIdArticulo`),
-  CONSTRAINT `fk_producto_articulo1` FOREIGN KEY (`articuloIdArticulo`) REFERENCES `articulo` (`idArticulo`)
+  CONSTRAINT `fk_producto_artiFculo1` FOREIGN KEY (`articuloIdArticulo`) REFERENCES `articulo` (`idArticulo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
