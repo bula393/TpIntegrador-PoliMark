@@ -1,5 +1,6 @@
 package com.api.Polimark.service;
 
+import com.api.Polimark.dto.EntradaVisible;
 import com.api.Polimark.dto.Perfil;
 import com.api.Polimark.dto.UsuarioRequest;
 import com.api.Polimark.modelo.*;
@@ -65,12 +66,12 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(idCliente)
                 .orElseThrow(() -> new RuntimeException("Cliente no existente"));
 
-        List<Entrada> historialEntradas = obtenerHistorialEntradas(idCliente);
+        List<EntradaVisible> historialEntradas = obtenerHistorialEntradas(idCliente);
 
         return new Perfil(usuario, historialEntradas);
     }
 
-    private List<Entrada> obtenerHistorialEntradas(Integer idCliente) {
+    private List<EntradaVisible> obtenerHistorialEntradas(Integer idCliente) {
         List<Entrada> historialEntradas = new ArrayList<>();
 
         List<Compra> compras = compraRepository.findByUsuarioIdentificador(idCliente);
@@ -79,7 +80,14 @@ public class UsuarioService {
             List<Entrada> entradasDeCompra = entradaRepository.findByCompraIdCompra(compra.getIdCompra());
             historialEntradas.addAll(entradasDeCompra);
         }
-        return historialEntradas;
+
+        List<EntradaVisible> entradaVisibles = new ArrayList<>();
+
+        for (Entrada entrada : historialEntradas){
+             entradaVisibles.add(new EntradaVisible(entrada.getIdArticulo(),entrada.getArticulo().getPrecio(),entrada.getButaca(),entrada.getFuncion()));
+        }
+
+        return entradaVisibles;
     }
 }
 

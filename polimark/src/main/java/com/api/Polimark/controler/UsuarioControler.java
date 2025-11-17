@@ -20,9 +20,15 @@ public class UsuarioControler {
         this.usuarioService = usuarioService;
     }
 
-    @GetMapping("{id}/perfil")
-    public Perfil perfil(@PathVariable int idCliente) {
-        return usuarioService.obtenerPerfil(idCliente);
+    @GetMapping("{idCliente}/perfil")
+    public ResponseEntity<?> perfil(@PathVariable int idCliente) {
+        try {
+            Perfil perfil = usuarioService.obtenerPerfil(idCliente);
+            return ResponseEntity.ok(perfil);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("crearUsuario")

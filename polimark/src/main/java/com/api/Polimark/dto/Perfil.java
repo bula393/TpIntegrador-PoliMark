@@ -6,9 +6,9 @@ import java.util.List;
 
 public class Perfil {
     private Usuario usuario;
-    private List<Entrada> historialEntradas;
+    private List<EntradaVisible> historialEntradas;
 
-    public Perfil(Usuario usuario, List<Entrada> historialEntradas) {
+    public Perfil(Usuario usuario, List<EntradaVisible> historialEntradas) {
         this.usuario = usuario;
         this.historialEntradas = historialEntradas;
     }
@@ -17,4 +17,12 @@ public class Perfil {
         return usuario;
     }
     public void setUsuario(Usuario usuario) {}
+
+    public List<EntradaVisible> getHistorialEntradas() {
+        return historialEntradas;
+    }
+
+    public void setHistorialEntradas(List<EntradaVisible> historialEntradas) {
+        this.historialEntradas = historialEntradas;
+    }
 }
