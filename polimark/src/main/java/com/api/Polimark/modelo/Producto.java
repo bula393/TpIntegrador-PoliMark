@@ -8,7 +8,7 @@ public class Producto {
 
     @Id
     @Column(name = "articuloIdArticulo")
-    private int articuloIdArticulo;
+    private Integer articuloIdArticulo;
 
     @OneToOne
     @JoinColumn(name = "articuloIdArticulo", referencedColumnName = "idArticulo", insertable = false, updatable = false)
@@ -38,7 +38,7 @@ public class Producto {
     }
 
     // 🔹 Getters y Setters
-    public int getArticuloIdArticulo() {
+    public Integer getArticuloIdArticulo() {
         return articuloIdArticulo;
     }
 

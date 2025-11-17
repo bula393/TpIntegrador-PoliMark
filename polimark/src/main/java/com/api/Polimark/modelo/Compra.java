@@ -36,7 +36,21 @@ public class Compra {
         this.usuario = usuario;
     }
 
+    public int getMontopagado() {
+        return montopagado;
+    }
+
+    public void setMontopagado(int montopagado) {
+        this.montopagado = montopagado;
+    }
+
     // Getters y setters
+
+
+    public void setIdCompra(int idCompra) {
+        this.idCompra = idCompra;
+    }
+
     public int getIdCompra() {
         return idCompra;
     }
