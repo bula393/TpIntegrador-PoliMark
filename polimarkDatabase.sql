@@ -167,6 +167,7 @@ CREATE TABLE `compra` (
   `metodoPagoIdMetodoPago` int,
   `usuarioIdentificador` int NOT NULL,
   `monto` int NULL,
+  `fecha` date NULL,
   PRIMARY KEY (`idCompra`),
   KEY `fk_compra_metodoPago1_idx` (`metodoPagoIdMetodoPago`),
   KEY `fk_compra_usuario1_idx` (`usuarioIdentificador`),

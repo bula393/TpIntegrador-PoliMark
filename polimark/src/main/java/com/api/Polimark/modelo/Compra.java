@@ -2,6 +2,8 @@ package com.api.Polimark.modelo;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "compra")
 public class Compra {
@@ -16,6 +18,10 @@ public class Compra {
 
     @Column(name = "monto")
     private int montopagado;
+
+    @Column(name = "fecha")
+    private LocalDate fecha;
+
 
     // Relación con MetodoPago
     @ManyToOne
@@ -46,6 +52,14 @@ public class Compra {
 
     // Getters y setters
 
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
 
     public void setIdCompra(int idCompra) {
         this.idCompra = idCompra;
