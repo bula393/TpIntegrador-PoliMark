@@ -1,0 +1,16 @@
+identificador,nombre,apellido,mail,contrasenaHash,rangoIdRango,puntos
+1,Juan,Pérez,juan.perez@mail.com,,1,100
+2,María,Gómez,maria.gomez@mail.com,,2,250
+3,Carlos,López,carlos.lopez@mail.com,,1,75
+4,Ana,Martínez,ana.martinez@mail.com,,3,500
+5,Pedro,Rodríguez,pedro.rodriguez@mail.com,,2,180
+6,Laura,García,laura.garcia@mail.com,,1,60
+7,Diego,Fernández,diego.fernandez@mail.com,,3,420
+8,Sofía,Hernández,sofia.hernandez@mail.com,,2,210
+9,Miguel,Díaz,miguel.diaz@mail.com,,1,90
+10,Elena,Torres,elena.torres@mail.com,,3,380
+11,Luis,Ramírez,luis.ramirez@mail.com,,1,120
+12,Carolina,Silva,carolina.silva@mail.com,,2,190
+13,Roberto,Mendoza,roberto.mendoza@mail.com,,1,85
+14,Patricia,Castro,patricia.castro@mail.com,,3,450
+15,Jorge,Suarez,jorge.suarez@mail.com,,2,220

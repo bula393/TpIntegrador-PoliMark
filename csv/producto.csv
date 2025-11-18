@@ -1,0 +1,9 @@
+nombre,descripcion,articuloIdArticulo,categoria,stock
+Coca Cola 500ml,Gaseosa Coca Cola 500ml,1,Bebida,100
+Pochoclos Grande,Pochoclos tamaño grande,2,Snack,50
+Agua Mineral,Agua sin gas 500ml,4,Bebida,80
+Sandwich Jamón y Queso,Sandwich fresco,5,Comida,25
+Gomitas,Gomitas surtidas 100gr,6,Snack,60
+Chocolate,Tableta de chocolate,7,Snack,45
+Nachos con Queso,Nachos con salsa de queso,9,Snack,35
+Helado,Helado en pote 250ml,10,Snack,40
