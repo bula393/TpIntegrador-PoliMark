@@ -3,24 +3,39 @@ create database Polimark;
 delimiter //
 
 
--- a
-create trigger beforeInsertEntrada before insert on entrada
-for each row
-begin
-	if exists(select * from entrada where butaca_idbutaca = new.butaca_idbutaca and funcion_idfuncion = new.funcion_idfuncion)
-		then
-			SIGNAL SQLSTATE '45000' 
-			SET MESSAGE_TEXT = 'Error: la butaca ya está ocupada para esa función';
-		end if;
-end //
+DELIMITER //
+
+CREATE TRIGGER beforeInsertEntrada 
+BEFORE INSERT ON entrada
+FOR EACH ROW
+BEGIN
+    IF EXISTS (
+        SELECT * FROM entrada 
+        WHERE butacaIdButaca = NEW.butacaIdButaca 
+        AND funcionIdFuncion = NEW.funcionIdFuncion
+    ) THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Error: la butaca ya está ocupada para esa función';
+    END IF;
+END //
+
+DELIMITER ;
+DELIMITER //
 
 -- b 
 
-create trigger afterInsertProductoHasCompra after insert on producto_has_compra
-for each row
-begin
-	update producto set stock = stock - new.cantidad where articulo_idarticulo = new.producto_articulo_idarticulo;
-end //
+DELIMITER //
+
+CREATE TRIGGER afterInsertProductoHasCompra 
+AFTER INSERT ON producto_has_compra
+FOR EACH ROW
+BEGIN
+    UPDATE producto 
+    SET stock = stock - NEW.cantidad 
+    WHERE articuloIdArticulo = NEW.productoArticuloIdArticulo;
+END //
+
+DELIMITER ;
 
 -- c
 
@@ -101,16 +116,6 @@ BEGIN
 END //
 
 DELIMITER ;
-
---e
-
- create event if not exists notiPeli on schedule 
- every 1 day starts timestamp(current_date(), "08:00.00") do
- begin
-	
- end//
- delimiter ;
-
 
 DELIMITER //
 
@@ -205,19 +210,8 @@ DELIMITER ;
 
 DELIMITER //
 
---f
-	
-CREATE EVENT IF NOT EXISTS usuariosInactivos 
-ON SCHEDULE EVERY 1 MONTH
-STARTS NOW()
-DO
-BEGIN 
-    UPDATE usuario 
-    SET rangoIdRango = 1 
-    WHERE idUsuario NOT IN (
-        SELECT DISTINCT c.idUsuario 
-        FROM compra 
-        WHERE compra.fecha >= DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)DELIMITER //
+
+
 
 CREATE EVENT IF NOT EXISTS usuariosInactivos 
 ON SCHEDULE EVERY 1 MONTH
@@ -235,10 +229,6 @@ BEGIN
 END//
 
 DELIMITER ;
-
-        AND compra.fecha < CURRENT_DATE
-    );
-END//
 
 DELIMITER ;
 

@@ -239,38 +239,39 @@ INSERT INTO `entrada` (`compraIdCompra`, `funcionIdFuncion`, `butacaIdButaca`, `
 
 -- Inserts adicionales para producto_has_compra
 INSERT INTO `producto_has_compra` (`compraIdCompra`, `cantidad`, `productoArticuloIdArticulo`) VALUES
-(11, 2, 1), (11, 1, 3),
+(11, 2, 1),
 (12, 3, 2), (12, 2, 4),
 (13, 1, 5), (13, 1, 6),
-(14, 2, 7), (14, 1, 8),
+(14, 2, 7), 
 (15, 3, 9), (15, 2, 10),
 (16, 1, 1), (16, 2, 2),
-(17, 2, 3), (17, 1, 4),
+ (17, 1, 4),
 (18, 3, 5), (18, 1, 6),
-(19, 2, 7), (19, 2, 8),
+(19, 2, 7), 
 (20, 1, 9), (20, 3, 10),
 (21, 2, 1), (21, 1, 2),
-(22, 3, 3), (22, 2, 4),
+ (22, 2, 4),
 (23, 1, 5), (23, 1, 6),
-(24, 2, 7), (24, 1, 8),
+(24, 2, 7), 
 (25, 3, 9), (25, 2, 10),
 (26, 1, 1), (26, 2, 2),
-(27, 2, 3), (27, 1, 4),
+ (27, 1, 4),
 (28, 3, 5), (28, 1, 6),
-(29, 2, 7), (29, 2, 8),
+(29, 2, 7), 
 (30, 1, 9), (30, 3, 10),
 (31, 2, 1), (31, 1, 2),
-(32, 3, 3), (32, 2, 4),
+ (32, 2, 4),
 (33, 1, 5), (33, 1, 6);
 
 -- Insert para tabla compraHasPromocion (promociones aplicadas)
+-- Corregir usando compras existentes
 INSERT INTO `compraHasPromocion` (`compraIdCompra`, `promocionesIdPromociones`, `cantidadAplicada`) VALUES
-(1, 1, 1),
-(2, 2, 1),
-(4, 3, 2),
-(5, 4, 1),
-(8, 5, 1),
-(10, 6, 3);
+(11, 1, 1),  -- Usar compra 11 en lugar de 1
+(12, 2, 1),  -- Usar compra 12 en lugar de 2
+(14, 3, 2),  -- Usar compra 14 en lugar de 4
+(15, 4, 1),  -- Usar compra 15 en lugar de 5
+(18, 5, 1),  -- Usar compra 18 en lugar de 8
+(20, 6, 3);  -- Usar compra 20 en lugar de 10
 
 -- Insert para tabla notificaciones
 INSERT INTO `notificaciones` (`idNotificacion`, `usuarioIdentificador`, `funcionIdFuncion`, `mensaje`, `fechaCreacion`, `leida`, `fechaEnvio`) VALUES
@@ -280,7 +281,8 @@ INSERT INTO `notificaciones` (`idNotificacion`, `usuarioIdentificador`, `funcion
 (4, 5, 5, 'Recordatorio: Jurassic Park en 1 hora', NOW(), 1, '2024-11-21'),
 (5, 7, 7, 'Harry Potter: Lleva 2x1 en pochoclos hoy', NOW(), 0, '2024-11-22');
 
--- Insert para tabla entradaAuto (para entradas de autocine)
+-- Corregir usando entradas existentes de salas autocine (3, 8, 12, 15)
 INSERT INTO `entradaAuto` (`entradaArticuloIdArticulo`, `patente`, `cantidadAuto`) VALUES
-(4, 'ABC123', 1),  -- Entrada 4 (Sala 3 - autocine)
-(9, 'DEF456', 2);  -- Entrada 9 (Sala 3 - autocine)
+(13, 'ABC123', 1),  -- Entrada 13 (Sala 3 - autocine) - Avatar
+(18, 'DEF456', 2),  -- Entrada 18 (Sala 8 - autocine) - The Dark Knight
+(33, 'GHI789', 1);  -- Entrada 33 (Sala 3 - autocine) - Avatar
