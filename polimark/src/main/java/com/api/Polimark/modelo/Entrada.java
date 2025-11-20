@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "entrada")
 public class Entrada {
 
-    static int precioBasa = 13200;
+    private static int precioBasa = 13200;
 
     @Id
     @Column(name = "articuloIdArticulo")

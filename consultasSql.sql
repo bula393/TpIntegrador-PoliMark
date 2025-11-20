@@ -1,48 +1,44 @@
-select * from articulo join producto on articulo_idarticulo = idarticulo;
-create database Polimark;
+
 delimiter //
 
-
-DELIMITER //
-
-CREATE TRIGGER beforeInsertEntrada 
-BEFORE INSERT ON entrada
-FOR EACH ROW
-BEGIN
-    IF EXISTS (
-        SELECT * FROM entrada 
-        WHERE butacaIdButaca = NEW.butacaIdButaca 
-        AND funcionIdFuncion = NEW.funcionIdFuncion
-    ) THEN
+create trigger beforeInsertEntrada 
+before insert on entrada
+for each row
+begin
+    if exists (
+        select * from entrada 
+        where butacaIdButaca = NEW.butacaIdButaca 
+        and funcionIdFuncion = NEW.funcionIdFuncion
+    ) then
         SIGNAL SQLSTATE '45000' 
         SET MESSAGE_TEXT = 'Error: la butaca ya está ocupada para esa función';
-    END IF;
-END //
+    end if;
+end //
 
-DELIMITER ;
-DELIMITER //
+delimiter ;
+delimiter //
 
 -- b 
 
-DELIMITER //
+delimiter //
 
-CREATE TRIGGER afterInsertProductoHasCompra 
-AFTER INSERT ON producto_has_compra
-FOR EACH ROW
-BEGIN
-    UPDATE producto 
-    SET stock = stock - NEW.cantidad 
-    WHERE articuloIdArticulo = NEW.productoArticuloIdArticulo;
-END //
+create trigger afterInsertProductoHasCompra 
+after insert on producto_has_compra
+for each row
+begin
+    update producto 
+    set stock = stock - NEW.cantidad 
+    where articuloIdArticulo = NEW.productoArticuloIdArticulo;
+end //
 
-DELIMITER ;
+delimiter ;
 
 -- c
 
 delimiter //
 create procedure actualizarRango(in idCliente int, in puntos int)
 begin
-	if puntos > 500 then 
+	if puntos > 500 and (select rangoIdRango from usuario where idCliente = identificador) = 1 then 
 		update usuario set rangoIdRango = 2 where identificador = idCliente;
 	end if;
 end//
@@ -52,134 +48,127 @@ select * from pelicula
 
 --d
 
-DELIMITER //
+delimiter //
 
-CREATE PROCEDURE PeliculaMasTaquilleraPorFecha(
-    IN fecha_inicio DATE,
-    IN fecha_fin DATE
+create procedure PeliculaMasTaquilleraPorFecha(
+    in fecha_inicio date,
+    in fecha_fin date
 )
-BEGIN
-    -- Variables para almacenar los resultados
-    DECLARE pelicula_nombre varchar(45);
-    DECLARE rango_horario_popular varchar(20);
-    DECLARE max_asistencia INT;
+begin
     
-    -- Encontrar la película más taquillera
-    SELECT 
-        p.nombre,
-        SUM(a.precio) as total_recaudacion
-    INTO pelicula_nombre
-    FROM pelicula
-    JOIN funcion ON pelicula.nombre = funcion.peliculaNombre
-    JOIN entrada ON funcion.idFuncion = entrada.funcionIdFuncion
-    JOIN articulo ON entrada.articuloIdArticulo = articulo.idArticulo
-    WHERE DATE(funcion.horario) BETWEEN fecha_inicio AND fecha_fin
-    GROUP BY pelicula.nombre
-    ORDER BY total_recaudacion DESC LIMIT 1;
+    declare pelicula_nombre varchar(45);
+    declare rango_horario_popular varchar(45);
+    declare max_asistencia int;
     
-    -- Si no se encontraron datos
-    IF pelicula_nombre IS NULL THEN
-        SELECT 'No se encontraron ventas en el rango de fechas especificado' as resultado;
-    ELSE
-        -- Encontrar el rango horario con mayor asistencia para esa película
-        SELECT 
-            CASE 
-                WHEN HOUR(funcion.horario) BETWEEN 6 AND 12 THEN 'Mañana (6:00-12:00)'
-                WHEN HOUR(funcion.horario) BETWEEN 12 AND 18 THEN 'Tarde (12:00-18:00)'
-                WHEN HOUR(funcion.horario) BETWEEN 18 AND 24 THEN 'Noche (18:00-24:00)'
-                ELSE 'Madrugada (0:00-6:00)'
-            END as rango_horario,
+    select pelicula.nombre,SUM(a.precio) as total_recaudacion
+    into pelicula_nombre from pelicula
+    join funcion on pelicula.nombre = funcion.peliculaNombre
+    join entrada on funcion.idFuncion = entrada.funcionIdFuncion
+    join articulo on entrada.articuloIdArticulo = articulo.idArticulo
+    where DATE(funcion.horario) between fecha_inicio and fecha_fin
+    group by pelicula.nombre
+    order by total_recaudacion desc limit 1;
+    
+    if pelicula_nombre is null then
+        select 'No se encontraron ventas en el rango de fechas especificado' as resultado;
+    else
+        select 
+            case 
+                when hour(funcion.horario) between 6 and 12 then 'Mañana (6:00-12:00)'
+                when hour(funcion.horario) between 12 and 18 then 'Tarde (12:00-18:00)'
+                when hour(funcion.horario) between 18 and 24 then 'Noche (18:00-24:00)'
+                else 'Madrugada (0:00-6:00)'
+            end as rango_horario,
             COUNT(entrada.articuloIdArticulo) as total_asistentes
-        INTO rango_horario_popular, max_asistencia
-        FROM funcion
-        JOIN entrada ON funcion.idFuncion = entrada.funcionIdFuncion
-        WHERE funcion.peliculaNombre = pelicula_nombre
-            AND DATE(funcion.horario) BETWEEN fecha_inicio AND fecha_fin
-        GROUP BY 
-            CASE 
-                WHEN HOUR(funcion.horario) BETWEEN 6 AND 12 THEN 'Mañana (6:00-12:00)'
-                WHEN HOUR(funcion.horario) BETWEEN 12 AND 18 THEN 'Tarde (12:00-18:00)'
-                WHEN HOUR(funcion.horario) BETWEEN 18 AND 24 THEN 'Noche (18:00-24:00)'
-                ELSE 'Madrugada (0:00-6:00)'
-            END
-        ORDER BY total_asistentes DESC
-        LIMIT 1;
+        into rango_horario_popular, max_asistencia
+        from funcion
+        join entrada on funcion.idFuncion = entrada.funcionIdFuncion
+        where funcion.peliculaNombre = pelicula_nombre
+            and DATE(funcion.horario) between fecha_inicio and fecha_fin
+        group by
+            case 
+                when hour(funcion.horario) between 6 and 12 then 'Mañana (6:00-12:00)'
+                when hour(funcion.horario) between 12 and 18 then 'Tarde (12:00-18:00)'
+                when hour(funcion.horario) between 18 and 24 then 'Noche (18:00-24:00)'
+                else 'Madrugada (0:00-6:00)'
+            end
+        order by total_asistentes desc
+        limit 1;
         
         -- Mostrar resultados
-        SELECT 
+        select 
             pelicula_nombre as 'Película Más Taquillera',
             rango_horario_popular as 'Rango Horario Más Popular',
             max_asistencia as 'Total de Asistentes',
             CONCAT(fecha_inicio, ' a ', fecha_fin) as 'Período Analizado';
-    END IF;
+    end if;
     
-END //
+end //
 
-DELIMITER ;
+delimiter ;
 
-DELIMITER //
+delimiter //
 
-CREATE EVENT RecordatoriosFuncionesDiarias
-ON SCHEDULE EVERY 1 DAY
-STARTS CONCAT(CURDATE() + INTERVAL 1 DAY, ' 08:00:00')
-DO
-BEGIN
-    DECLARE done INT DEFAULT FALSE;
-    DECLARE v_usuario_id INT;
-    DECLARE v_funcion_id INT;
-    DECLARE v_pelicula_nombre VARCHAR(45);
-    DECLARE v_horario DATETIME;
-    DECLARE v_lugar_nombre VARCHAR(45);
-    DECLARE v_notificacion_existe INT;
+create event RecordatoriosFuncionesDiarias
+on schedule every 1 day
+starts CONCAT(CURDATE() + interval 1 DAY, ' 08:00:00')
+do
+begin
+    declare done int default FALSE;
+    declare v_usuario_id int;
+    declare v_funcion_id int;
+    declare v_pelicula_nombre varchar(45);
+    declare v_horario datetime;
+    declare v_lugar_nombre varchar(45);
+    declare v_notificacion_existe int;
     
-    -- Cursor para recorrer las compras con funciones del día
-    DECLARE cur_compras CURSOR FOR 
-    SELECT 
+    declare cur_compras cursor for 
+    select 
         compra.usuarioIdentificador,
         funcion.idFuncion,
         funcion.peliculaNombre,
         funcion.horario,
         lugar.nombre
-    FROM compra
-    JOIN entrada ON compra.idCompra = entrada.compraIdCompra
-    JOIN funcion ON entrada.funcionIdFuncion = funcion.idFuncion
-    JOIN sala ON funcion.salaIdSala = sala.idSala
-    JOIN lugar ON sala.lugarIdLugar = lugar.idLugar
-    WHERE DATE(funcion.horario) = CURDATE()
-        AND compra.pagado = 1
-    GROUP BY compra.usuarioIdentificador, funcion.idFuncion;
+    from compra
+    join entrada on compra.idCompra = entrada.compraIdCompra
+    join funcion on entrada.funcionIdFuncion = funcion.idFuncion
+    join sala on funcion.salaIdSala = sala.idSala
+    join lugar on sala.lugarIdLugar = lugar.idLugar
+    where date(funcion.horario) = CURDATE()
+        and compra.pagado = 1
+    group by compra.usuarioIdentificador, funcion.idFuncion;
     
-    -- Handler para cuando no hay más registros
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    declare continue HandLER for not FOUND set done = TRUE;
     
     -- Abrir cursor
-    OPEN cur_compras;
+    open cur_compras;
     
     -- Iniciar ciclo
     read_loop: LOOP
-        FETCH cur_compras INTO v_usuario_id, v_funcion_id, v_pelicula_nombre, v_horario, v_lugar_nombre;
+        fetch cur_compras into v_usuario_id, v_funcion_id, v_pelicula_nombre, v_horario, v_lugar_nombre;
         
-        IF done THEN
+        if done then
             LEAVE read_loop;
-        END IF;
+        end if;
         
         -- Verificar si ya existe una notificación para este usuario y función hoy
-        SELECT COUNT(*) INTO v_notificacion_existe
-        FROM notificaciones 
-        WHERE usuarioIdentificador = v_usuario_id 
-            AND funcionIdFuncion = v_funcion_id
-            AND DATE(fechaCreacion) = CURDATE()
-            AND mensaje LIKE '%Recordatorio:%';
+        select COUNT(*) into v_notificacion_existe
+        from notificaciones 
+        where usuarioIdentificador = v_usuario_id 
+            and funcionIdFuncion = v_funcion_id
+            and DATE(fechaCreacion) = CURDATE()
+            and mensaje LIKE '%Recordatorio:%';
         
         -- Si no existe notificación, insertar una nueva
-        IF v_notificacion_existe = 0 THEN
-            INSERT INTO notificaciones (
+        if v_notificacion_existe = 0 then
+            insert into notificaciones (
                 usuarioIdentificador, 
                 funcionIdFuncion, 
                 mensaje, 
+                mensaje, 
                 fechaEnvio,
                 leida
-            ) VALUES (
+            ) values (
                 v_usuario_id,
                 v_funcion_id,
                 CONCAT(
@@ -194,41 +183,40 @@ BEGIN
                 CURDATE(),
                 0
             );
-        END IF;
+        end if;
         
-    END LOOP;
-    
+    end loop;    
     -- Cerrar cursor
-    CLOSE cur_compras;
+    close cur_compras;
     
     -- Mostrar resultado (opcional)
-    SELECT 'Proceso de recordatorios completado' as resultado;
+    select 'Proceso de recordatorios completado' as resultado;
     
-END //
+end //
 
-DELIMITER ;
+delimiter ;
 
-DELIMITER //
-
-
+delimiter //
 
 
-CREATE EVENT IF NOT EXISTS usuariosInactivos 
-ON SCHEDULE EVERY 1 MONTH
-STARTS NOW()
-DO
-BEGIN 
-    UPDATE usuario 
-    SET rangoIdRango = 1 
-    WHERE idUsuario NOT IN (
-        SELECT DISTINCT c.idUsuario 
-        FROM compra 
-        WHERE compra.fecha >= DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
-        AND compra.fecha < CURRENT_DATE
+
+
+create event if not exists usuariosInactivos 
+on schedule every 1 MONTH
+starts now()
+do
+begin 
+    update usuario 
+    set rangoIdRango = 1 
+    where idUsuario not in (
+        select distinct c.idUsuario 
+        from compra 
+        where compra.fecha >= DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
+        and compra.fecha < CURRENT_DATE
     );
-END//
+end//
 
-DELIMITER ;
+delimiter ;
 
-DELIMITER ;
+delimiter ;
 
