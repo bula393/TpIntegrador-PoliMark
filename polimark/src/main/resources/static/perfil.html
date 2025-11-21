@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PoliMark - Perfil</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* --- VARIABLES Y RESET (Igual que pág 5 para consistencia) --- */
+        :root {
+            --primary-red: #b71c1c;
+            --primary-red-hover: #9f1616;
+            --bg-black: #000000;
+            --bg-panel: #121212; /* Gris muy oscuro del panel */
+            --text-white: #ffffff;
+            --text-gray: #a0a0a0;
+            --input-border: #555;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-black); color: var(--text-white); }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- HEADER --- */
+        header {
+            background-color: var(--primary-red);
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        nav ul { display: flex; gap: 20px; font-size: 0.9rem; }
+        .login-btn { background-color: black; padding: 8px 20px; border-radius: 4px; font-weight: bold; }
+
+        /* --- MAIN LAYOUT --- */
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Centrado vertical visual */
+            min-height: 80vh; /* Ocupa gran parte de la pantalla */
+            padding: 40px 20px;
+            flex-direction: column;
+        }
+
+        /* --- PROFILE BOX --- */
+        .profile-card {
+            background-color: var(--bg-panel);
+            width: 100%;
+            max-width: 900px;
+            border-radius: 10px;
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .profile-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+
+        .profile-content {
+            display: flex;
+            gap: 50px;
+            align-items: flex-start;
+        }
+
+        /* Avatar Section (Izquierda) */
+        .avatar-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 30%;
+        }
+
+        .avatar-circle {
+            width: 150px;
+            height: 150px;
+            background-color: #333;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #555;
+            margin-bottom: 20px;
+        }
+        .avatar-circle i { font-size: 80px; color: #888; }
+
+        .username-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Form Section (Centro/Derecha) */
+        .form-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-field {
+            background-color: transparent;
+            border: 1px solid var(--text-white);
+            color: white;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .input-field::placeholder { color: #666; }
+
+        .rank-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .rank-label {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-transform: lowercase; /* "rango" en el pdf */
+        }
+
+        .rank-value {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            margin-right: auto;
+            margin-left: 15px;
+            text-transform: capitalize;
+        }
+
+        .action-btn {
+            background-color: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-align: center;
+            width: 100%;
+        }
+        .action-btn:hover { background-color: var(--primary-red-hover); }
+
+        /* Botón cuadrado "SUBIR RANGO" */
+        .rank-up-btn {
+            background-color: var(--primary-red);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            position: absolute;
+            right: 0;
+            top: 40px; /* Ajustado visualmente */
+            width: 100px;
+            line-height: 1.2;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .rank-up-btn:hover { background-color: var(--primary-red-hover); }
+
+        /* Botón Historial (Largo abajo) */
+        .history-btn-container {
+            margin-top: 40px;
+            width: 100%;
+        }
+        .history-btn {
+            width: 100%;
+            background-color: var(--primary-red);
+            color: white;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* --- HISTORIAL EXPANDIBLE --- */
+        #historial-container {
+            display: none; /* Oculto por defecto */
+            margin-top: 20px;
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            width: 100%;
+            border-top: 1px solid #333;
+        }
+
+        .ticket-card {
+            display: flex;
+            justify-content: space-between;
+            background-color: #2a2a2a;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 4px solid var(--primary-red);
+            align-items: center;
+        }
+
+        .ticket-info h4 { font-size: 1.1rem; margin-bottom: 5px; color: white; }
+        .ticket-meta { font-size: 0.9rem; color: #ccc; }
+        .ticket-price { font-size: 1.2rem; font-weight: bold; color: var(--primary-red); }
+
+        /* Footer simple para consistencia */
+        footer {
+            margin-top: auto;
+            background-color: #111;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #555;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <div class="logo"><i class="fas fa-star"></i> PoliMark</div>
+    <nav>
+        <ul>
+            <li><a href="#">Movies</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Help</a></li>
+        </ul>
+    </nav>
+    <a href="#" class="login-btn">Login</a>
+</header>
+
+<div class="main-container">
+    <div class="profile-card">
+        <h2 class="profile-title">Informacion Personal</h2>
+
+        <div class="profile-content">
+            <!-- Columna Izquierda: Avatar -->
+            <div class="avatar-section">
+                <div class="avatar-circle">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="username-display" id="username-display">
+                    Cargando...
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Formulario -->
+            <div class="form-section">
+                <!-- Botón flotante Subir Rango -->
+                <button class="rank-up-btn">SUBIR<br>RANGO</button>
+
+                <!-- Email -->
+                <div class="input-group">
+                    <input type="email" id="email-input" class="input-field" placeholder="Gmail" readonly>
+                </div>
+
+                <!-- Rango Texto -->
+                <div class="rank-row">
+                    <span class="rank-label">rango</span>
+                    <span class="rank-value" id="rank-display">...</span>
+                </div>
+
+                <!-- Botones Acciones -->
+                <button class="action-btn" style="margin-bottom: 10px;">Cambiar mail</button>
+                <button class="action-btn">Cambiar contraseña</button>
+            </div>
+        </div>
+
+        <!-- Botón Historial -->
+        <div class="history-btn-container">
+            <button class="history-btn" id="toggle-history-btn">Ver historial de entradas</button>
+        </div>
+
+        <!-- Contenedor Oculto del Historial -->
+        <div id="historial-container">
+            <!-- Aquí se inyectan las entradas -->
+            <p style="text-align: center; color: #888;">Cargando historial...</p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    All rights reserved © 2025 PoliMark
+</footer>
+
+<!-- JAVASCRIPT -->
+<script>
+    // Variables globales para almacenar datos si es necesario
+    let userData = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchUserProfile();
+
+        // Listener para el botón de historial
+        document.getElementById('toggle-history-btn').addEventListener('click', toggleHistory);
+    });
+
+    async function fetchUserProfile() {
+        // ID Cliente harcodeado a 1 según instrucción
+        const url = 'http://localhost:8080/api/clientes/1/perfil';
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Error al conectar con API');
+
+            userData = await response.json();
+            renderProfile(userData);
+
+        } catch (error) {
+            console.error(error);
+            document.getElementById('username-display').innerText = "Error";
+            alert("No se pudo cargar el perfil. Revisa que el backend esté corriendo.");
+        }
+    }
+
+    function renderProfile(data) {
+        const usuario = data.usuario;
+
+        // 1. Llenar Avatar y Nombre
+        document.getElementById('username-display').innerText = usuario.nombre; // Solo nombre, o `${usuario.nombre} ${usuario.apellido}` si prefieres
+
+        // 2. Llenar Email
+        document.getElementById('email-input').value = usuario.mail;
+
+        // 3. Llenar Rango
+        // Verificamos si rango existe para evitar errores null
+        if(usuario.rango) {
+            document.getElementById('rank-display').innerText = usuario.rango.nombre;
+        }
+    }
+
+    function toggleHistory() {
+        const container = document.getElementById('historial-container');
+        const btn = document.getElementById('toggle-history-btn');
+
+        // Si está oculto, mostrar y renderizar
+        if (container.style.display === 'none' || container.style.display === '') {
+            container.style.display = 'block';
+            btn.innerText = 'Ocultar historial de entradas';
+
+            if (userData && userData.historialEntradas) {
+                renderHistoryList(userData.historialEntradas);
+            }
+        } else {
+            // Si está visible, ocultar
+            container.style.display = 'none';
+            btn.innerText = 'Ver historial de entradas';
+        }
+    }
+
+    function renderHistoryList(historial) {
+        const container = document.getElementById('historial-container');
+        container.innerHTML = ''; // Limpiar
+
+        if (historial.length === 0) {
+            container.innerHTML = '<p style="text-align:center; padding:20px;">No hay entradas registradas.</p>';
+            return;
+        }
+
+        historial.forEach(entrada => {
+            const peli = entrada.funcion.pelicula;
+            const funcion = entrada.funcion;
+            const sala = entrada.butaca.sala;
+
+            // Formatear fecha
+            const fechaObj = new Date(funcion.horario);
+            const fechaStr = fechaObj.toLocaleDateString() + ' ' + fechaObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+            const cardHtml = `
+                <div class="ticket-card">
+                    <div class="ticket-info">
+                        <h4>${peli.nombre}</h4>
+                        <div class="ticket-meta">
+                            <i class="fas fa-calendar-alt"></i> ${fechaStr} <br>
+                            <i class="fas fa-map-marker-alt"></i> ${sala.lugar} - ${sala.tipo} <br>
+                            <i class="fas fa-chair"></i> Fila: ${entrada.butaca.fila} | Col: ${entrada.butaca.columna}
+                        </div>
+                    </div>
+                    <div class="ticket-price">
+                        $${entrada.precio}
+                    </div>
+                </div>
+            `;
+            container.innerHTML += cardHtml;
+        });
+    }
+</script>
+
+</body>
+</html>

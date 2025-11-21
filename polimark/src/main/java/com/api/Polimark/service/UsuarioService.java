@@ -1,8 +1,6 @@
 package com.api.Polimark.service;
 
-import com.api.Polimark.dto.EntradaVisible;
-import com.api.Polimark.dto.Perfil;
-import com.api.Polimark.dto.UsuarioRequest;
+import com.api.Polimark.dto.*;
 import com.api.Polimark.modelo.*;
 import com.api.Polimark.repository.*;
 import org.springframework.stereotype.Service;
@@ -84,7 +82,7 @@ public class UsuarioService {
         List<EntradaVisible> entradaVisibles = new ArrayList<>();
 
         for (Entrada entrada : historialEntradas){
-             entradaVisibles.add(new EntradaVisible(entrada.getIdArticulo(),entrada.getArticulo().getPrecio(),entrada.getButaca(),entrada.getFuncion()));
+            entradaVisibles.add(new EntradaVisible(entrada.getIdArticulo(),entrada.getArticulo().getPrecio(),new ButacaVisible(entrada.getButaca().getIdButaca(),entrada.getButaca().getColumna(),entrada.getButaca().getFila(),new SalaVisible(entrada.getFuncion().getSala().getIdSala(),entrada.getFuncion().getSala().getCapacidad(),entrada.getFuncion().getSala().getTipo(),entrada.getFuncion().getSala().getLugar().getNombre())),new FuncionVisible(entrada.getFuncion().getIdFuncion(),entrada.getFuncion().getHorario(),new SalaVisible(entrada.getFuncion().getSala().getIdSala(),entrada.getFuncion().getSala().getCapacidad(),entrada.getFuncion().getSala().getTipo(),entrada.getFuncion().getSala().getLugar().getNombre()),entrada.getFuncion().getPelicula())));
         }
 
         return entradaVisibles;

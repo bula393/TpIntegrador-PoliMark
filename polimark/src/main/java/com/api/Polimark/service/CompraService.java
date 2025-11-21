@@ -58,8 +58,8 @@ public class CompraService {
                 .map(entrada -> new EntradaVisible(
                         entrada.getIdArticulo(),
                         entrada.getArticulo().getPrecio(),
-                        entrada.getButaca(),
-                        entrada.getFuncion()
+                        new ButacaVisible(entrada.getButaca().getIdButaca(),entrada.getButaca().getColumna(),entrada.getButaca().getFila(),new SalaVisible(entrada.getFuncion().getSala().getIdSala(),entrada.getFuncion().getSala().getCapacidad(),entrada.getFuncion().getSala().getTipo(),entrada.getFuncion().getSala().getLugar().getNombre())),
+                        new FuncionVisible(entrada.getFuncion().getIdFuncion(),entrada.getFuncion().getHorario(),new SalaVisible(entrada.getFuncion().getSala().getIdSala(),entrada.getFuncion().getSala().getCapacidad(),entrada.getFuncion().getSala().getTipo(),entrada.getFuncion().getSala().getLugar().getNombre()),entrada.getFuncion().getPelicula())
                 ))
                 .collect(Collectors.toList());
 

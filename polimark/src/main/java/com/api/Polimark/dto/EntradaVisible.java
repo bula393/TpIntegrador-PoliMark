@@ -6,10 +6,10 @@ import com.api.Polimark.modelo.Funcion;
 public class EntradaVisible {
     private Integer idArticulo;
     private Integer precio;
-    private Butaca butaca;
-    private Funcion funcion;
+    private ButacaVisible butaca;
+    private FuncionVisible funcion;
 
-    public EntradaVisible(Integer idArticulo, Integer precio, Butaca butaca, Funcion funcion) {
+    public EntradaVisible(Integer idArticulo, Integer precio, ButacaVisible butaca, FuncionVisible funcion) {
         this.idArticulo = idArticulo;
         this.precio = precio;
         this.butaca = butaca;
@@ -21,8 +21,8 @@ public class EntradaVisible {
     public void setIdArticulo(Integer idArticulo) { this.idArticulo = idArticulo; }
     public Integer getPrecio() { return precio; }
     public void setPrecio(Integer precio) { this.precio = precio; }
-    public Butaca getButaca() { return butaca; }
-    public void setButaca(Butaca butaca) { this.butaca = butaca; }
-    public Funcion getFuncion() { return funcion; }
-    public void setFuncion(Funcion funcion) { this.funcion = funcion; }
+    public ButacaVisible getButaca() { return butaca; }
+    public void setButaca(ButacaVisible butaca) { this.butaca = butaca; }
+    public FuncionVisible getFuncion() { return funcion; }
+    public void setFuncion(FuncionVisible funcion) { this.funcion = funcion; }
 }

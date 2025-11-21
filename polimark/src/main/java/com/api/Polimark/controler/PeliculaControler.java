@@ -5,6 +5,7 @@ import com.api.Polimark.modelo.Pelicula;
 import com.api.Polimark.service.FuncionService;
 import com.api.Polimark.service.PeliculaService;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -23,9 +24,14 @@ public class PeliculaControler {
     }
 
     @GetMapping("/cartelera")
-    public List<Pelicula> cartelera(
+    public ResponseEntity<?>  cartelera(
     ) {
-        return peliculaService.peliculasConFuncionesProximamente();
+       try {
+           return ResponseEntity.ok(peliculaService.peliculasConFuncionesProximamente());
+       }
+        catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}/fechas")
