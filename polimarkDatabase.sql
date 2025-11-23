@@ -210,10 +210,11 @@ CREATE TABLE `funcion` (
 --
 -- Dumping data for table `funcion`
 --
+
 LOCK TABLES `funcion` WRITE;
 /*!40000 ALTER TABLE `funcion` DISABLE KEYS */;
 
-INSERT INTO `funcion` VALUES 
+INSERT INTO `funcion` (salaIdSala, peliculaNombre, horario, idFuncion) VALUES
 (1,'El Señor de los Anillos','2025-11-20 18:00:00',1),
 (2,'Matrix','2025-11-20 20:30:00',2),
 (3,'Avatar','2025-11-20 22:00:00',3),
@@ -225,23 +226,26 @@ INSERT INTO `funcion` VALUES
 (9,'Forrest Gump','2025-11-28 21:00:00',9),
 (10,'Pulp Fiction','2025-11-23 19:00:00',10),
 
-(11,'Harry Potter y la Piedra Filosofal','2025-12-01 14:00:00',1),
-(12,'Harry Potter y la Cámara Secreta','2025-12-01 17:00:00',2),
-(13,'Harry Potter y el Prisionero de Azkaban','2025-12-02 16:30:00',3),
-(14,'Harry Potter y el Cáliz de Fuego','2025-12-02 19:00:00',4),
-(15,'Harry Potter y la Orden del Fénix','2025-12-03 21:00:00',5),
+-- Nuevos para Harry Potter (sala 7)
+(7,'Harry Potter y la Piedra Filosofal','2025-12-01 14:00:00',11),
+(7,'Harry Potter y la Piedra Filosofal','2025-12-01 18:00:00',12),
+(7,'Harry Potter y la Piedra Filosofal','2025-12-02 16:00:00',13),
+(7,'Harry Potter y la Piedra Filosofal','2025-12-03 20:00:00',14),
+(7,'Harry Potter y la Piedra Filosofal','2025-12-04 15:30:00',15),
 
-(16,'Matrix','2025-12-05 18:00:00',1),
-(17,'Matrix Reloaded','2025-12-05 20:45:00',2),
-(18,'Matrix Revolutions','2025-12-06 22:00:00',3),
-(19,'The Matrix','2025-12-07 15:30:00',4),
-(20,'The Matrix Resurrections','2025-12-07 19:00:00',5),
+-- Nuevos para Matrix (sala 2)
+(2,'Matrix','2025-12-05 18:00:00',16),
+(2,'Matrix','2025-12-05 21:00:00',17),
+(2,'Matrix','2025-12-06 19:30:00',18),
+(2,'Matrix','2025-12-07 16:00:00',19),
+(2,'Matrix','2025-12-07 22:00:00',20),
 
-(21,'Avatar','2025-12-10 17:00:00',1),
-(22,'Avatar: El Camino del Agua','2025-12-10 20:00:00',2),
-(23,'Avatar','2025-12-11 14:30:00',3),
-(24,'Avatar: El Camino del Agua','2025-12-11 18:00:00',4),
-(25,'Avatar','2025-12-12 21:00:00',5);
+-- Nuevos para Avatar (sala 3)
+(3,'Avatar','2025-12-10 17:00:00',21),
+(3,'Avatar','2025-12-10 20:30:00',22),
+(3,'Avatar','2025-12-11 15:00:00',23),
+(3,'Avatar','2025-12-11 19:00:00',24),
+(3,'Avatar','2025-12-12 21:00:00',25);
 
 /*!40000 ALTER TABLE `funcion` ENABLE KEYS */;
 UNLOCK TABLES;
