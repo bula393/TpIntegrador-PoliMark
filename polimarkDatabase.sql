@@ -210,12 +210,42 @@ CREATE TABLE `funcion` (
 --
 -- Dumping data for table `funcion`
 --
-
 LOCK TABLES `funcion` WRITE;
 /*!40000 ALTER TABLE `funcion` DISABLE KEYS */;
-INSERT INTO `funcion` VALUES (1,'El Señor de los Anillos','2025-11-20 18:00:00',1),(2,'Matrix','2025-11-20 20:30:00',2),(3,'Avatar','2025-11-20 22:00:00',3),(4,'Toy Story','2025-11-21 15:00:00',4),(5,'Jurassic Park','2025-11-21 17:30:00',5),(6,'Star Wars: Una Nueva Esperanza','2025-11-21 20:00:00',6),(7,'Harry Potter y la Piedra Filosofal','2025-11-30 16:00:00',7),(8,'The Dark Knight','2025-11-29 18:30:00',8),(9,'Forrest Gump','2025-11-28 21:00:00',9),(10,'Pulp Fiction','2025-11-23 19:00:00',10);
+
+INSERT INTO `funcion` VALUES 
+(1,'El Señor de los Anillos','2025-11-20 18:00:00',1),
+(2,'Matrix','2025-11-20 20:30:00',2),
+(3,'Avatar','2025-11-20 22:00:00',3),
+(4,'Toy Story','2025-11-21 15:00:00',4),
+(5,'Jurassic Park','2025-11-21 17:30:00',5),
+(6,'Star Wars: Una Nueva Esperanza','2025-11-21 20:00:00',6),
+(7,'Harry Potter y la Piedra Filosofal','2025-11-30 16:00:00',7),
+(8,'The Dark Knight','2025-11-29 18:30:00',8),
+(9,'Forrest Gump','2025-11-28 21:00:00',9),
+(10,'Pulp Fiction','2025-11-23 19:00:00',10),
+
+(11,'Harry Potter y la Piedra Filosofal','2025-12-01 14:00:00',1),
+(12,'Harry Potter y la Cámara Secreta','2025-12-01 17:00:00',2),
+(13,'Harry Potter y el Prisionero de Azkaban','2025-12-02 16:30:00',3),
+(14,'Harry Potter y el Cáliz de Fuego','2025-12-02 19:00:00',4),
+(15,'Harry Potter y la Orden del Fénix','2025-12-03 21:00:00',5),
+
+(16,'Matrix','2025-12-05 18:00:00',1),
+(17,'Matrix Reloaded','2025-12-05 20:45:00',2),
+(18,'Matrix Revolutions','2025-12-06 22:00:00',3),
+(19,'The Matrix','2025-12-07 15:30:00',4),
+(20,'The Matrix Resurrections','2025-12-07 19:00:00',5),
+
+(21,'Avatar','2025-12-10 17:00:00',1),
+(22,'Avatar: El Camino del Agua','2025-12-10 20:00:00',2),
+(23,'Avatar','2025-12-11 14:30:00',3),
+(24,'Avatar: El Camino del Agua','2025-12-11 18:00:00',4),
+(25,'Avatar','2025-12-12 21:00:00',5);
+
 /*!40000 ALTER TABLE `funcion` ENABLE KEYS */;
 UNLOCK TABLES;
+
 
 --
 -- Table structure for table `lugar`
