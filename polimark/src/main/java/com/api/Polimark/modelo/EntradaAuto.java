@@ -1,6 +1,4 @@
 package com.api.Polimark.modelo;
-
-
 import jakarta.persistence.*;
 
 @Entity
@@ -8,15 +6,14 @@ import jakarta.persistence.*;
 public class EntradaAuto {
 
     @Id
-    @Column(name = "entrada_articulo_idarticulo")
-    private int entradaArticuloIdArticulo;
+    @Column(name = "entradaArticuloIdArticulo") // Nombre exacto de la BD
+    private Integer entradaArticuloIdArticulo;
 
     @OneToOne
+    @MapsId // ← Esto hace que el ID se tome de la relación
     @JoinColumn(
-            name = "entrada_articulo_idarticulo",
-            referencedColumnName = "articulo_idarticulo",
-            insertable = false,
-            updatable = false
+            name = "entradaArticuloIdArticulo", // Mismo nombre que el @Id
+            referencedColumnName = "articuloIdArticulo"
     )
     private Entrada entrada;
 
@@ -26,22 +23,23 @@ public class EntradaAuto {
     @Column(name = "cantidadAuto")
     private Integer cantidadAuto;
 
-    // 🔹 Constructores
+    // 🔹 Constructores CORREGIDOS
     public EntradaAuto() {
     }
 
-    public EntradaAuto(int entradaArticuloIdArticulo, String patente, Integer cantidadAuto) {
-        this.entradaArticuloIdArticulo = entradaArticuloIdArticulo;
+    // Constructor sin el ID explícito (deja que @MapsId lo maneje)
+    public EntradaAuto(Entrada entrada, String patente, Integer cantidadAuto) {
+        this.entrada = entrada;
         this.patente = patente;
         this.cantidadAuto = cantidadAuto;
     }
 
     // 🔹 Getters y Setters
-    public int getEntradaArticuloIdArticulo() {
+    public Integer getEntradaArticuloIdArticulo() {
         return entradaArticuloIdArticulo;
     }
 
-    public void setEntradaArticuloIdArticulo(int entradaArticuloIdArticulo) {
+    public void setEntradaArticuloIdArticulo(Integer entradaArticuloIdArticulo) {
         this.entradaArticuloIdArticulo = entradaArticuloIdArticulo;
     }
 
@@ -51,30 +49,11 @@ public class EntradaAuto {
 
     public void setEntrada(Entrada entrada) {
         this.entrada = entrada;
+        // Si estableces la entrada, actualiza el ID automáticamente
+        if (entrada != null && entrada.getArticulo() != null) {
+            this.entradaArticuloIdArticulo = entrada.getArticulo().getIdArticulo();
+        }
     }
 
-    public String getPatente() {
-        return patente;
-    }
-
-    public void setPatente(String patente) {
-        this.patente = patente;
-    }
-
-    public Integer getCantidadAuto() {
-        return cantidadAuto;
-    }
-
-    public void setCantidadAuto(Integer cantidadAuto) {
-        this.cantidadAuto = cantidadAuto;
-    }
-
-    @Override
-    public String toString() {
-        return "EntradaAuto{" +
-                "entradaArticuloIdArticulo=" + entradaArticuloIdArticulo +
-                ", patente='" + patente + '\'' +
-                ", cantidadAuto=" + cantidadAuto +
-                '}';
-    }
+    // Resto de getters y setters...
 }

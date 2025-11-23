@@ -229,47 +229,49 @@ public class CompraService {
         // 2. Crear compra temporal
         Compra compra = crearCompraInicial(solicitudEntradas.getIdUsuario());
 
-        // 3. Crear artículos con promociones (integrado aquí)
-        List<Articulo> articulosCreados = crearArticulosYPromociones(solicitudEntradas.getArticulosPromociones(), compra);
+        // 3. Crear artículos básicos (sin relaciones)
+        List<Articulo> articulosCreados = crearArticulosBasicos(solicitudEntradas.getArticulosPromociones(), compra);
 
         // 4. Extraer información para la reserva
         Integer funcionId = obtenerFuncionId(solicitudEntradas);
         List<Integer> articulosIds = new ArrayList<>();
         List<Integer> butacasIds = new ArrayList<>();
 
-        // 5. Procesar tanto ENTRADA como ENTRADA_AUTO
+        // 5. Primero crear todas las ENTRADAS
         int articuloIndex = 0;
         for (ArticuloPromocionRequest articuloRequest : solicitudEntradas.getArticulosPromociones()) {
             if ("ENTRADA".equals(articuloRequest.getTipo()) || "ENTRADA_AUTO".equals(articuloRequest.getTipo())) {
-                // Agregar artículo
+                // Procesar cada artículo de este tipo
                 for (int i = 0; i < articuloRequest.getCantidad(); i++) {
-                    articulosIds.add(articulosCreados.get(articuloIndex+i).getIdArticulo());
-                }
+                    Articulo articulo = articulosCreados.get(articuloIndex + i);
+                    articulosIds.add(articulo.getIdArticulo());
 
-
-                // Agregar butacas (tanto para entrada normal como auto)
-                if (articuloRequest.getButacasIds() != null) {
-                    butacasIds.addAll(articuloRequest.getButacasIds());
+                    // Agregar butaca si existe
+                    if (articuloRequest.getButacasIds() != null && i < articuloRequest.getButacasIds().size()) {
+                        butacasIds.add(articuloRequest.getButacasIds().get(i));
+                    }
                 }
             }
             articuloIndex += articuloRequest.getCantidad();
         }
 
-        // 6. Llamar al método original de reservarCompra
+        // 6. Crear las ENTRADAS primero
         Compra compraReservada = reservarCompra(funcionId, compra.getIdCompra(), articulosIds, butacasIds);
+
+        // 7. Ahora crear las EntradaAuto (después de que las Entradas existen)
+        crearEntradasAuto(solicitudEntradas, articulosIds, compraReservada);
+
         compraReservada.setMontopagado(calcularTotal(compraReservada));
         return compraRepository.save(compraReservada);
     }
 
-    private List<Articulo> crearArticulosYPromociones(List<ArticuloPromocionRequest> articulosPromociones, Compra compra) {
+    private List<Articulo> crearArticulosBasicos(List<ArticuloPromocionRequest> articulosPromociones, Compra compra) {
         List<Articulo> articulosCreados = new ArrayList<>();
 
         for (ArticuloPromocionRequest articuloRequest : articulosPromociones) {
-            // Crear artículos según la cantidad solicitada
             for (int i = 0; i < articuloRequest.getCantidad(); i++) {
                 Articulo nuevoArticulo = new Articulo();
 
-                // Usar el precio del request o el precio base si no está definido
                 if (articuloRequest.getPrecio() != null) {
                     nuevoArticulo.setPrecio(articuloRequest.getPrecio());
                 } else {
@@ -279,15 +281,13 @@ public class CompraService {
                 Articulo articuloGuardado = articuloRepository.save(nuevoArticulo);
                 articulosCreados.add(articuloGuardado);
 
-                // Crear relaciones adicionales según el tipo
-                if ("ENTRADA_AUTO".equals(articuloRequest.getTipo())) {
-                    crearEntradaAuto(articuloRequest, articuloGuardado, compra);
-                } else if ("PRODUCTO".equals(articuloRequest.getTipo())) {
+                // SOLO crear ProductoCompra aquí (no EntradaAuto todavía)
+                if ("PRODUCTO".equals(articuloRequest.getTipo())) {
                     crearProductoCompra(articuloRequest, articuloGuardado, compra);
                 }
             }
 
-            // Procesar promociones aplicadas
+            // Promociones (mantener igual)
             if (articuloRequest.getPromocionesAplicadas() != null) {
                 for (Integer idPromocion : articuloRequest.getPromocionesAplicadas()) {
                     Promocion promocion = promocionRepository.findById(idPromocion)
@@ -306,16 +306,23 @@ public class CompraService {
         return articulosCreados;
     }
 
-    private void crearEntradaAuto(ArticuloPromocionRequest articuloRequest, Articulo articulo, Compra compra) {
+    private void crearEntradasAuto(SolicitudEntradas solicitudEntradas, List<Integer> articulosCreados, Compra compra) {
+        int articuloIndex = 0;
+
+        for (ArticuloPromocionRequest articuloRequest : solicitudEntradas.getArticulosPromociones()) {
+            if ("ENTRADA_AUTO".equals(articuloRequest.getTipo())) {
+                    crearEntradaAuto(articuloRequest, articulosCreados.get(articuloIndex), compra);
+            }
+            articuloIndex += articuloRequest.getCantidad();
+        }
+    }
+
+    private void crearEntradaAuto(ArticuloPromocionRequest articuloRequest, int idArticulo, Compra compra) {
         if (articuloRequest.getPatente() == null || articuloRequest.getCantidadAuto() == null) {
             throw new RuntimeException("Patente y cantidadAuto son requeridos para ENTRADA_AUTO");
         }
-
-        EntradaAuto entradaAuto = new EntradaAuto();
-        entradaAuto.setEntradaArticuloIdArticulo(articulo.getIdArticulo());
-        entradaAuto.setPatente(articuloRequest.getPatente());
-        entradaAuto.setCantidadAuto(articuloRequest.getCantidadAuto());
-
+        Entrada entrada = entradaRepository.findById(idArticulo).orElseThrow(() -> new RuntimeException("entrada no encontrada"));
+        EntradaAuto entradaAuto = new EntradaAuto(entrada,articuloRequest.getPatente(),articuloRequest.getCantidadAuto());
         entradaAutoRepository.save(entradaAuto);
     }
 
