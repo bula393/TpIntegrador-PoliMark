@@ -4,7 +4,7 @@ Link ultimo commit :
 a - 
 rutas:
 http://localhost:8080/api/funciones/buscar?fecha=2025-11-21
-http://localhost:8080/api/funciones/buscar?fecha=2025-11-20&sucursalNombre=Polimark%20Avellaneda 
+http://localhost:8080/api/funciones/buscar?fecha=2025-11-20&sucursalNombre=Polimark%20Avellaneda
 http://localhost:8080/api/funciones/buscar?fecha=2025-11-20&sucursalNombre=Polimark%20Avellaneda&peliculaNombre=Avatar
 b -
 ruta:
@@ -54,6 +54,9 @@ http://localhost:8080/api/reporte/ocupacion/por-horario?desde=2025-11-01&hasta=2
 
 Otros metodos utiles
 -register
+ruta:
+http://localhost:8080/api/clientes/crearUsuario
+json:
         {
         "identificador": 49546254,
             "nombre": "facu",
