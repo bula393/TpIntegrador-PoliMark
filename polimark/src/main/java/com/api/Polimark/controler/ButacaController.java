@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("git ")
+@RequestMapping("/api/butaca")
 @CrossOrigin(origins = "*")
 public class ButacaController {
 
