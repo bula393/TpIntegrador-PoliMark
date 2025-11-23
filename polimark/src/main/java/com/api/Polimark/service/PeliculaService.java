@@ -11,10 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -133,12 +130,12 @@ public class PeliculaService {
                 .map(funcion -> funcion.getHorario().toLocalTime());
     }
 
-    public List<LocalDate> findFechaDisponibleById(String idPelicula) {
-        return funcionRepository.findByPeliculaNombre(idPelicula).stream()
-                .map(funcion -> funcion.getHorario().toLocalDate())
-                .filter(fecha -> !fecha.isBefore(LocalDate.now()))
-                .distinct()
-                .sorted()
-                .toList();
+    public HashSet<LocalDate> findFechaDisponibleById(String idPelicula) {
+        List<Funcion> funcionPelicula  = funcionRepository.findByPeliculaNombre(idPelicula);
+        HashSet<LocalDate> fechaDisponible = new HashSet<>();
+        for (Funcion funcion : funcionPelicula) {
+            fechaDisponible.add(funcion.getHorario().toLocalDate());
+        }
+        return fechaDisponible;
     }
 }

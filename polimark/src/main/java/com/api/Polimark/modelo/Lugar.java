@@ -18,9 +18,8 @@ public class Lugar {
     @Column(name = "direccion", length = 100)
     private String direccion;
 
-    // Relación bidireccional con Sala (opcional)
-    @OneToMany(mappedBy = "lugar", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Sala> salas;
+
+
 
     public Lugar() {}
 
@@ -54,11 +53,4 @@ public class Lugar {
         this.direccion = direccion;
     }
 
-    public List<Sala> getSalas() {
-        return salas;
-    }
-
-    public void setSalas(List<Sala> salas) {
-        this.salas = salas;
-    }
 }

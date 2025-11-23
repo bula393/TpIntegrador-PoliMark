@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.List;
 
 @RestController
@@ -35,7 +36,7 @@ public class PeliculaControler {
     }
 
     @GetMapping("/{idPelicula}/fechas")
-    public List<LocalDate> fechasDisponibles(@PathVariable String idPelicula
+    public HashSet<LocalDate> fechasDisponibles(@PathVariable String idPelicula
     ) {
         return peliculaService.findFechaDisponibleById(idPelicula);
     }
