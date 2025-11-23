@@ -69,7 +69,7 @@ public class UsuarioControler {
 // json para loguearse
 //   hal.jpg
 
-    @PutMapping("/{id}/adquirirRango")
+    @PutMapping("/{idCliente}/adquirirRango")
     public ResponseEntity<?> adquirirRango(@PathVariable int idCliente, @RequestBody Rango rango) {
         try {
             return ResponseEntity.ok(usuarioService.darRangoCliente(idCliente,rango));
