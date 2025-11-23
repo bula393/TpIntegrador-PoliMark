@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PoliMark - Outdoor Cinema</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* --- VARIABLES & RESET --- */
+        :root {
+            --primary-red: #b71c1c;
+            --bg-black: #050505;
+            --bg-dark: #121212;
+            --bg-card: #1a1a1a;
+            --text-white: #ffffff;
+            --text-gray: #b3b3b3;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-black); color: var(--text-white); overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- UTILITIES --- */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
+            font-size: 0.9rem;
+        }
+        .btn-red { background-color: var(--primary-red); color: white; }
+        .btn-red:hover { background-color: #9f1616; }
+        .text-center { text-align: center; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* --- HEADER --- */
+        header {
+            background-color: var(--primary-red);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-weight: 800; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
+        nav ul { display: flex; gap: 20px; font-size: 0.9rem; }
+        .login-btn { background-color: black; padding: 8px 20px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 200px 50px;
+            background-color: black;
+        }
+        .hero-content h1 { font-size: 3.5rem; line-height: 1.1; margin-bottom: 20px; }
+        .hero-desc { max-width: 400px; color: var(--text-gray); font-size: 0.9rem; line-height: 1.6; }
+        .hero-btn { margin-top: 20px; }
+
+        /* --- FEATURES ICONS --- */
+        .features-section {
+            background-color: var(--bg-dark);
+            padding: 100px 50px;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+        .feature-item h3 { font-size: 1.1rem; margin: 15px 0 10px; }
+        .feature-item p { font-size: 0.85rem; color: var(--text-gray); line-height: 1.5; }
+        .feature-icon { color: var(--primary-red); font-size: 1.5rem; margin-bottom: 10px; }
+
+        /* --- IMAGES / DRIVE-IN MAGIC --- */
+        .magic-section { padding: 80px 50px; background-color: black; }
+        .magic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .magic-card img { width: 100%; border-radius: 8px; opacity: 0.8; margin-bottom: 15px; }
+        .magic-card h3 { margin-bottom: 10px; }
+        .magic-card p { font-size: 0.9rem; color: var(--text-gray); margin-bottom: 15px; }
+
+        /* --- WHY CHOOSE US --- */
+        .why-us { padding: 80px 50px; background-color: var(--bg-dark); text-align: center; }
+        .why-us p { max-width: 700px; margin: 20px auto; color: var(--text-gray); line-height: 1.6; }
+
+        /* --- PRICING / RANKS (DYNAMIC) --- */
+        .pricing-section { padding: 80px 20px; background-color: black; }
+        .pricing-header { text-align: center; margin-bottom: 60px; }
+        .pricing-header h2 { font-size: 2.5rem; margin-bottom: 10px; }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background-color: var(--bg-card);
+            padding: 40px 30px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #222;
+            transition: transform 0.3s;
+        }
+        .pricing-card:hover { transform: translateY(-5px); border-color: #444; }
+
+        .plan-name { color: var(--primary-red); font-size: 0.8rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .plan-period { font-size: 0.7rem; color: var(--text-gray); text-transform: uppercase; }
+        .plan-price { font-size: 3rem; font-weight: bold; margin: 10px 0; }
+        .plan-desc { font-size: 0.9rem; color: var(--text-gray); margin-bottom: 30px; min-height: 60px; }
+
+        .reserve-btn { width: 100%; margin-bottom: 30px; }
+
+        .features-list { text-align: left; border-top: 1px solid #333; padding-top: 20px; }
+        .features-list li { margin-bottom: 10px; font-size: 0.85rem; display: flex; align-items: center; gap: 10px; color: #ccc; }
+        .features-list li i { color: var(--primary-red); font-size: 0.8rem; }
+
+        /* --- BOTTOM CTA --- */
+        .cta-section {
+            display: flex;
+            padding: 80px 50px;
+            background-color: var(--bg-dark);
+            align-items: center;
+            gap: 50px;
+        }
+        .cta-image { flex: 1; height: 400px; background: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=800&q=80') center/cover; border-radius: 8px; opacity: 0.6; }
+        .cta-content { flex: 1; }
+        .cta-content h2 { font-size: 3rem; line-height: 1.1; margin-bottom: 20px; }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: #1a1a1a;
+            padding: 50px;
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            border-top: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 80px;
+        }
+
+        .footer-col h4 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 8px;
+        }
+           </style>
+</head>
+<body>
+
+<header>
+    <div class="logo"><i class="fas fa-star"></i> PoliMark</div>
+    <nav>
+        <ul>
+            <li>Movies</li>
+            <li>About</li>
+            <li>Blog</li>
+            <li>Help</li>
+        </ul>
+    </nav>
+    <a href="#" class="login-btn">Login</a>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Movies under<br>the stars,<br>your way</h1>
+    </div>
+    <div class="hero-desc">
+        <p>Welcome to your new favorite movie night! Park, relax, and enjoy the latest films from the comfort of your car. Savor tasty snacks and find your nearest outdoor cinema.</p>
+        <button class="btn btn-red hero-btn">See movies</button>
+    </div>
+</section>
+
+<!-- Outdoor Features -->
+<section class="features-section">
+    <div class="container">
+        <h2>Outdoor cinema, your way</h2>
+        <p style="color:#888; margin-bottom:40px;">Welcome to a new era of movie nights.</p>
+        <div class="features-grid">
+            <div class="feature-item">
+                <i class="fas fa-car feature-icon"></i>
+                <h3>Watch from your car</h3>
+                <p>Settle in, tune your radio, and enjoy the magic of movies from the comfort of your own car.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-film feature-icon"></i>
+                <h3>Explore our movie catalog</h3>
+                <p>Browse a handpicked selection of films, from the latest blockbusters to hidden gems.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-popcorn feature-icon"></i>
+                <h3>Order snacks & treats</h3>
+                <p>Craving popcorn? Order online and we'll bring them right to your window.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-map-marker-alt feature-icon"></i>
+                <h3>Find a location nearby</h3>
+                <p>Use our interactive map to discover the closest outdoor cinema.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Drive In Magic -->
+<section class="magic-section">
+    <div class="container">
+        <h2>Drive-in magic, reimagined for you</h2>
+        <div class="magic-grid">
+            <div class="magic-card">
+                <img src="https://images.unsplash.com/photo-1517604931442-710e8e6427a6?auto=format&fit=crop&w=600&q=80" alt="Cinema">
+                <span style="font-size:0.7rem; color:#888; text-transform:uppercase;">Now Playing</span>
+                <h3>Epic movies, open skies</h3>
+                <p>Settle in for the newest blockbusters with immersive sound.</p>
+                <button class="btn btn-red">Browse films</button>
+            </div>
+            <div class="magic-card">
+                <img src="https://images.unsplash.com/photo-1572177812156-58036aae439c?auto=format&fit=crop&w=600&q=80" alt="Snacks">
+                <span style="font-size:0.7rem; color:#888; text-transform:uppercase;">Tasty treats</span>
+                <h3>Snacks that steal the show</h3>
+                <p>Our snack bar has you covered with classic favorites and exclusive deals.</p>
+                <button class="btn btn-red">Shop snacks</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="why-us">
+    <h2>Why choose us?</h2>
+    <p>Choosing us means experiencing cinema differently. We offer not only traditional screenings but also an exclusive drive-in theater, designed for those who appreciate comfort, style, and a touch of luxury.</p>
+</section>
+
+<!-- PRICING SECTION (DYNAMIC) -->
+<section class="pricing-section">
+    <div class="pricing-header">
+        <h2>Movie nights, your way</h2>
+    </div>
+
+    <div class="pricing-grid" id="pricing-container">
+        <div style="color:white; text-align:center; width:100%;">Cargando precios...</div>
+    </div>
+</section>
+
+<!-- Bottom CTA -->
+<section class="cta-section">
+    <div class="cta-image"></div>
+    <div class="cta-content">
+        <p style="font-size:0.8rem; color:#888; margin-bottom:10px;">YOUR NEXT MOVIE NIGHT AWAITS</p>
+        <h2>Roll in.<br>Relax. Revel<br>together.</h2>
+        <p style="color:#aaa; margin:20px 0;">Join the drive-in community—enjoy the latest films, delicious snacks, and special deals.</p>
+        <button class="btn btn-red">Get tickets</button>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div>
+        <div class="logo" style="margin-bottom: 20px;">
+            <i class="fas fa-star"></i> POLIMARK
+        </div>
+        <div class="socials">
+            <i class="fab fa-facebook"></i>
+            <i class="fab fa-instagram"></i>
+            <i class="fab fa-twitter"></i>
+            <i class="fab fa-youtube"></i>
+        </div>
+        <p style="margin-top: 20px;">All rights reserved © 2025 PoliMark</p>
+    </div>
+
+    <div class="footer-links">
+        <div class="footer-col">
+            <h4>Movies</h4>
+            <ul>
+                <li>Now</li>
+                <li>Upcoming</li>
+                <li>Classics</li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Snacks</h4>
+            <ul>
+                <li>Popcorn</li>
+                <li>Drinks</li>
+                <li>Combos</li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Visit</h4>
+            <ul>
+                <li>Map</li>
+                <li>Contact</li>
+                <li>FAQ</li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+<!-- JAVASCRIPT LOGIC -->
+<script>
+    // Datos estáticos del PDF que no vienen en la API (Descripción y Features)
+    // Usamos keys en minúscula para mapear con el nombre de la API
+    const rangosInfo = {
+        "regular": {
+            descripcion: "Classic drive-in fun for one car. Enjoy the film and easy snack access.",
+            features: ["Drive-in movie access", "Reserved parking spot", "Snack bar savings"]
+        },
+        "car pro+": {
+            descripcion: "Perfect for families or friends—up to 5 people, plus special snack deals.",
+            features: ["Group parking area", "Family snack combo", "Kids' activity pack", "Priority entry"]
+        },
+        "car premium": {
+            descripcion: "Enjoy our best service up to date, up to 3 people included!",
+            features: ["Up to 3 free meal combos per month", "Premium tickets up to 50% OFF", "Premium items up to 90% OFF"]
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchRanks();
+    });
+
+    async function fetchRanks() {
+        const container = document.getElementById('pricing-container');
+        const url = 'http://localhost:8080/api/rango/rangosDisponibles';
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Error fetching ranks');
+
+            const ranks = await response.json();
+
+            container.innerHTML = ''; // Limpiar loading
+
+            ranks.forEach(rank => {
+                const nombreKey = rank.nombre.toLowerCase().trim();
+                const info = rangosInfo[nombreKey] || {
+                    descripcion: "Disfruta de nuestro cine.",
+                    features: ["Acceso general"]
+                };
+
+                // Lógica de Precio (0 -> Free)
+                const precioDisplay = rank.precio === 0 ? "Free" : `$${rank.precio}`;
+                const periodDisplay = "MONTHLY";
+
+                // Construir lista de beneficios
+                let featuresHtml = '';
+                info.features.forEach(feat => {
+                    featuresHtml += `<li><i class="fas fa-check"></i> ${feat}</li>`;
+                });
+
+                const cardHtml = `
+                    <div class="pricing-card">
+                        <div class="plan-period">${periodDisplay}</div>
+                        <div class="plan-name">${rank.nombre}</div>
+                        <div class="plan-price">${precioDisplay}</div>
+                        <div class="plan-desc">${info.descripcion}</div>
+
+                        <button class="btn btn-red reserve-btn">Reserve</button>
+
+                        <ul class="features-list">
+                            <li style="color:#666; font-size:0.7rem; text-transform:uppercase; margin-bottom:15px;">
+                                Everything in ${nombreKey === 'regular' ? 'Regular' : 'Previous'}:
+                            </li>
+                            ${featuresHtml}
+                        </ul>
+                    </div>
+                `;
+
+                container.innerHTML += cardHtml;
+            });
+
+        } catch (error) {
+            console.error(error);
+            container.innerHTML = '<p style="text-align:center; color:red;">Error cargando planes.</p>';
+        }
+    }
+</script>
+
+</body>
+</html>

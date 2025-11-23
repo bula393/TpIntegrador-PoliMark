@@ -34,7 +34,7 @@ public class PeliculaControler {
         }
     }
 
-    @GetMapping("/{id}/fechas")
+    @GetMapping("/{idPelicula}/fechas")
     public List<LocalDate> fechasDisponibles(@PathVariable String idPelicula
     ) {
         return peliculaService.findFechaDisponibleById(idPelicula);

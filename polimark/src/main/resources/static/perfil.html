@@ -167,7 +167,7 @@
             cursor: pointer;
             position: absolute;
             right: 0;
-            top: 40px; /* Ajustado visualmente */
+            top: 57px; /* Ajustado visualmente */
             width: 100px;
             line-height: 1.2;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
@@ -217,15 +217,29 @@
         .ticket-meta { font-size: 0.9rem; color: #ccc; }
         .ticket-price { font-size: 1.2rem; font-weight: bold; color: var(--primary-red); }
 
-        /* Footer simple para consistencia */
+        /* --- FOOTER --- */
         footer {
-            margin-top: auto;
-            background-color: #111;
-            padding: 20px;
-            text-align: center;
+            background-color: #1a1a1a;
+            padding: 50px;
             font-size: 0.8rem;
-            color: #555;
-            width: 100%;
+            color: var(--text-gray);
+            border-top: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 80px;
+        }
+
+        .footer-col h4 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 8px;
         }
     </style>
 </head>
@@ -295,8 +309,47 @@
     </div>
 </div>
 
+<!-- Footer -->
 <footer>
-    All rights reserved © 2025 PoliMark
+    <div>
+        <div class="logo" style="margin-bottom: 20px;">
+            <i class="fas fa-star"></i> POLIMARK
+        </div>
+        <div class="socials">
+            <i class="fab fa-facebook"></i>
+            <i class="fab fa-instagram"></i>
+            <i class="fab fa-twitter"></i>
+            <i class="fab fa-youtube"></i>
+        </div>
+        <p style="margin-top: 20px;">All rights reserved © 2025 PoliMark</p>
+    </div>
+
+    <div class="footer-links">
+        <div class="footer-col">
+            <h4>Movies</h4>
+            <ul>
+                <li>Now</li>
+                <li>Upcoming</li>
+                <li>Classics</li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Snacks</h4>
+            <ul>
+                <li>Popcorn</li>
+                <li>Drinks</li>
+                <li>Combos</li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Visit</h4>
+            <ul>
+                <li>Map</li>
+                <li>Contact</li>
+                <li>FAQ</li>
+            </ul>
+        </div>
+    </div>
 </footer>
 
 <!-- JAVASCRIPT -->
@@ -388,7 +441,7 @@
                         <h4>${peli.nombre}</h4>
                         <div class="ticket-meta">
                             <i class="fas fa-calendar-alt"></i> ${fechaStr} <br>
-                            <i class="fas fa-map-marker-alt"></i> ${sala.lugar} - ${sala.tipo} <br>
+                            <i class="fas fa-map-marker-alt"></i> ${sala.lugar} - sala ${sala.idSala} - ${sala.tipo} <br>
                             <i class="fas fa-chair"></i> Fila: ${entrada.butaca.fila} | Col: ${entrada.butaca.columna}
                         </div>
                     </div>

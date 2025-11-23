@@ -13,12 +13,23 @@ public class Rango {
     @Column(name = "nombre")
     private String nombre;
 
+    @Column(name = "precio")
+    private int precio;
+
     // Constructor vacío
     public Rango() {}
 
-    // Constructor con parámetros
-    public Rango(String nombre) {
+    public Rango(String nombre, int precio) {
         this.nombre = nombre;
+        this.precio = precio;
+    }
+
+    public int getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(int precio) {
+        this.precio = precio;
     }
 
     // Getters y Setters
