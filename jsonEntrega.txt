@@ -1,0 +1,77 @@
+Link ultimo commit :
+
+3)
+a - 
+rutas:
+http://localhost:8080/api/funciones/buscar?fecha=2025-11-21
+http://localhost:8080/api/funciones/buscar?fecha=2025-11-20&sucursalNombre=Polimark%20Avellaneda 
+http://localhost:8080/api/funciones/buscar?fecha=2025-11-20&sucursalNombre=Polimark%20Avellaneda&peliculaNombre=Avatar
+b -
+ruta:
+http://localhost:8080/api/butaca/1/butacas
+c y e: se usa el mismo metodo para comprar entradas, como para comprar porductos ya que solo se pueden comprar producto cuando realizas un compra para ver una peli -
+ruta:
+POST http://localhost:8080/api/compra/reservarEntrada
+json:
+{
+  "idUsuario": 3,
+  "articulosPromociones": [
+    {
+      "tipo": "ENTRADA_AUTO",
+      "cantidad": 1,
+      "precio": 20000,
+      "funcionId": 3,
+      "butacasIds": [10],
+      "patente": "XYZ789",
+      "cantidadAuto": 3,
+      "promocionesAplicadas": [8]
+    },
+    {
+      "tipo": "PRODUCTO",
+      "cantidad": 1,
+      "precio": 2200,
+      "productoId": 7,
+      "promocionesAplicadas": [4]
+    }
+  ]
+}
+d -- se debe eligir una compra que actualmente este sin pagar
+ruta:
+http://localhost:8080/api/compra/pagarCompra
+json
+{
+    "idCompra": 52,
+    "idMetodoPago" : 2
+}
+f --
+ruta :
+http://localhost:8080/api/clientes/1/perfil
+g --
+ruta:
+http://localhost:8080/api/reporte/taquilla/top?desde=2025-11-01&hasta=2025-11-30
+h -- 
+http://localhost:8080/api/reporte/ocupacion/por-horario?desde=2025-11-01&hasta=2025-11-30&nombreEstablecimiento=Polimark%20Avellaneda
+
+Otros metodos utiles
+-register
+        {
+        "identificador": 49546254,
+            "nombre": "facu",
+            "apellido": "buhler",
+            "mail": "facu.buhler@gmail.com",
+            "contrasena": "hal.jpg",
+            "puntos": 0,
+            "rangoId": 1
+    }
+-login
+ruta:
+http://localhost:8080/api/clientes/3/logIn
+json
+hal.jpg
+-ver tienda(con filtros)
+ruta:
+http://localhost:8080/api/tienda/productosVisibles?filter=BEBIDA // otos posibles son combos o snack com filtro, en mayus
+- cartelera(peliculas con funciones en las proximas 2 semanas)
+http://localhost:8080/api/peliculas/cartelera
+-Rango disponibles
+http://localhost:8080/api/rango/rangosDisponibles

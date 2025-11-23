@@ -123,16 +123,16 @@ INSERT INTO `promociones` (`idPromociones`, `tipo`, `caracteristicas`, `rangoIdR
 
 -- Insert para tabla funcion
 INSERT INTO `funcion` (`salaIdSala`, `peliculaNombre`, `horario`, `idFuncion`) VALUES
-(1, 'El Señor de los Anillos', '2024-11-20 18:00:00', 1),
-(2, 'Matrix', '2024-11-20 20:30:00', 2),
-(3, 'Avatar', '2024-11-20 22:00:00', 3),
-(4, 'Toy Story', '2024-11-21 15:00:00', 4),
-(5, 'Jurassic Park', '2024-11-21 17:30:00', 5),
-(6, 'Star Wars: Una Nueva Esperanza', '2024-11-21 20:00:00', 6),
-(7, 'Harry Potter y la Piedra Filosofal', '2024-11-22 16:00:00', 7),
-(8, 'The Dark Knight', '2024-11-22 18:30:00', 8),
-(9, 'Forrest Gump', '2024-11-22 21:00:00', 9),
-(10, 'Pulp Fiction', '2024-11-23 19:00:00', 10);
+(1, 'El Señor de los Anillos', '2025-11-20 18:00:00', 1),
+(2, 'Matrix', '2025-11-20 20:30:00', 2),
+(3, 'Avatar', '2025-11-20 22:00:00', 3),
+(4, 'Toy Story', '2025-11-21 15:00:00', 4),
+(5, 'Jurassic Park', '2025-11-21 17:30:00', 5),
+(6, 'Star Wars: Una Nueva Esperanza', '2025-11-21 20:00:00', 6),
+(7, 'Harry Potter y la Piedra Filosofal', '2025-11-22 16:00:00', 7),
+(8, 'The Dark Knight', '2025-11-22 18:30:00', 8),
+(9, 'Forrest Gump', '2025-11-22 21:00:00', 9),
+(10, 'Pulp Fiction', '2025-11-23 19:00:00', 10);
 -- Insert para tabla usuario (10 usuarios)
 INSERT INTO `usuario` (`identificador`, `nombre`, `apellido`, `mail`, `contrasenaHash`, `rangoIdRango`, `puntos`) VALUES
 (1, 'Juan', 'Pérez', 'juan.perez@mail.com', UNHEX(SHA2('password123', 256)), 1, 100),
@@ -187,29 +187,29 @@ INSERT INTO `butaca` (`idButaca`, `columna`, `fila`, `salaIdSala`) VALUES
 (96, 1, 'A', 8), (97, 2, 'A', 8), (98, 3, 'A', 8), (99, 4, 'A', 8), (100, 5, 'A', 8);
 
 INSERT INTO `compra` (`idCompra`, `pagado`, `metodoPagoIdMetodoPago`, `usuarioIdentificador`, `monto`, `fecha`) VALUES
-(11, 1, 1, 1, 5200, '2024-01-10'),
-(12, 1, 2, 2, 4800, '2024-01-15'),
-(13, 1, 3, 3, 6100, '2024-02-05'),
-(14, 1, 4, 4, 7300, '2024-02-20'),
-(15, 1, 1, 5, 3900, '2024-03-08'),
-(16, 1, 2, 6, 8500, '2024-03-25'),
-(17, 1, 3, 7, 4200, '2024-04-12'),
-(18, 1, 4, 8, 6700, '2024-04-18'),
-(19, 1, 1, 9, 5400, '2024-05-03'),
-(20, 1, 2, 10, 7800, '2024-05-22'),
-(21, 1, 3, 1, 3200, '2024-06-07'),
-(22, 1, 4, 2, 8900, '2024-06-30'),
-(23, 1, 1, 3, 4500, '2024-07-14'),
-(24, 1, 2, 4, 6100, '2024-07-28'),
-(25, 1, 3, 5, 7200, '2024-08-09'),
-(26, 1, 4, 6, 3800, '2024-08-17'),
-(27, 1, 1, 7, 5600, '2024-09-11'),
-(28, 1, 2, 8, 4900, '2024-09-26'),
-(29, 1, 3, 9, 8300, '2024-10-05'),
-(30, 1, 4, 10, 6700, '2024-10-19'),
-(31, 1, 1, 1, 4100, '2024-12-03'),
-(32, 1, 2, 2, 7500, '2024-12-15'),
-(33, 1, 3, 3, 5200, '2024-12-22');
+(11, 1, 1, 1, 5200, '2025-01-10'),
+(12, 1, 2, 2, 4800, '2025-01-15'),
+(13, 1, 3, 3, 6100, '2025-02-05'),
+(14, 1, 4, 4, 7300, '2025-02-20'),
+(15, 1, 1, 5, 3900, '2025-03-08'),
+(16, 1, 2, 6, 8500, '2025-03-25'),
+(17, 1, 3, 7, 4200, '2025-04-12'),
+(18, 1, 4, 8, 6700, '2025-04-18'),
+(19, 1, 1, 9, 5400, '2025-05-03'),
+(20, 1, 2, 10, 7800, '2025-05-22'),
+(21, 1, 3, 1, 3200, '2025-06-07'),
+(22, 1, 4, 2, 8900, '2025-06-30'),
+(23, 1, 1, 3, 4500, '2025-07-14'),
+(24, 1, 2, 4, 6100, '2025-07-28'),
+(25, 1, 3, 5, 7200, '2025-08-09'),
+(26, 1, 4, 6, 3800, '2025-08-17'),
+(27, 1, 1, 7, 5600, '2025-09-11'),
+(28, 1, 2, 8, 4900, '2025-09-26'),
+(29, 1, 3, 9, 8300, '2025-10-05'),
+(30, 1, 4, 10, 6700, '2025-10-19'),
+(31, 1, 1, 1, 4100, '2025-12-03'),
+(32, 1, 2, 2, 7500, '2025-12-15'),
+(33, 1, 3, 3, 5200, '2025-12-22');
 
 -- Inserts adicionales para entrada
 INSERT INTO `entrada` (`compraIdCompra`, `funcionIdFuncion`, `butacaIdButaca`, `articuloIdArticulo`) VALUES
@@ -275,11 +275,11 @@ INSERT INTO `compraHasPromocion` (`compraIdCompra`, `promocionesIdPromociones`, 
 
 -- Insert para tabla notificaciones
 INSERT INTO `notificaciones` (`idNotificacion`, `usuarioIdentificador`, `funcionIdFuncion`, `mensaje`, `fechaCreacion`, `leida`, `fechaEnvio`) VALUES
-(1, 1, 1, 'Recordatorio: Tu función de El Señor de los Anillos es hoy a las 18:00', NOW(), 0, '2024-11-20'),
-(2, 2, 2, 'Promoción especial para Matrix: 20% de descuento en combos', NOW(), 1, '2024-11-20'),
-(3, 4, 4, 'No te pierdas Toy Story esta tarde a las 15:00', NOW(), 0, '2024-11-21'),
-(4, 5, 5, 'Recordatorio: Jurassic Park en 1 hora', NOW(), 1, '2024-11-21'),
-(5, 7, 7, 'Harry Potter: Lleva 2x1 en pochoclos hoy', NOW(), 0, '2024-11-22');
+(1, 1, 1, 'Recordatorio: Tu función de El Señor de los Anillos es hoy a las 18:00', NOW(), 0, '2025-11-20'),
+(2, 2, 2, 'Promoción especial para Matrix: 20% de descuento en combos', NOW(), 1, '2025-11-20'),
+(3, 4, 4, 'No te pierdas Toy Story esta tarde a las 15:00', NOW(), 0, '2025-11-21'),
+(4, 5, 5, 'Recordatorio: Jurassic Park en 1 hora', NOW(), 1, '2025-11-21'),
+(5, 7, 7, 'Harry Potter: Lleva 2x1 en pochoclos hoy', NOW(), 0, '2025-11-22');
 
 -- Corregir usando entradas existentes de salas autocine (3, 8, 12, 15)
 INSERT INTO `entradaAuto` (`entradaArticuloIdArticulo`, `patente`, `cantidadAuto`) VALUES
