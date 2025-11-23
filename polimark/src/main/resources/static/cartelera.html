@@ -405,13 +405,13 @@
 <section class="hero">
     <h1>Your next movie<br>night awaits<br>Catch the latest<br>blockbusters</h1>
     <div class="hero-buttons">
-        <button class="btn btn-red">Explore movies</button>
+        <button class="btn btn-red" onclick="scrollToMovies()">Explore movies</button>
         <button class="btn btn-outline">View deals</button>
     </div>
 </section>
 
 <!-- API Movies Section -->
-<section class="movies-section">
+<section class="movies-section" id="movies-section">
     <div class="section-header">
         <span class="section-subtitle">Featured & Upcoming Films</span>
         <h2 class="section-title">See what's playing next</h2>
@@ -595,9 +595,11 @@
                             <div class="date-badge">
                                 <span>09<br><small>FEB</small></span>
                             </div>
+                            <a href="pelicula.html?movie=${movie.nombre}">
                             <img src="imagenes/${movie.fotoCartelera}"
                                  alt="${movie.nombre}"
                                  onerror="this.src='https://via.placeholder.com/300x450/333/fff?text=No+Image'">
+                                 </a>
                         </div>
                         <div class="card-content">
                             <span class="tag">Premiere</span>
@@ -625,6 +627,14 @@
             `;
         }
     }
+
+    function scrollToMovies() {
+    const moviesSection = document.getElementById('movies-section');
+    moviesSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+}
 </script>
 </body>
 </html>
