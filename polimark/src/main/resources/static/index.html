@@ -46,6 +46,7 @@
         }
         .logo { font-weight: 800; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
         nav ul { display: flex; gap: 20px; font-size: 0.9rem; }
+        .logoImagen { width : 50px }
         .login-btn { background-color: black; padding: 8px 20px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; }
 
         /* --- HERO SECTION --- */
@@ -167,7 +168,11 @@
 <body>
 
 <header>
-    <div class="logo"><i class="fas fa-star"></i> PoliMark</div>
+    <a href="index.html">
+    <div class="logo">
+        <img class="logoImagen" src="imagenes/logo.png"></img> PoliMark
+    </div>
+        </a>
     <nav>
         <ul>
             <li>Movies</li>
@@ -186,7 +191,7 @@
     </div>
     <div class="hero-desc">
         <p>Welcome to your new favorite movie night! Park, relax, and enjoy the latest films from the comfort of your car. Savor tasty snacks and find your nearest outdoor cinema.</p>
-        <button class="btn btn-red hero-btn">See movies</button>
+        <a href="cartelera.html">    <button class="btn btn-red hero-btn">See movies</button></a>
     </div>
 </section>
 
@@ -274,9 +279,11 @@
 <!-- Footer -->
 <footer>
     <div>
+        <a href="index.html">
         <div class="logo" style="margin-bottom: 20px;">
-            <i class="fas fa-star"></i> POLIMARK
+            <img class="logoImagen" src="imagenes/logo.png"></img> PoliMark
         </div>
+        </a>
         <div class="socials">
             <i class="fab fa-facebook"></i>
             <i class="fab fa-instagram"></i>
