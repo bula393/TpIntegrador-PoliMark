@@ -257,12 +257,15 @@
         // URL del Backend
         const url = `http://localhost:8080/api/clientes/${encodeURIComponent(email)}/logIn`;
 
+        console.log(url);
+
+
         try {
             // NOTA: Fetch usa 'POST' aquí para compatibilidad con navegadores.
             // Si tu backend SOLO acepta GET con Body, esto fallará en Chrome/Edge.
             // Asegúrate de cambiar @GetMapping a @PostMapping en tu Controller.
             const response = await fetch(url, {
-                method: 'POST', // Cambiado a POST por estándar web
+                method: 'POST',
                 headers: {
                     'Content-Type': 'text/plain' // @RequestBody String espera texto plano o JSON según config
                 },

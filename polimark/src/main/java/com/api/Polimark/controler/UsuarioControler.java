@@ -55,7 +55,7 @@ public class UsuarioControler {
 
 
 
-    @GetMapping("/{mailCliente}/logIn")
+    @PostMapping("/{mailCliente}/logIn")
     public ResponseEntity<?> logIn(@PathVariable String mailCliente, @RequestBody String contrasenia) {
         try {
             return ResponseEntity.ok(usuarioService.usuarioLogueado(mailCliente,contrasenia));
