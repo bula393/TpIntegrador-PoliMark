@@ -242,6 +242,165 @@
         .footer-col ul li {
             margin-bottom: 8px;
         }
+        /* =========================================================
+   ===============   RESPONSIVE DESIGN   ====================
+   ========================================================= */
+
+/* 🔹 Tablets — 900px para abajo */
+@media (max-width: 900px) {
+
+    header {
+        padding: 15px 25px;
+    }
+
+    nav ul {
+        gap: 10px;
+        font-size: 0.8rem;
+    }
+
+    .profile-card {
+        padding: 30px;
+    }
+
+    .profile-content {
+        gap: 25px;
+    }
+
+    /* Avatar más chico */
+    .avatar-section {
+        width: 35%;
+    }
+
+    .avatar-circle {
+        width: 130px;
+        height: 130px;
+    }
+
+    /* Botón subir rango reposicionado */
+    .rank-up-btn {
+        top: 40px;
+        right: 0;
+        width: 90px;
+        padding: 12px;
+        font-size: 0.85rem;
+    }
+
+    /* Footer más compacto */
+    footer {
+        flex-direction: column;
+        gap: 40px;
+        text-align: center;
+    }
+
+    .footer-links {
+        justify-content: center;
+        gap: 40px;
+    }
+}
+
+/* 🔹 Celulares grandes — 768px para abajo */
+@media (max-width: 768px) {
+
+    header {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px 15px;
+    }
+
+    nav ul {
+        gap: 15px;
+    }
+
+    /* El contenido del perfil pasa a columna */
+    .profile-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 35px;
+    }
+
+    .avatar-section {
+        width: 100%;
+    }
+
+    /* Form a ancho completo */
+    .form-section {
+        width: 100%;
+    }
+
+    /* Botón SUBIR RANGO pasa abajo del rango */
+    .rank-up-btn {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .rank-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    footer {
+        padding: 40px 20px;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        gap: 30px;
+    }
+}
+
+/* 🔹 Celulares chicos — 480px para abajo */
+@media (max-width: 480px) {
+
+    header {
+        padding: 10px;
+    }
+
+    .logoImagen {
+        width: 40px;
+    }
+
+    nav ul {
+        font-size: 0.75rem;
+        gap: 10px;
+    }
+
+    .profile-title {
+        font-size: 1.5rem;
+    }
+
+    .avatar-circle {
+        width: 110px;
+        height: 110px;
+    }
+
+    .username-display {
+        font-size: 1.2rem;
+    }
+
+    .profile-card {
+        padding: 20px;
+    }
+
+    /* Ticket del historial */
+    .ticket-card {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .ticket-price {
+        font-size: 1.1rem;
+    }
+
+    footer {
+        font-size: 0.75rem;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -253,7 +412,7 @@
             <img class="logoImagen" src="imagenes/logo.png"></img> PoliMark
         </div>
     </a>
-        <nav>
+    <nav>
         <ul>
             <li><a href="#">Movies</a></li>
             <li><a href="#">About</a></li>
@@ -361,53 +520,119 @@
 
 <!-- JAVASCRIPT -->
 <script>
-    // Variables globales para almacenar datos si es necesario
+    // Variables globales para almacenar datos
     let userData = null;
+    let currentUserId = null;
 
     document.addEventListener('DOMContentLoaded', () => {
+        // Obtener ID de usuario de URL con manejo de errores
+        try {
+            if (typeof window !== 'undefined' && window.location && window.URLSearchParams) {
+                const urlParams = new URLSearchParams(window.location.search);
+                currentUserId = urlParams.get('id');
+                console.log('ID de usuario desde URL:', currentUserId);
+            }
+        } catch (error) {
+            console.warn('No se pudieron obtener parámetros de URL:', error);
+            currentUserId = null;
+        }
+
+        // Cargar perfil de usuario
         fetchUserProfile();
 
         // Listener para el botón de historial
-        document.getElementById('toggle-history-btn').addEventListener('click', toggleHistory);
+        const historyBtn = document.getElementById('toggle-history-btn');
+        if (historyBtn) {
+            historyBtn.addEventListener('click', toggleHistory);
+        }
     });
 
     async function fetchUserProfile() {
-        // ID Cliente harcodeado a 1 según instrucción
-        const url = 'http://localhost:8080/api/clientes/1/perfil';
+    // Verificar que tenemos un ID de usuario
+    if (!currentUserId) {
+        console.error('No hay ID de usuario disponible');
+        document.getElementById('username-display').innerText = "Usuario no encontrado";
+        return;
+    }
 
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('Error al conectar con API');
+    // Template literal - aquí se inserta el valor de currentUserId
+    const url = `http://localhost:8080/api/clientes/${currentUserId}/perfil`;
+
+    console.log('Consultando URL:', url); // Esto mostrará: "Consultando URL: http://localhost:8080/api/clientes/2/perfil"
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+        });
+
+
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
 
             userData = await response.json();
             renderProfile(userData);
 
         } catch (error) {
-            console.error(error);
-            document.getElementById('username-display').innerText = "Error";
-            alert("No se pudo cargar el perfil. Revisa que el backend esté corriendo.");
+            console.error('Error cargando perfil:', error);
+            document.getElementById('username-display').innerText = "Error de conexión";
+
+            // Mostrar mensaje de error más específico
+            let errorMessage = "No se pudo cargar el perfil. ";
+            if (error.message.includes('Failed to fetch')) {
+                errorMessage += "Verifica que el backend esté corriendo en localhost:8080.";
+            } else {
+                errorMessage += error.message;
+            }
+
+            alert(errorMessage);
         }
     }
 
     function renderProfile(data) {
+        if (!data || !data.usuario) {
+            console.error('Datos de usuario no válidos:', data);
+            return;
+        }
+
         const usuario = data.usuario;
 
-        // 1. Llenar Avatar y Nombre
-        document.getElementById('username-display').innerText = usuario.nombre; // Solo nombre, o `${usuario.nombre} ${usuario.apellido}` si prefieres
+        try {
+            // 1. Llenar Avatar y Nombre
+            const usernameDisplay = document.getElementById('username-display');
+            if (usernameDisplay) {
+                usernameDisplay.innerText = usuario.nombre || "Usuario";
+            }
 
-        // 2. Llenar Email
-        document.getElementById('email-input').value = usuario.mail;
+            // 2. Llenar Email
+            const emailInput = document.getElementById('email-input');
+            if (emailInput) {
+                emailInput.value = usuario.mail || "";
+            }
 
-        // 3. Llenar Rango
-        // Verificamos si rango existe para evitar errores null
-        if(usuario.rango) {
-            document.getElementById('rank-display').innerText = usuario.rango.nombre;
+            // 3. Llenar Rango
+            const rankDisplay = document.getElementById('rank-display');
+            if (rankDisplay && usuario.rango) {
+                rankDisplay.innerText = usuario.rango.nombre || "Sin rango";
+            }
+
+        } catch (error) {
+            console.error('Error renderizando perfil:', error);
         }
     }
 
     function toggleHistory() {
         const container = document.getElementById('historial-container');
         const btn = document.getElementById('toggle-history-btn');
+
+        if (!container || !btn) {
+            console.error('Elementos del historial no encontrados');
+            return;
+        }
 
         // Si está oculto, mostrar y renderizar
         if (container.style.display === 'none' || container.style.display === '') {
@@ -416,6 +641,8 @@
 
             if (userData && userData.historialEntradas) {
                 renderHistoryList(userData.historialEntradas);
+            } else {
+                container.innerHTML = '<p style="text-align:center; padding:20px;">No hay datos de historial disponibles.</p>';
             }
         } else {
             // Si está visible, ocultar
@@ -426,39 +653,58 @@
 
     function renderHistoryList(historial) {
         const container = document.getElementById('historial-container');
+        if (!container) return;
+
         container.innerHTML = ''; // Limpiar
 
-        if (historial.length === 0) {
+        if (!historial || historial.length === 0) {
             container.innerHTML = '<p style="text-align:center; padding:20px;">No hay entradas registradas.</p>';
             return;
         }
 
-        historial.forEach(entrada => {
-            const peli = entrada.funcion.pelicula;
-            const funcion = entrada.funcion;
-            const sala = entrada.butaca.sala;
+        try {
+            historial.forEach(entrada => {
+                if (!entrada || !entrada.funcion || !entrada.butaca) {
+                    console.warn('Entrada con datos incompletos:', entrada);
+                    return;
+                }
 
-            // Formatear fecha
-            const fechaObj = new Date(funcion.horario);
-            const fechaStr = fechaObj.toLocaleDateString() + ' ' + fechaObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                const peli = entrada.funcion.pelicula;
+                const funcion = entrada.funcion;
+                const sala = entrada.butaca.sala;
 
-            const cardHtml = `
-                <div class="ticket-card">
-                    <div class="ticket-info">
-                        <h4>${peli.nombre}</h4>
-                        <div class="ticket-meta">
-                            <i class="fas fa-calendar-alt"></i> ${fechaStr} <br>
-                            <i class="fas fa-map-marker-alt"></i> ${sala.lugar} - sala ${sala.idSala} - ${sala.tipo} <br>
-                            <i class="fas fa-chair"></i> Fila: ${entrada.butaca.fila} | Col: ${entrada.butaca.columna}
+                // Formatear fecha con manejo de errores
+                let fechaStr = "Fecha no disponible";
+                try {
+                    if (funcion.horario) {
+                        const fechaObj = new Date(funcion.horario);
+                        fechaStr = fechaObj.toLocaleDateString() + ' ' + fechaObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    }
+                } catch (dateError) {
+                    console.warn('Error formateando fecha:', dateError);
+                }
+
+                const cardHtml = `
+                    <div class="ticket-card">
+                        <div class="ticket-info">
+                            <h4>${peli?.nombre || "Película no disponible"}</h4>
+                            <div class="ticket-meta">
+                                <i class="fas fa-calendar-alt"></i> ${fechaStr} <br>
+                                <i class="fas fa-map-marker-alt"></i> ${sala?.lugar || "Lugar no disponible"} - sala ${sala?.idSala || "N/A"} - ${sala?.tipo || "Tipo no disponible"} <br>
+                                <i class="fas fa-chair"></i> Fila: ${entrada.butaca.fila || "N/A"} | Col: ${entrada.butaca.columna || "N/A"}
+                            </div>
+                        </div>
+                        <div class="ticket-price">
+                            $${entrada.precio || "0"}
                         </div>
                     </div>
-                    <div class="ticket-price">
-                        $${entrada.precio}
-                    </div>
-                </div>
-            `;
-            container.innerHTML += cardHtml;
-        });
+                `;
+                container.innerHTML += cardHtml;
+            });
+        } catch (error) {
+            console.error('Error renderizando historial:', error);
+            container.innerHTML = '<p style="text-align:center; padding:20px; color: red;">Error al cargar el historial.</p>';
+        }
     }
 </script>
 

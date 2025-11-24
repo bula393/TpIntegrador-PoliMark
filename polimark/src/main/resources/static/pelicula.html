@@ -3,6 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PoliMark - Movies</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* --- RESET & VARIABLES --- */
+        :root {
+            --primary-red: #b71c1c; /* Rojo oscuro similar al PDF */
+            --bg-black: #0a0a0a;
+            --bg-dark: #141414;
+            --text-white: #ffffff;
+            --text-gray: #a0a0a0;
+            --input-bg: #1e1e1e;
+            --border-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI',…
+[17:40, 24/11/2025] Liras: peli
+[17:40, 24/11/2025] Liras: <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PoliMark - Booking</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -217,6 +242,185 @@
         }
         .btn-large-red:hover { background-color: #9f1616; }
 
+/* ----- Tablets (<= 1024px) ----- */
+@media (max-width: 1024px) {
+    header {
+        padding: 15px 20px;
+    }
+
+    .content-grid {
+        grid-template-columns: 300px 1fr;
+        gap: 40px;
+    }
+
+    .movie-header-title {
+        font-size: 2rem;
+    }
+
+    .footer-links {
+        gap: 40px;
+    }
+}
+
+/* ----- Tablets pequeñas y móviles grandes (<= 768px) ----- */
+@media (max-width: 768px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    /* Centramos poster */
+    .left-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .poster-container {
+        max-width: 60%;
+    }
+
+    .meta-data-row {
+        width: 100%;
+        padding: 12px 0;
+    }
+
+    /* Schedule Header en columna */
+    .schedule-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .dates-container {
+        gap: 10px;
+        padding-bottom: 10px;
+        scroll-snap-type: x mandatory;
+    }
+
+    .date-card {
+        min-width: 85px;
+        padding: 12px 15px;
+        scroll-snap-align: start;
+    }
+
+    .times-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 15px;
+    }
+
+    footer {
+        flex-direction: column;
+        gap: 30px;
+        padding: 40px 20px;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        gap: 25px;
+    }
+}
+
+/* ----- Móviles medianos (<= 576px) ----- */
+@media (max-width: 576px) {
+
+    header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    header nav {
+        gap: 10px;
+    }
+
+    .movie-header-title {
+        font-size: 1.7rem;
+        text-align: center;
+    }
+
+    /* Poster más chico */
+    .poster-container {
+        max-width: 80%;
+    }
+
+    /* Meta data en columna para evitar desbordes */
+    .meta-data-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        padding: 10px 0;
+    }
+
+    .meta-label {
+        font-size: 1rem;
+    }
+
+    .meta-value {
+        font-size: 0.9rem;
+    }
+
+    .schedule-title {
+        font-size: 1.3rem;
+    }
+
+    .date-card {
+        min-width: 75px;
+        padding: 10px 12px;
+    }
+
+    .times-grid {
+        gap: 12px;
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .time-btn {
+        font-size: 1rem;
+        padding: 12px;
+    }
+
+    .btn-large-red {
+        padding: 15px;
+        font-size: 1.1rem;
+    }
+
+    footer {
+        padding: 30px 20px;
+        text-align: center;
+    }
+
+    .logoImagen {
+        width: 40px;
+    }
+}
+
+/* ----- Móviles chicos (<= 420px) ----- */
+@media (max-width: 420px) {
+
+    .poster-container {
+        max-width: 90%;
+    }
+
+    .dates-container {
+        gap: 8px;
+    }
+
+    .date-card {
+        min-width: 70px;
+    }
+
+    .times-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .time-btn {
+        padding: 10px;
+        font-size: 0.95rem;
+    }
+}
+
+
     </style>
 </head>
 <body>
@@ -355,7 +559,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         // 1. Obtener nombre de la película de la URL (ej: ?movie=Avatar)
         const urlParams = new URLSearchParams(window.location.search);
-        currentMovieName = urlParams.get('movie') || "Avatar"; // Default fallback
+        currentMovieName = urlParams.get('movie'); // Default fallback
 
         // Cargar datos iniciales
         fetchLocations();

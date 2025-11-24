@@ -34,9 +34,8 @@ public class UsuarioService {
 
 
 
-    public UsuarioRequest usuarioLogueado(int idCliente,String contrasenia){
-        Usuario usuario = usuarioRepository.findById(idCliente)
-                .orElseThrow(() -> new RuntimeException("Cliente no existente"));
+    public UsuarioRequest usuarioLogueado(String mailCliente,String contrasenia){
+        Usuario usuario = usuarioRepository.findByMail(mailCliente);
         byte[] contraseniaByte = generarHash(contrasenia);
         byte[] contraseniaBytes = Arrays.copyOf(usuario.getContrasenaHash(), contraseniaByte.length);
         if (Arrays.equals(contraseniaBytes,contraseniaByte)){

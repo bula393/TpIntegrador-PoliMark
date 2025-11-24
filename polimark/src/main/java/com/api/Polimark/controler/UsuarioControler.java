@@ -55,10 +55,10 @@ public class UsuarioControler {
 
 
 
-    @GetMapping("/{idCliente}/logIn")
-    public ResponseEntity<?> logIn(@PathVariable int idCliente, @RequestBody String contrasenia) {
+    @GetMapping("/{mailCliente}/logIn")
+    public ResponseEntity<?> logIn(@PathVariable String mailCliente, @RequestBody String contrasenia) {
         try {
-            return ResponseEntity.ok(usuarioService.usuarioLogueado(idCliente,contrasenia));
+            return ResponseEntity.ok(usuarioService.usuarioLogueado(mailCliente,contrasenia));
         }
         catch (Exception e) {
             return ResponseEntity

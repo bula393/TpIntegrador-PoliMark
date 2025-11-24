@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PoliMark - Login</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* --- ESTILOS GENERALES (Iguales a las otras páginas) --- */
+        :root {
+            --primary-red: #b71c1c;
+            --primary-red-hover: #9f1616;
+            --bg-black: #050505;
+            --bg-card: #141414;
+            --text-white: #ffffff;
+            --text-gray: #a0a0a0;
+            --input-border: #444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-black); color: var(--text-white); height: 100vh; display: flex; flex-direction: column; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        a:hover { color: var(--text-white); }
+
+        /* --- HEADER --- */
+        header {
+            background-color: var(--bg-card); /* Header negro en login según screenshot */
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #222;
+        }
+        .logo { font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        nav ul { display: flex; gap: 20px; font-size: 0.9rem; color: var(--text-gray); }
+
+        /* --- LOGIN CONTAINER --- */
+        .login-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+            position: relative;
+        }
+
+        /* Título superior (Overlay visual del PDF) */
+        .welcome-title {
+            position: absolute;
+            top: 10%;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* --- LOGIN CARD --- */
+        .login-card {
+            background-color: var(--bg-card);
+            width: 100%;
+            max-width: 500px;
+            padding: 50px 40px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .avatar-circle {
+            width: 100px;
+            height: 100px;
+            background-color: #333; /* Gris del avatar */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 40px;
+            border: 2px solid #555;
+        }
+        .avatar-circle i { font-size: 50px; color: #888; }
+
+        .form-group {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .form-input {
+            width: 100%;
+            background-color: transparent;
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            padding: 12px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+        .form-input:focus { border-color: var(--text-white); }
+
+        .login-btn {
+            width: 100%;
+            background-color: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        .login-btn:hover { background-color: var(--primary-red-hover); }
+
+        .helper-links {
+            width: 100%;
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 0.75rem;
+            color: var(--text-gray);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .register-link span { color: var(--text-white); font-style: italic; font-weight: bold; cursor: pointer; }
+
+        /* --- ERROR POPUP (MODAL) --- */
+        .error-modal {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .error-content {
+            background-color: #222;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            border-top: 4px solid var(--primary-red);
+            max-width: 400px;
+        }
+
+        .error-icon { color: var(--primary-red); font-size: 3rem; margin-bottom: 15px; }
+        .error-msg { font-size: 1rem; margin-bottom: 20px; color: #ddd; }
+        .close-modal-btn {
+            background-color: #444;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .close-modal-btn:hover { background-color: #666; }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: #111;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #555;
+            border-top: 1px solid #222;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo"><i class="fas fa-star"></i> POLIMARK</div>
+    <nav>
+        <ul>
+            <li>Movies</li>
+            <li>About</li>
+            <li>Blog</li>
+            <li>Help</li>
+        </ul>
+    </nav>
+    <div style="width: 50px;"></div> <!-- Spacer -->
+</header>
+
+<div class="welcome-title">Welcome back please log in! LOG IN:</div>
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="avatar-circle">
+            <i class="fas fa-user"></i>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">GMAIL</label>
+            <input type="email" id="email" class="form-input" placeholder="Gmail">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">PASSWORD</label>
+            <input type="password" id="password" class="form-input" placeholder="Password">
+        </div>
+
+        <div class="helper-links">
+            <a href="#" style="font-size: 0.7rem;">FORGOTTEN PASSWORD</a>
+        </div>
+
+        <button class="login-btn" onclick="performLogin()">Login</button>
+
+        <div class="helper-links register-link">
+            HAVEN'T REGISTERED YET? <a href="register.html"><span>REGISTER HERE ➔</span></a>
+        </div>
+    </div>
+</div>
+
+<!-- Error Popup -->
+<div id="errorModal" class="error-modal">
+    <div class="error-content">
+        <div class="error-icon"><i class="fas fa-exclamation-circle"></i></div>
+        <h3 style="margin-bottom: 10px;">Error de Ingreso</h3>
+        <p id="errorMessage" class="error-msg">Credenciales incorrectas</p>
+        <button class="close-modal-btn" onclick="closeModal()">Cerrar</button>
+    </div>
+</div>
+
+<footer>
+    All rights reserved © 2025 PoliMark Terms Privacy Cookies
+</footer>
+
+<!-- JAVASCRIPT -->
+<script>
+    async function performLogin() {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const modal = document.getElementById('errorModal');
+        const msg = document.getElementById('errorMessage');
+
+        // Validación simple de campos vacíos
+        if (!email || !password) {
+            msg.textContent = "Por favor, completa el email y la contraseña.";
+            modal.style.display = 'flex';
+            return;
+        }
+
+        // URL del Backend
+        const url = `http://localhost:8080/api/clientes/${encodeURIComponent(email)}/logIn`;
+
+        try {
+            // NOTA: Fetch usa 'POST' aquí para compatibilidad con navegadores.
+            // Si tu backend SOLO acepta GET con Body, esto fallará en Chrome/Edge.
+            // Asegúrate de cambiar @GetMapping a @PostMapping en tu Controller.
+            const response = await fetch(url, {
+                method: 'POST', // Cambiado a POST por estándar web
+                headers: {
+                    'Content-Type': 'text/plain' // @RequestBody String espera texto plano o JSON según config
+                },
+                body: password
+            });
+
+            if (response.ok) {
+                // Login Exitoso
+                const data = await response.json();
+
+                // Extraer ID (Soporta estructura plana o anidada en 'usuario')
+                let userId = null;
+
+                if (data.usuario && data.usuario.identificador) {
+                    userId = data.usuario.identificador;
+                } else if (data.identificador) {
+                    userId = data.identificador;
+                }
+
+                if (userId) {
+                    // Redirección Exitosa
+                    window.location.href = `perfil.html?id=${userId}`;
+                } else {
+                    throw new Error("No se pudo obtener el ID del usuario.");
+                }
+
+            } else {
+                // Login Fallido (400, 500, etc.)
+                const errorText = await response.text();
+                throw new Error(errorText || "Usuario o contraseña incorrectos.");
+            }
+
+        } catch (error) {
+            console.error("Login error:", error);
+            msg.textContent = error.message;
+            modal.style.display = 'flex';
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('errorModal').style.display = 'none';
+    }
+
+    // Permitir login con tecla Enter
+    document.getElementById('password').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            performLogin();
+        }
+    });
+</script>
+
+</body>
+</html>

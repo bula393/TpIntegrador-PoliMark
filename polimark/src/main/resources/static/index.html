@@ -45,14 +45,18 @@
             align-items: center;
         }
         .logo { font-weight: 800; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
-        nav ul { display: flex; gap: 20px; font-size: 0.9rem; }
+        nav ul {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+        }
         .logoImagen { width : 50px }
         .login-btn { background-color: black; padding: 8px 20px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; }
 
         /* --- HERO SECTION --- */
         .hero {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-evenly;
             align-items: center;
             padding: 200px 50px;
             background-color: black;
@@ -71,6 +75,11 @@
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 40px;
             margin-top: 40px;
+        }
+        .features-grid .feature-item{
+          background-color: black;
+          padding: 25px;
+          border-radius: 15px;
         }
         .feature-item h3 { font-size: 1.1rem; margin: 15px 0 10px; }
         .feature-item p { font-size: 0.85rem; color: var(--text-gray); line-height: 1.5; }
@@ -163,16 +172,271 @@
         .footer-col ul li {
             margin-bottom: 8px;
         }
-           </style>
+                    /* --------------------------------------------- */
+            /*          FAQ + CONTACT SECTION STYLES         */
+            /* --------------------------------------------- */
+
+            .faq-contact-section {
+                background-color: #0d0d0d;
+                padding: 80px 40px;
+            }
+
+            /* FAQ GRID */
+            .faq-container {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 60px;
+                margin-bottom: 120px;
+            }
+
+            .faq-left h2 {
+                font-size: 2.2rem;
+                margin-bottom: 15px;
+            }
+            .faq-subtitle {
+                color: #aaa;
+                max-width: 400px;
+                margin-bottom: 25px;
+            }
+            .faq-btn {
+                margin-top: 10px;
+            }
+
+            /* FAQ ITEMS */
+            .faq-item {
+                margin-bottom: 30px;
+                border-bottom: 1px solid #333;
+                padding-bottom: 20px;
+            }
+            .faq-item h4 {
+                margin-bottom: 8px;
+            }
+            .faq-item p {
+                color: #b5b5b5;
+                font-size: 0.9rem;
+            }
+
+            /* CONTACT FORM BOX */
+            .contact-box {
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                gap: 40px;
+                background-color: #141414;
+                padding: 60px 40px;
+                border-radius: 12px;
+                border: 1px solid #222;
+            }
+
+            .contact-label {
+                font-size: 0.8rem;
+                color: #888;
+                letter-spacing: 1px;
+                margin-bottom: 10px;
+            }
+
+            .contact-form {
+                margin-top: 25px;
+            }
+
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 20px;
+            }
+            .form-group input {
+                padding: 12px;
+                margin-top: 6px;
+                border-radius: 6px;
+                border: 1px solid #333;
+                background-color: #0e0e0e;
+                color: white;
+            }
+
+            .form-textarea textarea {
+                margin-top: 6px;
+                width: 100%;
+                height: 120px;
+                resize: none;
+                padding: 12px;
+                border-radius: 6px;
+                border: 1px solid #333;
+                background-color: #0e0e0e;
+                color: white;
+            }
+
+            /* CONTACT INFO RIGHT BOX */
+            .contact-right {
+                background-color: #121212;
+                border-radius: 10px;
+                padding: 30px;
+                border: 1px solid #222;
+            }
+            .contact-info p {
+                margin-bottom: 12px;
+                color: #bbb;
+            }
+            .contact-title {
+                font-weight: bold;
+                margin-bottom: 10px;
+                color: white;
+            }
+
+            /* RESPONSIVE */
+            @media (max-width: 900px) {
+                .faq-container {
+                    grid-template-columns: 1fr;
+                }
+                .contact-box {
+                    grid-template-columns: 1fr;
+                }
+            }
+            @media (max-width: 600px) {
+                .faq-contact-section {
+                    padding: 60px 20px;
+                }
+            }
+
+
+                    /* --------------------------------------------- */
+            /*              RESPONSIVE IMPROVEMENTS           */
+            /* --------------------------------------------- */
+
+            /* Tablets */
+            @media (max-width: 992px) {
+
+                /* HEADER */
+                header {
+                    flex-direction: column;
+                    gap: 15px;
+                    padding: 20px;
+                    text-align: center;
+                }
+                nav ul {
+                    gap: 15px;
+                    flex-wrap: wrap;
+                }
+
+                /* HERO */
+                .hero {
+                    flex-direction: column;
+                    text-align: center;
+                    padding: 120px 20px;
+                    gap: 30px;
+                }
+                .hero-content h1 {
+                    font-size: 2.8rem;
+                }
+                .hero-desc {
+                    max-width: 100%;
+                }
+
+                /* MAGIC GRID */
+                .magic-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                /* CTA */
+                .cta-section {
+                    flex-direction: column;
+                    text-align: center;
+                    padding: 50px 20px;
+                }
+                .cta-image {
+                    width: 100%;
+                    height: 250px;
+                }
+            }
+
+            /* Mobile */
+            @media (max-width: 600px) {
+
+                /* GENERAL */
+                body {
+                    overflow-x: hidden;
+                }
+
+                /* HEADER */
+                header {
+                    padding: 15px;
+                }
+                nav ul {
+                    gap: 10px;
+                    font-size: 0.85rem;
+                }
+                .logo {
+                    font-size: 1.1rem;
+                }
+                .logoImagen {
+                    width: 40px;
+                }
+
+                /* HERO */
+                .hero {
+                    padding: 80px 15px;
+                }
+                .hero-content h1 {
+                    font-size: 2.2rem;
+                }
+
+                /* FEATURES */
+                .features-section {
+                    padding: 60px 20px;
+                }
+                .features-grid {
+                    gap: 20px;
+                }
+                .feature-item {
+                    padding: 20px;
+                }
+
+                /* MAGIC */
+                .magic-section {
+                    padding: 60px 20px;
+                }
+
+                /* PRICING */
+                .pricing-section {
+                    padding: 60px 15px;
+                }
+                .pricing-card {
+                    padding: 25px 20px;
+                }
+                .plan-price {
+                    font-size: 2.3rem;
+                }
+
+                /* CTA */
+                .cta-section {
+                    padding: 50px 20px;
+                }
+                .cta-content h2 {
+                    font-size: 2.2rem;
+                }
+
+                /* FOOTER */
+                footer {
+                    flex-direction: column;
+                    gap: 40px;
+                    text-align: center;
+                    padding: 40px 20px;
+                }
+                .footer-links {
+                    flex-direction: column;
+                    gap: 40px;
+                    text-align: center;
+                }
+            }
+
+    </style>
 </head>
 <body>
 
 <header>
     <a href="index.html">
-    <div class="logo">
-        <img class="logoImagen" src="imagenes/logo.png"></img> PoliMark
-    </div>
-        </a>
+        <div class="logo">
+            <img class="logoImagen" src="imagenes/logo.png"></img> PoliMark
+        </div>
+    </a>
     <nav>
         <ul>
             <li>Movies</li>
@@ -276,13 +540,86 @@
     </div>
 </section>
 
+<!-- FAQ + CONTACT SECTION -->
+<section class="faq-contact-section">
+
+    <!-- FAQ -->
+    <div class="faq-container">
+        <div class="faq-left">
+            <h2>Your drive-in questions, answered</h2>
+            <p class="faq-subtitle">
+                Curious about our outdoor cinema experience? Find all the details you need to make your
+                movie night smooth, fun, and unforgettable—right from your car.
+            </p>
+        </div>
+
+        <div class="faq-right">
+            <div class="faq-item">
+                <h4>How does it all work?</h4>
+                <p>Pick your movie, book your spot online, and roll up to your chosen location. Audio streams directly to your car so you can relax and enjoy every scene in your own cozy space.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Can I bring my own snacks?</h4>
+                <p>Absolutely! Bring your favorites, or treat yourself to our special snack bundles and fresh bites—available to pre-order or grab at the venue.</p>
+            </div>
+            <div class="faq-item">
+                <h4>What if the weather changes?</h4>
+                <p>If weather cancels a show, you'll get a refund or can reschedule—no stress.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Are pets welcome at the drive-in?</h4>
+                <p>Leashed pets are welcome at most locations! Just make sure they remain comfy and safe.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTACT FORM -->
+    <div class="contact-box">
+        <div class="contact-left">
+            <p class="contact-label">CONTACT US</p>
+            <h2>Let’s chat about your next movie night</h2>
+
+            <form class="contact-form">
+                <div class="form-group">
+                    <label>FULL NAME</label>
+                    <input type="text" placeholder="Your name">
+                </div>
+
+                <div class="form-group">
+                    <label>EMAIL ADDRESS</label>
+                    <input type="email" placeholder="email@website.com">
+                </div>
+
+                <div class="form-textarea">
+                    <label>TELL US YOUR IDEA OR QUESTION</label>
+                    <textarea placeholder="Type your message..."></textarea>
+                </div>
+
+                <button class="btn btn-red">Send message</button>
+            </form>
+        </div>
+
+        <div class="contact-right">
+            <div class="contact-info">
+                <p class="contact-title">Call or text anytime</p>
+                <p><i class="fas fa-comment"></i> +1 (555) 000-0000</p>
+
+                <p class="contact-title" style="margin-top:20px;">Find us online</p>
+                <p><i class="fas fa-map-pin"></i> 101 Web Lane, SF, CA</p>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
 <!-- Footer -->
 <footer>
     <div>
         <a href="index.html">
-        <div class="logo" style="margin-bottom: 20px;">
-            <img class="logoImagen" src="imagenes/logo.png"></img> PoliMark
-        </div>
+            <div class="logo" style="margin-bottom: 20px;">
+                <img class="logoImagen" src="imagenes/logo.png"></img> PoliMark
+            </div>
         </a>
         <div class="socials">
             <i class="fab fa-facebook"></i>
