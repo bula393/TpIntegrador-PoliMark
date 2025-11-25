@@ -68,6 +68,7 @@ json:
     }
 -login
 ruta:
+post
 http://localhost:8080/api/clientes/3/logIn
 json
 hal.jpg
